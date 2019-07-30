@@ -1,5 +1,5 @@
 <template>
-  <div class="main-container">
+  <div class="article-container">
     <article>
       <header class="post-title">
         <span>{{ article.createTimeStr }}</span>
@@ -7,7 +7,7 @@
       </header>
       <main>
         <blockquote v-if="article.summary">{{ article.summary }}</blockquote>
-        <div v-html="article.html"></div>
+        <article-content :content="article.html"></article-content>
       </main>
     </article>
     <aside>Menu</aside>
@@ -15,15 +15,18 @@
 </template>
 <script>
 import { mapState } from "vuex";
-import "highlight.js/styles/tomorrow-night.css";
+import ArticleContent from "~/components/ArticleContent.vue";
 export default {
+  components: {
+    ArticleContent
+  },
   computed: mapState({
     article: state => state.article
   })
 };
 </script>
 <style scoped>
-.main-container {
+.article-container {
   max-width: 75rem;
   margin: 0 auto;
 }
