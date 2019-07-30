@@ -13,8 +13,12 @@ export default {
     CategoryList,
     PostList
   },
-  async fetch({ store }) {
-    await store.dispatch("getCategories");
+  async validate({ params, store }) {
+    const category = params.category || '';
+    await store.dispatch('getCategories');
+    return store.state.categoryList.some(
+      item => item.alias === category
+    );
   }
 };
 </script>

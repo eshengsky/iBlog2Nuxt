@@ -5,7 +5,9 @@ export default {
         cateId: '',
         page: 1,
         hasNext: false,
-        loading: false
+        loading: false,
+        articleAlias: '',
+        article: null
     }),
 
     mutations: {
@@ -63,6 +65,24 @@ export default {
             commit('setData', {
                 key: 'loading',
                 value: false
+            });
+        },
+
+        async getArticle ({ commit, state }) {
+            let article = null;
+            try {
+                const { data } = await this.$axios.$get('/api/article', {
+                    params: {
+                        alias: state.articleAlias
+                    }
+                });
+                article = data.article;
+            } catch (err) {
+                console.error(err);
+            }
+            commit('setData', {
+                key: 'article',
+                value: article
             });
         }
     }

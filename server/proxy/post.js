@@ -69,7 +69,6 @@ exports.getPosts = async (params) => {
             PostModel.estimatedDocumentCount(query).exec()
         ]);
         postList = data[0];
-        console.log(postList)
         const count = data[1];
         pageCount = count % pageSize === 0 ? parseInt(count / pageSize) : parseInt(count / pageSize) + 1;
     } catch (err) {
@@ -78,5 +77,18 @@ exports.getPosts = async (params) => {
     return {
         postList,
         hasNext: pageCount > page
+    };
+}
+
+exports.getArticle = async (params) => {
+    let article;
+    try {
+        const alias = params.alias;
+        article = await PostModel.findOne({ alias }).exec();
+    } catch (err) {
+        console.error(err);
+    }
+    return {
+        article
     };
 }

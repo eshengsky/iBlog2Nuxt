@@ -1,6 +1,7 @@
 <template>
   <div class="category-wrap">
-    <div class="category-top">文章分类</div>
+    <div class="category-title">文章分类</div>
+    <div class="category-split"></div>
     <ul class="category-list">
       <li v-for="item in categories" :key="item._id">
         <nuxt-link :to="item.alias ? `/blog/${item.alias}` : '/'" exact active-class="active">
@@ -30,12 +31,19 @@ export default {
     z-index: 1;
 }
 
-.category-top {
+.category-title {
     border: 1px solid #e7eaec;
     height: 60px;
+    line-height: 60px;
     font-size: 16px;
-    padding-top: 20px;
     padding-left: 15px;
+    background: #fff;
+}
+
+.category-split {
+    height: 20px;
+    border-left: 1px solid #e7eaec;
+    border-right: 1px solid #e7eaec;
     background: #fff;
 }
 
@@ -52,6 +60,7 @@ export default {
 }
 
 .category-list li a {
+    padding: 10px 15px;
     border-bottom: 1px solid transparent;
     border-top: 1px solid transparent;
     font-size: 15px;

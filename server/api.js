@@ -19,4 +19,12 @@ router.get('/posts', async (req, res, next) => {
     });
 });
 
+router.get('/article', async (req, res, next) => {
+    const data = await postProxy.getArticle(req.query);
+    res.json({
+        code: '1',
+        data
+    });
+});
+
 module.exports = router;
