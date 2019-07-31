@@ -75,42 +75,7 @@ img {
   border-style: none;
 }
 
-pre code {
-  font-size: 14px;
-  font-family: Hack;
-}
-
-.pre-header {
-  display: flex;
-  justify-content: space-between;
-  height: 36px;
-}
-
-.pre-header-left div {
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  margin-right: 8px;
-  display: inline-block;
-}
-
-.pre-header-left div:nth-of-type(1) {
-  background: rgb(255, 95, 86);
-}
-
-.pre-header-left div:nth-of-type(2) {
-  background: rgb(255, 189, 46);
-}
-
-.pre-header-left div:nth-of-type(3) {
-  background: rgb(39, 201, 63);
-}
-
-.pre-header-right {
-  font-family: Hack;
-  font-size: 12px;
-  color: #777;
-  -webkit-user-select: none;
-  user-select: none;
+pre, code {
+  font-family: Consolas, "Courier New", monospace;
 }
 </style>

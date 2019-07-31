@@ -1,7 +1,5 @@
 <template>
-  <div>
-    <blog-article></blog-article>
-  </div>
+  <blog-article></blog-article>
 </template>
 <script>
 import BlogArticle from "~/components/BlogArticle.vue";
