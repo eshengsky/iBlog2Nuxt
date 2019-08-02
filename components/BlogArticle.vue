@@ -10,7 +10,7 @@
       </header>
       <main>
         <blockquote v-if="article.summary">{{ article.summary }}</blockquote>
-        <article-content :content="article.html"></article-content>
+        <div class="article-content" v-html="article.html"></div>
       </main>
       <div>Comments here</div>
     </article>
@@ -19,11 +19,8 @@
 </template>
 <script>
 import { mapState } from "vuex";
-import ArticleContent from "~/components/ArticleContent.vue";
+import "highlight.js/styles/tomorrow.css";
 export default {
-  components: {
-    ArticleContent
-  },
   computed: mapState({
     article: state => state.article
   })
@@ -60,5 +57,9 @@ export default {
 .article-title h1 {
     font-size: 25px;
     font-weight: 500;
+}
+
+.article-content {
+  font-family: Consolas, "Courier New", monospace;
 }
 </style>

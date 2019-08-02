@@ -73,9 +73,77 @@ a {
 img {
   vertical-align: middle;
   border-style: none;
+  max-width: 100%;
 }
 
 pre, code {
   font-family: Consolas, "Courier New", monospace;
+}
+
+pre.hljs {
+  padding: 12px 16px 0;
+  border-radius: 8px;
+  background: #f6f8fa;
+  border: 1px solid #eee;
+}
+
+pre code {
+  font-size: 14px;
+  line-height: 19px;
+  display: block;
+  overflow-x: auto;
+  padding-bottom: 12px;
+}
+
+.pre-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.pre-header-left div {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  margin-right: 8px;
+  display: inline-block;
+}
+
+.pre-header-left div:nth-of-type(1) {
+  background: rgb(255, 95, 86);
+}
+
+.pre-header-left div:nth-of-type(2) {
+  background: rgb(255, 189, 46);
+}
+
+.pre-header-left div:nth-of-type(3) {
+  background: rgb(39, 201, 63);
+}
+
+.pre-header-right {
+  font-size: 12px;
+  color: #777;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+::-webkit-scrollbar {
+    width: 7px;
+    height: 7px;
+}
+
+::-webkit-scrollbar-thumb {
+    border-radius: 6px;
+    background-color: rgba(120, 120, 120, 0.3);
+}
+
+::-webkit-scrollbar-thumb:active {
+    background-color: rgba(120, 120, 120, 0.5);
+}
+
+::-webkit-scrollbar-track {
+    border-radius: 6px;
+    background-color: #F5F5F5;
 }
 </style>

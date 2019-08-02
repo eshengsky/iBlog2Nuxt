@@ -7,7 +7,8 @@ export default {
         hasNext: false,
         loading: false,
         articleAlias: '',
-        article: null
+        article: {},
+        drawer: false
     }),
 
     mutations: {
@@ -69,7 +70,7 @@ export default {
         },
 
         async getArticle ({ commit, state }) {
-            let article = null;
+            let article = {};
             try {
                 const { data } = await this.$axios.$get('/api/article', {
                     params: {
