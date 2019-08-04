@@ -1,8 +1,8 @@
 <template>
   <div class="navbar">
     <div class="navbar-header">
-      <a class="navbar-brand">
-        <img src="/images/zhr.jpg" />
+      <a class="navbar-brand" href="/">
+        <img src="/images/iBlog2_logo.png" />
         <span>xxx</span>
       </a>
     </div>
@@ -37,9 +37,7 @@
 }
 
 .navbar .navbar-brand img {
-    width: 50px;
     height: 50px;
-    border-radius: 50%;
     display: inline-block;
     margin-top: -4px;
     margin-right: 6px;

@@ -7,8 +7,12 @@ export default {
         hasNext: false,
         loading: false,
         articleAlias: '',
-        article: {},
-        drawer: false
+        article: {
+            category: {}
+        },
+        drawer: false,
+        filterType: 'text',
+        
     }),
 
     mutations: {
@@ -69,8 +73,8 @@ export default {
             });
         },
 
-        async getArticle ({ commit, state }) {
-            let article = {};
+        async getArticle({ commit, state }) {
+            let article = { category: {} };
             try {
                 const { data } = await this.$axios.$get('/api/article', {
                     params: {

@@ -22,7 +22,6 @@ export default {
 </script>
 <style scoped>
 .category-wrap {
-    background: #f3f3f4;
     padding: 30px 0 0 15px;
     width: 260px;
     top: 70px;

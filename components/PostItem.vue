@@ -22,11 +22,12 @@
       <font-awesome-icon :icon="['fas', 'map-signs']"></font-awesome-icon>
       <nuxt-link :to="`/blog/${post.category.alias}`">{{ post.category.cateName }}</nuxt-link>
     </span>
-    <span title="发布时间">
+    <span title="发布时间" style="margin-left: 20px;">
       <font-awesome-icon :icon="['far', 'clock']"></font-awesome-icon>
       {{ post.publishDate }}
     </span>
     <p>{{ post.summary }}</p>
+    <div class="hr-line-dashed"></div>
   </div>
 </template>
 <script>
@@ -81,9 +82,21 @@ export default {
   max-width: 100%;
 }
 
+.blog-item p {
+  margin-top: 20px;
+}
+
 .blog-item p,
 .blog-item span {
   color: #777;
+}
+
+.hr-line-dashed {
+  background-color: #fff;
+  border-top: 1px dashed #e7eaec;
+  color: #fff;
+  height: 1px;
+  margin: 20px 0;
 }
 </style>
 

@@ -30,9 +30,6 @@ html {
 
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-    "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji",
-    "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   font-size: 1rem;
   font-weight: 400;
   line-height: 1.5;
@@ -45,10 +42,23 @@ body {
 
 .container {
   padding-top: 70px;
+  background: #f3f3f4;
 }
 
 [tabindex="-1"]:focus:not(:focus-visible) {
   outline: 0 !important;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: inherit;
+  font-weight: 500;
+  line-height: 1.1;
+  color: inherit;
 }
 
 ol,
@@ -76,7 +86,8 @@ img {
   max-width: 100%;
 }
 
-pre, code {
+pre,
+code {
   font-family: Consolas, "Courier New", monospace;
 }
 
@@ -124,26 +135,31 @@ pre code {
 .pre-header-right {
   font-size: 12px;
   color: #777;
+  padding-top: 1px;
   -webkit-user-select: none;
   user-select: none;
 }
 
 ::-webkit-scrollbar {
-    width: 7px;
-    height: 7px;
+  width: 7px;
+  height: 7px;
 }
 
 ::-webkit-scrollbar-thumb {
-    border-radius: 6px;
-    background-color: rgba(120, 120, 120, 0.3);
+  border-radius: 6px;
+  background-color: rgba(120, 120, 120, 0.3);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(120, 120, 120, 0.5);
 }
 
 ::-webkit-scrollbar-thumb:active {
-    background-color: rgba(120, 120, 120, 0.5);
+  background-color: rgba(120, 120, 120, 0.8);
 }
 
 ::-webkit-scrollbar-track {
-    border-radius: 6px;
-    background-color: #F5F5F5;
+  border-radius: 6px;
+  background-color: #f5f5f5;
 }
 </style>

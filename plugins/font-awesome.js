@@ -5,8 +5,9 @@ import {
     faClock
 } from '@fortawesome/free-regular-svg-icons';
 import {
-    faMapSigns
+    faMapSigns,
+    faSearch
 } from '@fortawesome/free-solid-svg-icons';
 config.autoAddCss = false;
-library.add(faClock, faMapSigns);
+library.add(faClock, faMapSigns, faSearch);
 Vue.component('font-awesome-icon', FontAwesomeIcon);
