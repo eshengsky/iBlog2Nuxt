@@ -26,6 +26,7 @@
   height: 70px;
   background: #fff;
   border-bottom: 1px solid #e7e7e7;
+  z-index: 3;
 }
 
 .navbar .navbar-brand {

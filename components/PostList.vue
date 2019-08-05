@@ -6,14 +6,14 @@
         <a>标题</a>
       </div>
       <div class="post-top-right">
-        <Select :value="filterType" @on-change="filterTypeChange" style="width: 70px">
+        <Select v-model="filterTypeVal" @on-change="filterTypeChange" style="width: 70px">
           <Option value="text">全文</Option>
           <Option value="title">标题</Option>
           <Option value="tag">标签</Option>
           <Option value="date">日期</Option>
         </Select>
         <Input
-          v-if="filterType !== 'date'"
+          v-if="filterTypeVal !== 'date'"
           v-model="inputTxt"
           style="width: 200px"
           :placeholder="searchPhd"
@@ -22,7 +22,7 @@
           @on-enter="search"
         ></Input>
         <DatePicker
-          v-if="filterType === 'date'"
+          v-if="filterTypeVal === 'date'"
           v-model="inputDate"
           type="daterange"
           split-panels
@@ -43,29 +43,32 @@
       <li v-for="item in posts" :key="item._id">
         <post-item :post="item"></post-item>
       </li>
+      <li>
+        <Button
+          class="btn-load"
+          @click="loadNext"
+          v-if="posts.length > 0 && hasNext"
+          :loading="loading"
+        >下一页</Button>
+        <div class="no-more" v-if="posts.length > 0 && !hasNext">没有更多数据</div>
+      </li>
     </ul>
-    <div class="no-more" v-else>暂无数据</div>
-
-    <Button
-      class="btn-load"
-      @click="loadNext"
-      v-if="posts.length > 0 && hasNext"
-      :loading="loading"
-    >下一页</Button>
-    <div class="no-more" v-if="posts.length > 0 && !hasNext">没有更多数据</div>
+    <div class="first-loading" v-else-if="loading">加载中...</div>
+    <div class="no-data" v-else>暂无数据</div>
 
     <Drawer
       :title="article.title"
       :value="drawer"
       placement="right"
-      width="60%"
+      width="66.66%"
       :closable="false"
       @input="closeDrawer"
     >
       <article class="preview-article" v-html="article.html"></article>
       <footer class="preview-footer">
-        <i-button @click="closeDrawer">关闭</i-button>
+        <i-button size="large" @click="closeDrawer">关闭</i-button>
         <i-button
+          size="large"
           type="primary"
           :to="`/blog/${article.category.alias}/${article.alias}`"
           target="_blank"
@@ -85,18 +88,19 @@ export default {
   },
   data() {
     return {
+      filterTypeVal: "text",
       inputTxt: "",
       inputDate: "",
       dateOpts: {
         shortcuts: [
           {
-            text: "今天的文章",
+            text: "今天发布",
             value() {
               return [new Date(), new Date()];
             }
           },
           {
-            text: "本周的文章",
+            text: "本周发布",
             value() {
               const end = new Date();
               const start = new Date();
@@ -105,7 +109,7 @@ export default {
             }
           },
           {
-            text: "本月的文章",
+            text: "本月发布",
             value() {
               const end = new Date();
               const start = new Date();
@@ -114,7 +118,7 @@ export default {
             }
           },
           {
-            text: "今年的文章",
+            text: "今年发布",
             value() {
               const end = new Date();
               const start = new Date();
@@ -139,8 +143,8 @@ export default {
     this.$store.commit("setData", {
       postList: [],
       hasNext: false,
-      filterType: 'text',
-      keyword: ''
+      filterType: "text",
+      keyword: ""
     });
     const category = this.$route.params.category || "";
     const findOne = this.$store.state.categoryList.find(
@@ -162,7 +166,7 @@ export default {
     },
     searchPhd() {
       let placeholder = "";
-      switch (this.filterType) {
+      switch (this.filterTypeVal) {
         case "text":
           placeholder = "全文关键字";
           break;
@@ -182,10 +186,7 @@ export default {
       hasNext: state => state.hasNext,
       loading: state => state.loading,
       drawer: state => state.drawer,
-      article: state => state.article,
-      filterType: state => state.filterType,
-      keyword: state => state.keyword,
-      sortBy: state => state.sortBy
+      article: state => state.article
     })
   },
   methods: {
@@ -201,11 +202,8 @@ export default {
       });
     },
     filterTypeChange(val) {
-      this.$store.commit("setData", {
-        filterType: val
-      });
       this.$nextTick(function() {
-        if (this.filterType !== "date") {
+        if (this.filterTypeVal !== "date") {
           this.$refs.inputComp.focus();
         } else {
           document.querySelector(".ivu-date-picker input").click();
@@ -214,7 +212,7 @@ export default {
     },
     search() {
       let input = "";
-      if (this.filterType === "date") {
+      if (this.filterTypeVal === "date") {
         input = this.inputDate;
       } else {
         input = this.inputTxt;
@@ -223,7 +221,8 @@ export default {
         postList: [],
         page: 1,
         hasNext: false,
-        keyword: input
+        keyword: input,
+        filterType: this.filterTypeVal
       });
       this.$store.dispatch("getPosts");
     }
@@ -232,16 +231,14 @@ export default {
 </script>
 <style>
 .post-wrap {
-  margin: 30px 0 0;
-  margin-left: 280px;
+  margin: 30px 0 30px 280px;
   background: #fff;
   border-color: #e7eaec;
   border-style: solid solid none;
   border-width: 1px 0;
-  min-height: 64px;
+  min-height: calc(100vh - 110px);
   position: relative;
   width: 66.66%;
-  height: calc(100vh - 70px);
 }
 
 .post-top {
@@ -264,11 +261,13 @@ export default {
 }
 
 .post-list {
-  padding: 10px 20px;
+  padding: 10px 20px 0;
+  margin-bottom: 0;
 }
 
 .btn-load {
   width: 100%;
+  margin-bottom: 20px;
 }
 
 .ivu-drawer-header-inner {
@@ -279,7 +278,7 @@ export default {
 }
 
 .ivu-drawer-body {
-  height: calc(100% - 51px - 54px);
+  height: calc(100% - 51px - 57px);
   position: static;
 }
 
@@ -303,11 +302,22 @@ export default {
   text-align: center;
   color: #888;
   font-size: 14px;
-  line-height: 34px;
+  padding-bottom: 20px;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.no-data {
+  text-align: center;
+  color: #888;
+  font-size: 14px;
+  margin-top: 30px;
+  -webkit-user-select: none;
+  user-select: none;
 }
 
 .ivu-picker-panel-body-wrapper {
-  font-size: 12px;
+  font-size: 14px;
 }
 
 .ivu-select-single .ivu-select-selection .ivu-select-placeholder,

@@ -35,14 +35,13 @@ body {
   line-height: 1.5;
   color: #212529;
   text-align: left;
-  background-color: #fff;
+  background: #f3f3f4;
   -webkit-text-size-adjust: 100%;
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
 
 .container {
   padding-top: 70px;
-  background: #f3f3f4;
 }
 
 [tabindex="-1"]:focus:not(:focus-visible) {

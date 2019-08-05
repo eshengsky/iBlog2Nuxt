@@ -1,3 +1,4 @@
+const minLoadingTimeout = 1000;
 export default {
     state: () => ({
         categoryList: [],
@@ -5,7 +6,7 @@ export default {
         cateId: '',
         page: 1,
         hasNext: false,
-        loading: false,
+        loading: true,
         articleAlias: '',
         article: {
             category: {}
@@ -47,6 +48,7 @@ export default {
         },
 
         async getPosts({ commit, state }) {
+            const startTime = new Date();
             let postList = [];
             let hasNext = false;
             commit('setData', {
@@ -67,13 +69,19 @@ export default {
             } catch (err) {
                 console.error(err);
             }
-            commit('appendData', {
-                postList
-            });
-            commit('setData', {
-                hasNext,
-                loading: false
-            });
+
+            // loading 时间过短体验也不好，这里设置一个最少 loading 时间
+            const duration = new Date() - startTime;
+            const timeout = duration > minLoadingTimeout ? 0 : (minLoadingTimeout - duration);
+            setTimeout(() => {
+                commit('appendData', {
+                    postList
+                });
+                commit('setData', {
+                    hasNext,
+                    loading: false
+                });
+            }, timeout);
         },
 
         async getArticle({ commit, state }) {
