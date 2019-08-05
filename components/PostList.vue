@@ -14,13 +14,16 @@
         </Select>
         <Input
           v-if="filterType !== 'date'"
+          v-model="inputTxt"
           style="width: 200px"
           :placeholder="searchPhd"
           clearable
           ref="inputComp"
+          @on-enter="search"
         ></Input>
         <DatePicker
           v-if="filterType === 'date'"
+          v-model="inputDate"
           type="daterange"
           split-panels
           separator=" ~ "
@@ -33,7 +36,7 @@
           style="width: 200px"
           ref="dateComp"
         ></DatePicker>
-        <Button>搜索</Button>
+        <Button @click="search">搜索</Button>
       </div>
     </div>
     <ul class="post-list" v-if="posts.length > 0">
@@ -82,6 +85,8 @@ export default {
   },
   data() {
     return {
+      inputTxt: "",
+      inputDate: "",
       dateOpts: {
         shortcuts: [
           {
@@ -132,8 +137,10 @@ export default {
   },
   mounted: function() {
     this.$store.commit("setData", {
-      key: "postList",
-      value: []
+      postList: [],
+      hasNext: false,
+      filterType: 'text',
+      keyword: ''
     });
     const category = this.$route.params.category || "";
     const findOne = this.$store.state.categoryList.find(
@@ -141,12 +148,8 @@ export default {
     );
     if (findOne) {
       this.$store.commit("setData", {
-        key: "page",
-        value: 1
-      });
-      this.$store.commit("setData", {
-        key: "cateId",
-        value: findOne._id
+        page: 1,
+        cateId: findOne._id
       });
       this.$store.dispatch("getPosts");
     }
@@ -180,35 +183,49 @@ export default {
       loading: state => state.loading,
       drawer: state => state.drawer,
       article: state => state.article,
-      filterType: state => state.filterType
+      filterType: state => state.filterType,
+      keyword: state => state.keyword,
+      sortBy: state => state.sortBy
     })
   },
   methods: {
     loadNext() {
       this.$store.commit("setData", {
-        key: "page",
-        value: this.page + 1
+        page: this.page + 1
       });
       this.$store.dispatch("getPosts");
     },
     closeDrawer() {
       this.$store.commit("setData", {
-        key: "drawer",
-        value: false
+        drawer: false
       });
     },
     filterTypeChange(val) {
       this.$store.commit("setData", {
-        key: "filterType",
-        value: val
+        filterType: val
       });
       this.$nextTick(function() {
         if (this.filterType !== "date") {
           this.$refs.inputComp.focus();
         } else {
-          document.querySelector('.ivu-date-picker input').click();
+          document.querySelector(".ivu-date-picker input").click();
         }
       });
+    },
+    search() {
+      let input = "";
+      if (this.filterType === "date") {
+        input = this.inputDate;
+      } else {
+        input = this.inputTxt;
+      }
+      this.$store.commit("setData", {
+        postList: [],
+        page: 1,
+        hasNext: false,
+        keyword: input
+      });
+      this.$store.dispatch("getPosts");
     }
   }
 };
@@ -341,7 +358,8 @@ export default {
   box-shadow: none;
 }
 
-.ivu-input-icon {
+.ivu-icon-ios-close-circle,
+.ivu-input-suffix i.ivu-icon-ios-close-circle {
   color: #999;
 }
 </style>

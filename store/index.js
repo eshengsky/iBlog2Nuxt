@@ -12,16 +12,23 @@ export default {
         },
         drawer: false,
         filterType: 'text',
-        
+        keyword: '',
+        sortBy: 'date'
     }),
 
     mutations: {
+        // 提交更改，支持批量提交
         setData(state, data) {
-            state[data.key] = data.value;
+            Object.keys(data).forEach(key => {
+                state[key] = data[key];
+            });
         },
 
+        // 提交数组的附加更改，支持批量提交
         appendData(state, data) {
-            state[data.key] = [...state[data.key], ...data.value];
+            Object.keys(data).forEach(key => {
+                state[key] = [...state[key], ...data[key]];
+            });
         }
     },
 
@@ -35,8 +42,7 @@ export default {
                 console.error(err);
             }
             commit('setData', {
-                key: 'categoryList',
-                value: result
+                categoryList: result
             });
         },
 
@@ -44,14 +50,16 @@ export default {
             let postList = [];
             let hasNext = false;
             commit('setData', {
-                key: 'loading',
-                value: true
+                loading: true
             });
             try {
                 const { data } = await this.$axios.$get('/api/posts', {
                     params: {
                         cateId: state.cateId,
-                        pageIndex: state.page
+                        pageIndex: state.page,
+                        filterType: state.filterType,
+                        keyword: state.keyword,
+                        sortBy: state.sortBy
                     }
                 });
                 postList = data.postList;
@@ -60,16 +68,11 @@ export default {
                 console.error(err);
             }
             commit('appendData', {
-                key: 'postList',
-                value: postList
+                postList
             });
             commit('setData', {
-                key: 'hasNext',
-                value: hasNext
-            });
-            commit('setData', {
-                key: 'loading',
-                value: false
+                hasNext,
+                loading: false
             });
         },
 
@@ -86,8 +89,7 @@ export default {
                 console.error(err);
             }
             commit('setData', {
-                key: 'article',
-                value: article
+                article
             });
         }
     }

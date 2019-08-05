@@ -36,12 +36,8 @@ export default {
   methods: {
     preview() {
       this.$store.commit("setData", {
-        key: "article",
-        value: this.post
-      });
-      this.$store.commit("setData", {
-        key: "drawer",
-        value: true
+        article: this.post,
+        drawer: true
       });
     }
   }

@@ -10,8 +10,7 @@ export default {
   async validate({ params, store }) {
     const alias = params.article;
     store.commit('setData', {
-      key: 'articleAlias',
-      value: alias
+      articleAlias: alias
     });
     await store.dispatch('getArticle');
     return !!store.state.article;

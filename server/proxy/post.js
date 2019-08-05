@@ -1,5 +1,3 @@
-const url = require('url');
-const moment = require('moment');
 const PostModel = require('../models/post');
 const pageSize = 3;
 
@@ -14,36 +12,41 @@ function getPostsQuery(params) {
     if (params.cateId) {
         query.category = params.cateId;
     }
-    if (params.keyword) {
+    const keyword = params.keyword;
+    if (keyword) {
         switch (params.filterType) {
-            case '1':
-                query.title = { $regex: params.keyword, $options: 'gi' };
+            case 'title':
+                query.title = { $regex: keyword, $options: 'gi' };
                 break;
-            case '2':
-                query.labels = { $regex: params.keyword, $options: 'gi' };
+            case 'tag':
+                query.labels = { $regex: keyword, $options: 'gi' };
                 break;
-            case '3':
-                query.createTime = { $regex: params.keyword, $options: 'gi' };
+            case 'date':
+                if (Array.isArray(keyword) && keyword.length === 2 && keyword[0] && keyword[1]) {
+                    const start = new Date(keyword[0]);
+                    const end = new Date(keyword[1]);
+                    query.createTime = { $gt: start, $lt: end };
+                }
                 break;
             default:
                 query.$or = [{
                     title: {
-                        $regex: params.keyword,
+                        $regex: keyword,
                         $options: 'gi'
                     }
                 }, {
                     labels: {
-                        $regex: params.keyword,
+                        $regex: keyword,
                         $options: 'gi'
                     }
                 }, {
                     summary: {
-                        $regex: params.keyword,
+                        $regex: keyword,
                         $options: 'gi'
                     }
                 }, {
                     content: {
-                        $regex: params.keyword,
+                        $regex: keyword,
                         $options: 'gi'
                     }
                 }];
@@ -66,7 +69,7 @@ exports.getPosts = async (params) => {
         const query = getPostsQuery(params);
         const data = await Promise.all([
             PostModel.find(query, {}, options).populate('category').exec(),
-            PostModel.estimatedDocumentCount(query).exec()
+            PostModel.countDocuments(query).exec()
         ]);
         postList = data[0];
         const count = data[1];
