@@ -55,7 +55,7 @@
     </ul>
     <div class="first-loading" v-else-if="loading">加载中...</div>
     <div class="no-data" v-else>暂无数据</div>
-
+    <footer class="copyright">2019 © All Rights Reserved | 浙ICP备15032882号 | 后台管理</footer>
     <Drawer
       :title="article.title"
       :value="drawer"
@@ -231,12 +231,10 @@ export default {
 </script>
 <style>
 .post-wrap {
-  margin: 30px 0 30px 280px;
-  background: #fff;
+  margin: 30px 0 15px 280px;
   border-color: #e7eaec;
   border-style: solid solid none;
   border-width: 1px 0;
-  min-height: calc(100vh - 110px);
   position: relative;
   width: 66.66%;
 }
@@ -245,6 +243,7 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  background: #fff;
   height: 59px;
   border-bottom: 1px solid #e7eaec;
   padding: 20px;
@@ -261,6 +260,8 @@ export default {
 }
 
 .post-list {
+  background: #fff;
+  min-height: calc(100vh - 160px);
   padding: 10px 20px 0;
   margin-bottom: 0;
 }
@@ -371,5 +372,12 @@ export default {
 .ivu-icon-ios-close-circle,
 .ivu-input-suffix i.ivu-icon-ios-close-circle {
   color: #999;
+}
+
+.copyright {
+  color: #888;
+  font-size: 13px;
+  text-align: center;
+  padding: 25px 0 10px;
 }
 </style>
