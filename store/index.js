@@ -6,7 +6,7 @@ export default {
         cateId: '',
         page: 1,
         hasNext: false,
-        loading: true,
+        loading: false,
         articleAlias: '',
         article: {
             category: {}

@@ -30,17 +30,18 @@
 }
 
 .navbar .navbar-brand {
+  display: inline-block;
   height: 70px;
   line-height: 70px;
   color: #2b2b2b;
-  padding: 15px 15px;
+  padding: 0 15px;
   font-size: 18px;
 }
 
 .navbar .navbar-brand img {
-    height: 50px;
-    display: inline-block;
-    margin-top: -4px;
-    margin-right: 6px;
+  height: 46px;
+  display: inline-block;
+  margin-top: -4px;
+  margin-right: 6px;
 }
 </style>

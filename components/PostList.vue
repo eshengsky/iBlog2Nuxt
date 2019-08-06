@@ -43,18 +43,20 @@
       <li v-for="item in posts" :key="item._id">
         <post-item :post="item"></post-item>
       </li>
-      <li>
+      <li class="last-li">
+        <div class="dot-loading" v-if="loading">
+          <div></div>
+          <div></div>
+          <div></div>
+        </div>
         <Button
           class="btn-load"
           size="large"
           @click="loadNext"
-          v-if="posts.length > 0 && hasNext"
+          v-else-if="posts.length > 0 && hasNext"
           :loading="loading"
         >下一页</Button>
         <div class="no-more" v-else-if="posts.length > 0 && !hasNext">没有更多数据</div>
-        <div class="first-loading" v-else-if="loading">
-          <Icon type="ios-loading" size="16" class="icon-loading"></Icon> 加载中...
-        </div>
         <div class="no-data" v-else>暂无数据</div>
       </li>
     </ul>
@@ -142,7 +144,12 @@ export default {
       }
     };
   },
-  mounted: function() {
+  created() {
+    this.$store.commit("setData", {
+      loading: true
+    });
+  },
+  mounted() {
     this.$store.commit("setData", {
       postList: [],
       hasNext: false,
@@ -265,7 +272,7 @@ export default {
 .post-list {
   background: #fff;
   min-height: calc(100vh - 160px);
-  padding: 10px 20px 0;
+  padding: 20px 20px 0;
   margin-bottom: 0;
 }
 
@@ -306,7 +313,7 @@ export default {
   text-align: center;
   color: #888;
   font-size: 14px;
-  padding-bottom: 20px;
+  padding: 10px;
   -webkit-user-select: none;
   user-select: none;
 }
@@ -315,59 +322,102 @@ export default {
   text-align: center;
   color: #888;
   font-size: 14px;
-  margin-top: 30px;
+  margin: 20px 0;
   -webkit-user-select: none;
   user-select: none;
 }
 
-.first-loading {
-  text-align: center;
-  color: #888;
-  font-size: 14px;
-  margin-top: 30px;
-  -webkit-user-select: none;
-  user-select: none;
-}
-
-.icon-loading {
-  -webkit-animation: icon-loading 1s linear infinite;
-  animation: icon-loading 1s linear infinite;
-  position: relative;
-  top: -1px;
-}
-
-@-webkit-keyframes icon-loading {
+@-webkit-keyframes dot-loading {
   0% {
-    -webkit-transform: rotate(0deg);
-    transform: rotate(0deg);
+    -webkit-transform: scale(1, 1);
+    transform: scale(1, 1);
+    opacity: 0.5;
   }
 
-  50% {
-    -webkit-transform: rotate(180deg);
-    transform: rotate(180deg);
+  33.33% {
+    -webkit-transform: scale(1.667, 1.667);
+    transform: scale(1.667, 1.667);
+    opacity: 1;
   }
 
-  to {
-    -webkit-transform: rotate(1turn);
-    transform: rotate(1turn);
+  66.66% {
+    -webkit-transform: scale(1, 1);
+    transform: scale(1, 1);
+    opacity: 0.5;
+  }
+
+  100% {
+    -webkit-transform: scale(1, 1);
+    transform: scale(1, 1);
+    opacity: 0.5;
   }
 }
 
-@keyframes icon-loading {
+@keyframes dot-loading {
   0% {
-    -webkit-transform: rotate(0deg);
-    transform: rotate(0deg);
+    -webkit-transform: scale(1, 1);
+    transform: scale(1, 1);
+    opacity: 0.5;
   }
 
-  50% {
-    -webkit-transform: rotate(180deg);
-    transform: rotate(180deg);
+  33.33% {
+    -webkit-transform: scale(1.667, 1.667);
+    transform: scale(1.667, 1.667);
+    opacity: 1;
   }
 
-  to {
-    -webkit-transform: rotate(1turn);
-    transform: rotate(1turn);
+  66.66% {
+    -webkit-transform: scale(1, 1);
+    transform: scale(1, 1);
+    opacity: 0.5;
   }
+
+  100% {
+    -webkit-transform: scale(1, 1);
+    transform: scale(1, 1);
+    opacity: 0.5;
+  }
+}
+
+.dot-loading {
+  transform: translate(-50%, 0);
+  position: absolute;
+  left: 50%;
+  width: 70px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 10px;
+}
+
+.post-list li.last-li:first-of-type .dot-loading {
+  margin-top: 10px;
+}
+
+.dot-loading > div {
+  width: 6px;
+  height: 6px;
+  border-radius: 100%;
+  opacity: 0.5;
+  -webkit-animation: dot-loading 1.2s linear infinite;
+  animation: dot-loading 1.2s linear infinite;
+}
+
+.dot-loading > div:nth-child(1) {
+  background: #fe3c71;
+}
+
+.dot-loading > div:nth-child(2) {
+  background: #fe686c;
+  -webkit-animation-delay: 0.4s;
+  animation-delay: 0.4s;
+}
+
+.dot-loading > div:nth-child(3) {
+  background: #fe7f6a;
+  -webkit-animation-delay: 0.8s;
+  animation-delay: 0.8s;
 }
 
 .ivu-picker-panel-body-wrapper {
@@ -432,5 +482,10 @@ export default {
   font-size: 13px;
   text-align: center;
   padding: 25px 0 10px;
+}
+
+.last-li {
+  position: relative;
+  height: 60px;
 }
 </style>
