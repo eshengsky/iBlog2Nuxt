@@ -39,22 +39,25 @@
         <Button @click="search">搜索</Button>
       </div>
     </div>
-    <ul class="post-list" v-if="posts.length > 0">
+    <ul class="post-list">
       <li v-for="item in posts" :key="item._id">
         <post-item :post="item"></post-item>
       </li>
       <li>
         <Button
           class="btn-load"
+          size="large"
           @click="loadNext"
           v-if="posts.length > 0 && hasNext"
           :loading="loading"
         >下一页</Button>
-        <div class="no-more" v-if="posts.length > 0 && !hasNext">没有更多数据</div>
+        <div class="no-more" v-else-if="posts.length > 0 && !hasNext">没有更多数据</div>
+        <div class="first-loading" v-else-if="loading">
+          <Icon type="ios-loading" size="16" class="icon-loading"></Icon> 加载中...
+        </div>
+        <div class="no-data" v-else>暂无数据</div>
       </li>
     </ul>
-    <div class="first-loading" v-else-if="loading">加载中...</div>
-    <div class="no-data" v-else>暂无数据</div>
     <footer class="copyright">2019 © All Rights Reserved | 浙ICP备15032882号 | 后台管理</footer>
     <Drawer
       :title="article.title"
@@ -315,6 +318,56 @@ export default {
   margin-top: 30px;
   -webkit-user-select: none;
   user-select: none;
+}
+
+.first-loading {
+  text-align: center;
+  color: #888;
+  font-size: 14px;
+  margin-top: 30px;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.icon-loading {
+  -webkit-animation: icon-loading 1s linear infinite;
+  animation: icon-loading 1s linear infinite;
+  position: relative;
+  top: -1px;
+}
+
+@-webkit-keyframes icon-loading {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+
+  50% {
+    -webkit-transform: rotate(180deg);
+    transform: rotate(180deg);
+  }
+
+  to {
+    -webkit-transform: rotate(1turn);
+    transform: rotate(1turn);
+  }
+}
+
+@keyframes icon-loading {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+
+  50% {
+    -webkit-transform: rotate(180deg);
+    transform: rotate(180deg);
+  }
+
+  to {
+    -webkit-transform: rotate(1turn);
+    transform: rotate(1turn);
+  }
 }
 
 .ivu-picker-panel-body-wrapper {
