@@ -12,7 +12,12 @@
         <blockquote v-if="article.summary">{{ article.summary }}</blockquote>
         <div class="article-content" v-html="article.html"></div>
       </main>
-      <div>Comments here</div>
+      <div class="comments-wrap">
+        <div>{{ JSON.stringify($auth.$state) }}</div>
+        <div @click="loginWithGithub">登录</div>
+        <div @click="$auth.logout()">退出</div>
+        <button @click="test">get data</button>
+      </div>
     </article>
     <aside>Menu</aside>
   </div>
@@ -23,7 +28,15 @@ import "highlight.js/styles/tomorrow.css";
 export default {
   computed: mapState({
     article: state => state.article
-  })
+  }),
+  methods: {
+    loginWithGithub() {
+      this.$auth.loginWith('github');
+    },
+    test() {
+      console.log(this.$auth)
+    }
+  }
 };
 </script>
 <style scoped>

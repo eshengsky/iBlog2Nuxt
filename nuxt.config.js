@@ -15,6 +15,10 @@ module.exports = {
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
     ]
   },
+  server: {
+    port: 8000,
+    host: 'localhost',
+  },
   serverMiddleware: [
     { path: '/api', handler: '~/server/api.js' }
   ],
@@ -42,8 +46,20 @@ module.exports = {
   modules: [
     // Doc: https://axios.nuxtjs.org/usage
     '@nuxtjs/axios',
-    '@nuxtjs/pwa'
+    // '@nuxtjs/pwa',
+    '@nuxtjs/auth'
   ],
+  auth: {
+    redirect: {
+      callback: '/callback'
+    },
+    strategies: {
+      github: {
+        client_id: '7dc9bb0e0fd4e9a92de9',
+        client_secret: 'a3d9f400defcee58bef9ce90f5e8ddf3bb71c6bf'
+      },
+    }
+  },
   /*
   ** Axios module configuration
   ** See https://axios.nuxtjs.org/options
