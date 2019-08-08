@@ -51,7 +51,7 @@ module.exports = {
   ],
   auth: {
     redirect: {
-      callback: '/callback'
+      callback: '/auth/github/callback'
     },
     strategies: {
       github: {
