@@ -14,7 +14,8 @@ export default {
         drawer: false,
         filterType: 'text',
         keyword: '',
-        sortBy: 'date'
+        sortBy: 'date',
+        user: null
     }),
 
     mutations: {

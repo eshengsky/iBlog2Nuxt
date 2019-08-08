@@ -13,10 +13,20 @@
         <div class="article-content" v-html="article.html"></div>
       </main>
       <div class="comments-wrap">
-        <div>{{ JSON.stringify($auth.$state) }}</div>
-        <div @click="loginWithGithub">登录</div>
-        <div @click="$auth.logout()">退出</div>
-        <button @click="test">get data</button>
+        <div>
+          <div>共xx条评论</div>
+          <div v-if="user">
+            {{ user.displayName }}
+            <a href="/logout">退出</a>
+          </div>
+          <div v-else>
+            <a href="/auth/github">登录</a> 后才可评论
+          </div>
+        </div>
+        <div v-if="user">
+          <editor v-model="editorText" :options="editorOptions" />
+          <Button @click="postComment">评论</Button>
+        </div>
       </div>
     </article>
     <aside>Menu</aside>
@@ -26,20 +36,42 @@
 import { mapState } from "vuex";
 import "highlight.js/styles/tomorrow.css";
 export default {
+  data() {
+    return {
+      editorText: "",
+      editorOptions: {
+        hideModeSwitch: true,
+        language: 'zh_CN',
+        toolbarItems: [
+          "bold",
+          "italic",
+          "strike",
+          "divider",
+          "ul",
+          "ol",
+          "divider",
+          "table",
+          "image",
+          "link",
+          "divider",
+          "code",
+          "codeblock"
+        ]
+      }
+    };
+  },
   computed: mapState({
-    article: state => state.article
+    article: state => state.article,
+    user: state => state.user
   }),
   methods: {
-    loginWithGithub() {
-      this.$auth.loginWith('github');
-    },
-    test() {
-      console.log(this.$auth)
+    postComment() {
+      console.log(this.editorText)
     }
   }
 };
 </script>
-<style scoped>
+<style>
 .detail-wrap {
   background: #f3f3f4;
   min-height: 100vh;
@@ -59,8 +91,8 @@ export default {
 }
 
 .article-title {
-    margin: 40px 0 100px;
-    text-align: center;
+  margin: 40px 0 100px;
+  text-align: center;
 }
 
 .article-title span {
@@ -68,11 +100,19 @@ export default {
 }
 
 .article-title h1 {
-    font-size: 25px;
-    font-weight: 500;
+  font-size: 25px;
+  font-weight: 500;
 }
 
 .article-content {
   font-family: Consolas, "Courier New", monospace;
+}
+
+.tui-editor-defaultUI .te-tab button {
+  height: 32px;
+}
+
+.te-markdown-tab-section .te-tab {
+  margin-left: 12px;
 }
 </style>
