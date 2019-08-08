@@ -48,7 +48,6 @@ module.exports = {
     // Doc: https://axios.nuxtjs.org/usage
     '@nuxtjs/axios',
     // '@nuxtjs/pwa',
-    '@nuxtjs/auth'
   ],
   auth: {
     redirect: {
