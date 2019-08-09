@@ -15,7 +15,9 @@ export default {
         filterType: 'text',
         keyword: '',
         sortBy: 'date',
-        user: null
+        user: null,
+        commentList: [],
+        commentCount: 0
     }),
 
     mutations: {
@@ -100,6 +102,40 @@ export default {
             commit('setData', {
                 article
             });
+        },
+
+        async getCommentList({ commit, state }) {
+            let commentList = [];
+            let commentCount = 0;
+            try {
+                const { data } = await this.$axios.$get('/api/getComments', {
+                    params: {
+                        articleId: state.article._id
+                    }
+                });
+                commentList = data.commentList;
+                commentCount = data.commentCount;
+            } catch (err) {
+                console.error(err);
+            }
+            commit('setData', {
+                commentList,
+                commentCount
+            });
+        }, 
+
+        async saveComment({ state }, payload) {
+            try {
+                await this.$axios.$post('/api/saveComment', {
+                    articleId: state.article._id,
+                    username: state.user.username,
+                    displayName: state.user.displayName,
+                    avatar: state.user._json.avatar_url,
+                    content: payload.content
+                });
+            } catch (err) {
+                console.error(err);
+            }
         }
     }
 }

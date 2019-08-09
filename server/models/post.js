@@ -40,7 +40,7 @@ const PostSchema = new mongoose.Schema(Object.assign({}, BaseSchema.obj, {
     // 是否有效
     isActive: { type: Boolean, default: true }
 }), {
-        // 设置查询时默认返回上述虚拟字段
+        // 设置查询时默认返回虚拟字段
         toJSON: { virtuals: true },
         toObject: { virtuals: true }
     });

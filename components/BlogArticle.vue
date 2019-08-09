@@ -13,19 +13,52 @@
         <div class="article-content" v-html="article.html"></div>
       </main>
       <div class="comments-wrap">
-        <div>
-          <div>共xx条评论</div>
+        <div class="comments-top">
+          <div>
+            <span v-if="commentCount === 0">暂无评论</span>
+            <span v-else>共{{ commentCount }}条评论</span>
+          </div>
           <div v-if="user">
             {{ user.displayName }}
             <a href="/logout">退出</a>
           </div>
           <div v-else>
-            <a href="/auth/github">登录</a> 后才可评论
+            <a href="/auth/github">登录</a>后才可评论
           </div>
         </div>
-        <div v-if="user">
-          <editor v-model="editorText" :options="editorOptions" />
-          <Button @click="postComment">评论</Button>
+        <div class="post-wrap" v-if="user">
+          <div class="avatar"><img :src="user._json.avatar_url" /></div>
+          <div class="editor-wrap">
+            <editor ref="editor" v-model="editorText" height="150px" :options="editorOptions" />
+            <div class="comment-btn-wrap">
+              <Tooltip content="支持除标题外的其它Markdown语法" transfer>
+                <a href="https://www.jianshu.com/p/191d1e21f7ed" target="_blank">
+                  <font-awesome-icon :icon="['fab', 'markdown']" style="font-size: 14px"></font-awesome-icon>
+                </a>
+              </Tooltip>
+              <Button type="primary" size="large" @click="postComment">
+                <font-awesome-icon :icon="['far', 'paper-plane']"></font-awesome-icon> 评论
+              </Button>
+            </div>
+          </div>
+        </div>
+        <div class="comment-list">
+          <ul>
+            <li class="comment-item" v-for="comment in commentList" :key="comment._id">
+              <div class="avatar"><img :src="comment.avatar" /></div>
+              <div class="comment-right">
+                <div>
+                  <a
+                    :href="`https://github.com/${comment.username}`"
+                    target="_blank"
+                    :title="comment.username"
+                  >{{ comment.displayName }}</a>
+                  {{ comment.commentTimeStr }}
+                </div>
+                <viewer :value="comment.content" />
+              </div>
+            </li>
+          </ul>
         </div>
       </div>
     </article>
@@ -41,7 +74,7 @@ export default {
       editorText: "",
       editorOptions: {
         hideModeSwitch: true,
-        language: 'zh_CN',
+        language: "zh_CN",
         toolbarItems: [
           "bold",
           "italic",
@@ -62,11 +95,23 @@ export default {
   },
   computed: mapState({
     article: state => state.article,
-    user: state => state.user
+    user: state => state.user,
+    commentList: state => state.commentList,
+    commentCount: state => state.commentCount
   }),
+  created() {
+    this.$store.dispatch("getCommentList");
+  },
   methods: {
-    postComment() {
-      console.log(this.editorText)
+    async postComment() {
+      const content = this.editorText.trim();
+      if (!content) {
+        return this.$refs.editor.invoke("focus");
+      }
+      await this.$store.dispatch("saveComment", {
+        content
+      });
+      this.$store.dispatch("getCommentList");
     }
   }
 };
@@ -114,5 +159,93 @@ export default {
 
 .te-markdown-tab-section .te-tab {
   margin-left: 12px;
+}
+
+.comments-wrap {
+  font-size: 14px;
+}
+
+.tui-tooltip {
+  border-radius: 4px;
+}
+
+.tui-editor-defaultUI .CodeMirror-lines {
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.tui-editor-defaultUI .CodeMirror-line {
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.tui-toolbar-icons:disabled {
+  display: none;
+}
+
+.tui-toolbar-icons:disabled + .tui-toolbar-divider {
+  display: none;
+}
+
+.CodeMirror pre {
+  line-height: 1.6;
+}
+
+.comment-btn-wrap {
+  display: -webkit-flex;
+  display: flex;
+  justify-content: space-between;
+  border-color: #e5e5e5;
+  border-style: solid;
+  border-width: 0 1px 1px;
+  align-items: center;
+  padding: 6px 10px;
+}
+
+.comment-btn-wrap div {
+  font-size: 12px;
+  color: #666;
+}
+
+.comments-top {
+  display: -webkit-flex;
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 3px double #eee;
+  margin-bottom: 30px;
+  padding-bottom: 15px;
+}
+
+.post-wrap {
+  display: -webkit-flex;
+  display: flex;
+}
+
+.avatar {
+  width: 60px;
+  height: 60px;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.avatar img {
+  transition: transform .2s;
+}
+
+.avatar img:hover {
+  transform: scale(1.2);
+}
+
+.editor-wrap {
+  flex: auto;
+  margin-left: 20px;
+}
+
+.comment-item {
+  display: flex;
+}
+
+.comment-right {
+  margin-left: 20px;
 }
 </style>

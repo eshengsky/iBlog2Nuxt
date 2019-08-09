@@ -1,4 +1,5 @@
 const express = require('express');
+const bodyParser = require('body-parser');
 const session = require('express-session');
 const consola = require('consola');
 const mongoose = require('mongoose');
@@ -63,6 +64,8 @@ async function start() {
     await nuxt.ready()
   }
 
+  app.use(bodyParser.json());
+  app.use(bodyParser.urlencoded({ extended: false }));
   app.use(session({ secret: 'iblog2commentsauthsecret', resave: false, saveUninitialized: false }));
   app.use(passport.initialize());
   app.use(passport.session());

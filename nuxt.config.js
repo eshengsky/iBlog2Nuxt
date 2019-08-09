@@ -39,7 +39,8 @@ module.exports = {
   plugins: [
     '@/plugins/iview',
     '@/plugins/font-awesome',
-    { src: '@/plugins/tui-editor', ssr: false }
+    { src: '@/plugins/tui-editor', ssr: false },
+    { src: '@/plugins/tui-viewer', ssr: false }
   ],
   /*
   ** Nuxt.js modules
