@@ -4,9 +4,6 @@ const moment = require('moment');
 const BaseSchema = base.BaseSchema;
 
 const CommentSchema = new mongoose.Schema(Object.assign({}, BaseSchema.obj, {
-    // 评论对应的文章ID
-    articleId: { type: mongoose.Schema.Types.ObjectId },
-
     // 评论者用户名
     username: { type: String },
 
@@ -17,7 +14,10 @@ const CommentSchema = new mongoose.Schema(Object.assign({}, BaseSchema.obj, {
     avatar: { type: String },
 
     // 评论内容
-    content: { type: String }
+    content: { type: String },
+
+    // 回复列表
+    comments: [CommentSchema]
 }), {
         // 设置查询时默认返回虚拟字段
         toJSON: { virtuals: true },
@@ -28,4 +28,4 @@ const CommentSchema = new mongoose.Schema(Object.assign({}, BaseSchema.obj, {
 CommentSchema.virtual('commentTimeStr').get(function () {
     return moment(this.createTime).format('YYYY-MM-DD hh:mm:ss');
 });
-module.exports = mongoose.model('comment', CommentSchema, 'comment');
+module.exports = CommentSchema;

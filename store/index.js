@@ -128,6 +128,7 @@ export default {
             try {
                 await this.$axios.$post('/api/saveComment', {
                     articleId: state.article._id,
+                    parentId: '',
                     username: state.user.username,
                     displayName: state.user.displayName,
                     avatar: state.user._json.avatar_url,

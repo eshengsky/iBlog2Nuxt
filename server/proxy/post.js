@@ -95,3 +95,23 @@ exports.getArticle = async (params) => {
         article
     };
 }
+
+exports.saveComment = async (params) => {
+    try {
+        const articleId = params.articleId;
+        const postEntry = await PostModel.findById(articleId).exec();
+        const username = params.username;
+        const displayName = params.displayName;
+        const avatar = params.avatar;
+        const content = params.content;
+        postEntry.comments.unshift({
+            username,
+            displayName,
+            avatar,
+            content
+        });
+        postEntry.save();
+    } catch (err) {
+        console.error(err);
+    }
+}

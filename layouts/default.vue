@@ -74,7 +74,6 @@ p {
 }
 
 a {
-  color: #444;
   text-decoration: none;
   background-color: transparent;
 }
@@ -88,6 +87,10 @@ img {
 pre,
 code {
   font-family: Consolas, "Courier New", monospace;
+}
+
+pre {
+  display: block;
 }
 
 pre.hljs {

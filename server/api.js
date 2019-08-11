@@ -37,7 +37,7 @@ router.get('/getComments', async (req, res, next) => {
 });
 
 router.post('/saveComment', async (req, res, next) => {
-    await commentProxy.saveComment(req.body);
+    await postProxy.saveComment(req.body);
     res.json({
         code: '1'
     });

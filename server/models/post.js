@@ -5,6 +5,7 @@ const mongoose = require('mongoose');
 const MarkdownIt = require('markdown-it');
 const hljs = require('highlight.js');
 const BaseSchema = base.BaseSchema;
+const CommentSchema = require('./comment');
 
 const PostSchema = new mongoose.Schema(Object.assign({}, BaseSchema.obj, {
     // 标题
@@ -38,7 +39,10 @@ const PostSchema = new mongoose.Schema(Object.assign({}, BaseSchema.obj, {
     isDraft: { type: Boolean, default: false },
 
     // 是否有效
-    isActive: { type: Boolean, default: true }
+    isActive: { type: Boolean, default: true },
+
+    // 评论列表
+    comments: [CommentSchema]
 }), {
         // 设置查询时默认返回虚拟字段
         toJSON: { virtuals: true },
