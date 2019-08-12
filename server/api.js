@@ -1,6 +1,5 @@
 const categoryProxy = require('./proxy/category');
 const postProxy = require('./proxy/post');
-const commentProxy = require('./proxy/comment');
 const express = require('express');
 const router = express.Router();
 
@@ -22,14 +21,6 @@ router.get('/posts', async (req, res, next) => {
 
 router.get('/article', async (req, res, next) => {
     const data = await postProxy.getArticle(req.query);
-    res.json({
-        code: '1',
-        data
-    });
-});
-
-router.get('/getComments', async (req, res, next) => {
-    const data = await commentProxy.getComments(req.query);
     res.json({
         code: '1',
         data

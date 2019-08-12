@@ -1,9 +1,7 @@
-const base = require('./base');
 const mongoose = require('mongoose');
 const moment = require('moment');
-const BaseSchema = base.BaseSchema;
 
-const CommentSchema = new mongoose.Schema(Object.assign({}, BaseSchema.obj, {
+const CommentSchema = new mongoose.Schema({
     // 评论者用户名
     username: { type: String },
 
@@ -14,8 +12,14 @@ const CommentSchema = new mongoose.Schema(Object.assign({}, BaseSchema.obj, {
     avatar: { type: String },
 
     // 评论内容
-    content: { type: String }
-}), {
+    content: { type: String },
+
+    // 创建时间
+    createTime: { type: Date, default: new Date() },
+
+    // 修改时间
+    modifyTime: { type: Date, default: new Date() }
+}, {
         // 设置查询时默认返回虚拟字段
         toJSON: { virtuals: true },
         toObject: { virtuals: true }
@@ -28,6 +32,6 @@ CommentSchema.add({
 
 // 虚拟字段：评论时间字符串
 CommentSchema.virtual('commentTimeStr').get(function () {
-    return moment(this.createTime).format('YYYY-MM-DD hh:mm:ss');
+    return moment(this.createTime).format('YYYY年MM月DD日 hh:mm:ss');
 });
 module.exports = CommentSchema;
