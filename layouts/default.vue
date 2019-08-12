@@ -82,6 +82,8 @@ img {
   vertical-align: middle;
   border-style: none;
   max-width: 100%;
+  -webkit-user-select: none;
+  user-select: none;
 }
 
 pre,

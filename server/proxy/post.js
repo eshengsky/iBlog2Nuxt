@@ -104,7 +104,15 @@ exports.saveComment = async (params) => {
         const displayName = params.displayName;
         const avatar = params.avatar;
         const content = params.content;
-        postEntry.comments.unshift({
+        const pathId = params.pathId;
+        let parentComments = postEntry.comments;
+        if (pathId) {
+            const commentIdArr = pathId.split('>');
+            commentIdArr.forEach(commentId => {
+                parentComments = parentComments.id(commentId).comments;
+            });
+        }
+        parentComments.unshift({
             username,
             displayName,
             avatar,

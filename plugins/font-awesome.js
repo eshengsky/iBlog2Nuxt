@@ -7,11 +7,12 @@ import {
 } from '@fortawesome/free-regular-svg-icons';
 import {
     faMapSigns,
-    faSearch
+    faSearch,
+    faReply
 } from '@fortawesome/free-solid-svg-icons';
 import {
     faMarkdown
 } from '@fortawesome/free-brands-svg-icons'
 config.autoAddCss = false;
-library.add(faClock, faMapSigns, faSearch, faMarkdown, faPaperPlane);
+library.add(faClock, faMapSigns, faSearch, faMarkdown, faPaperPlane, faReply);
 Vue.component('font-awesome-icon', FontAwesomeIcon);
