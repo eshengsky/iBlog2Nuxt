@@ -16,8 +16,7 @@ export default {
         keyword: '',
         sortBy: 'date',
         user: null,
-        commentList: [],
-        commentCount: 0
+        guestbook: []
     }),
 
     mutations: {
@@ -104,10 +103,37 @@ export default {
             });
         },
 
+        async getGuestbook({ commit, state }) {
+            let guestbook = [];
+            try {
+                const { data } = await this.$axios.$get('/api/guestbook');
+                guestbook = data.guestbook;
+            } catch (err) {
+                console.error(err);
+            }
+            commit('setData', {
+                guestbook
+            });
+        },
+
         async saveComment({ state }, payload) {
             try {
                 await this.$axios.$post('/api/saveComment', {
                     articleId: state.article._id,
+                    username: state.user.username,
+                    displayName: state.user.displayName,
+                    avatar: state.user._json.avatar_url,
+                    pathId: payload.pathId,
+                    content: payload.content
+                });
+            } catch (err) {
+                console.error(err);
+            }
+        },
+
+        async saveGuestbook({ state }, payload) {
+            try {
+                await this.$axios.$post('/api/saveGuestbook', {
                     username: state.user.username,
                     displayName: state.user.displayName,
                     avatar: state.user._json.avatar_url,

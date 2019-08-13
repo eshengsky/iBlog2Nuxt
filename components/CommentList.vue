@@ -2,9 +2,10 @@
   <div class="comments-wrap">
     <div class="comments-top">
       <div class="comments-top-left">
-        <span v-if="commentCount === 0">暂无评论</span>
+        <span v-if="commentCount === 0">暂无{{ commentName }}</span>
         <span v-else>
-          <span style="margin: 0 1px;">{{ commentCount }}</span>条评论
+          <span style="margin: 0 1px;">{{ commentCount }}</span>
+          条{{ commentName }}
         </span>
       </div>
       <div class="comments-top-right">
@@ -13,7 +14,8 @@
           <a href="/logout">退出</a>
         </template>
         <template v-else>
-          <a href="/auth/github">登录</a>后才可评论
+          <a href="/auth/github">登录</a>
+          后才可{{ commentName }}
         </template>
       </div>
     </div>
@@ -40,13 +42,13 @@
           </Tooltip>
           <Button type="primary" size="large" @click="postComment">
             <font-awesome-icon :icon="['far', 'paper-plane']"></font-awesome-icon>
-            <span>评论</span>
+            <span>{{ commentName }}</span>
           </Button>
         </div>
       </div>
     </div>
     <div class="comment-list">
-      <div class="editor-wrap editor-reply">
+      <div class="editor-wrap editor-reply" v-show="isEditorReplyShown">
         <editor
           ref="editorReply"
           v-model="editorReplyText"
@@ -156,15 +158,33 @@
 import { mapState } from "vuex";
 import { setTimeout } from "timers";
 export default {
+  props: ["comments", "from"],
   data() {
     return {
       editorText: "",
       editorReplyText: "",
+      isEditorReplyShown: true,
       pathId: "",
-      editorOptions: {
+      editorReplyOptions: {
         hideModeSwitch: true,
         language: "zh_CN",
-        placeholder: "输入评论内容",
+        placeholder: "输入回复内容",
+        toolbarItems: []
+      }
+    };
+  },
+  computed: {
+    ...mapState({
+      user: state => state.user
+    }),
+    commentName() {
+      return this.from === 2 ? "评论" : "留言";
+    },
+    editorOptions() {
+      return {
+        hideModeSwitch: true,
+        language: "zh_CN",
+        placeholder: `输入${this.commentName}内容`,
         toolbarItems: [
           "bold",
           "italic",
@@ -180,21 +200,11 @@ export default {
           "code",
           "codeblock"
         ]
-      },
-      editorReplyOptions: {
-        hideModeSwitch: true,
-        language: "zh_CN",
-        placeholder: "输入回复内容",
-        toolbarItems: []
-      }
-    };
-  },
-  computed: mapState({
-    user: state => state.user,
-    comments: state => state.article.comments,
-    commentCount: state => {
+      };
+    },
+    commentCount() {
       let total = 0;
-      let comments = state.article.comments;
+      let comments = this.comments;
       const getCount = comments => {
         total += comments.length;
         comments.forEach(item => {
@@ -204,10 +214,10 @@ export default {
       getCount(comments);
       return total;
     }
-  }),
+  },
   mounted() {
     // 回复框需默认显示，此处再手动设为隐藏，以确保tui-editor渲染正常
-    document.querySelector(".editor-reply").style.display = "none";
+    this.isEditorReplyShown = false;
   },
   methods: {
     async postComment() {
@@ -215,11 +225,27 @@ export default {
       if (!content) {
         return this.$refs.editor.invoke("focus");
       }
-      await this.$store.dispatch("saveComment", {
+      await this.saveComment({
         content
       });
-      this.$store.dispatch("getArticle");
+      this.getLatestData();
       this.editorText = "";
+    },
+
+    getLatestData() {
+      if (this.from === 1) {
+        this.$store.dispatch("getGuestbook");
+      } else {
+        this.$store.dispatch("getArticle");
+      }
+    },
+
+    saveComment(data) {
+      if (this.from === 1) {
+        this.$store.dispatch("saveGuestbook", data);
+      } else {
+        this.$store.dispatch("saveComment", data);
+      }
     },
 
     onEditorLoad() {
@@ -273,16 +299,14 @@ export default {
       }
       const replyEl = document.querySelector(".editor-reply");
       linkEl.parentElement.parentElement.appendChild(replyEl);
-      replyEl.style.display = "block";
+      this.isEditorReplyShown = true;
       setTimeout(() => {
-        console.log(this.$refs.editorReply);
         this.$refs.editorReply.invoke("focus");
       }, 0);
     },
 
     hideReply() {
-      const replyEl = document.querySelector(".editor-reply");
-      replyEl.style.display = "none";
+      this.isEditorReplyShown = false;
     },
 
     async sendReply() {
@@ -290,11 +314,11 @@ export default {
       if (!content) {
         return this.$refs.editorReply.invoke("focus");
       }
-      await this.$store.dispatch("saveComment", {
+      await this.saveComment({
         content,
         pathId: this.pathId
       });
-      this.$store.dispatch("getArticle");
+      this.getLatestData();
       this.editorReplyText = "";
       setTimeout(() => {
         this.hideReply();
@@ -374,6 +398,7 @@ export default {
   display: -webkit-flex;
   display: flex;
   justify-content: space-between;
+  background: #fff;
   border-color: #e5e5e5;
   border-style: solid;
   border-width: 0 1px 1px;

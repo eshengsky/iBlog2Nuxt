@@ -12,7 +12,7 @@
         <blockquote v-if="article.summary">{{ article.summary }}</blockquote>
         <div class="article-content" v-html="article.html"></div>
       </main>
-      <comment-list></comment-list>
+      <comment-list :comments="article.comments" :from="2"></comment-list>
     </article>
     <aside>Menu</aside>
   </div>
