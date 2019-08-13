@@ -234,18 +234,16 @@ export default {
 
     getLatestData() {
       if (this.from === 1) {
-        this.$store.dispatch("getGuestbook");
-      } else {
-        this.$store.dispatch("getArticle");
+        return this.$store.dispatch("getGuestbook");
       }
+      return this.$store.dispatch("getArticle");
     },
 
     saveComment(data) {
       if (this.from === 1) {
-        this.$store.dispatch("saveGuestbook", data);
-      } else {
-        this.$store.dispatch("saveComment", data);
+        return this.$store.dispatch("saveGuestbook", data);
       }
+      return this.$store.dispatch("saveComment", data);
     },
 
     onEditorLoad() {

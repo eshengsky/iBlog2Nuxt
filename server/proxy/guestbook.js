@@ -37,7 +37,7 @@ exports.saveGuestbook = async (params) => {
                 }
             });
             parentComments.unshift(item);
-            rootComment.save();
+            await rootComment.save();
         } else {
             const newItem = new GuestbookModel(item)
             newItem.save();
