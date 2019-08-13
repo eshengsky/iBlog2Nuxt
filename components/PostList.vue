@@ -99,13 +99,13 @@ export default {
       dateOpts: {
         shortcuts: [
           {
-            text: "今天发布",
+            text: "今天",
             value() {
               return [new Date(), new Date()];
             }
           },
           {
-            text: "本周发布",
+            text: "本周",
             value() {
               const end = new Date();
               const start = new Date();
@@ -114,7 +114,7 @@ export default {
             }
           },
           {
-            text: "本月发布",
+            text: "本月",
             value() {
               const end = new Date();
               const start = new Date();
@@ -123,7 +123,7 @@ export default {
             }
           },
           {
-            text: "今年发布",
+            text: "今年",
             value() {
               const end = new Date();
               const start = new Date();

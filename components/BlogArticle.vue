@@ -64,7 +64,7 @@ export default {
 }
 
 .article-main {
-  /* min-height: 500px; */
+  min-height: 500px;
 }
 
 .article-content {

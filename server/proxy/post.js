@@ -112,11 +112,14 @@ exports.saveComment = async (params) => {
                 parentComments = parentComments.id(commentId).comments;
             });
         }
+        const now = new Date();
         parentComments.unshift({
             username,
             displayName,
             avatar,
-            content
+            content,
+            createTime: now,
+            modifyTime: now
         });
         postEntry.save();
     } catch (err) {

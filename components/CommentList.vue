@@ -193,7 +193,16 @@ export default {
     user: state => state.user,
     comments: state => state.article.comments,
     commentCount: state => {
-      return state.article.comments.length;
+      let total = 0;
+      let comments = state.article.comments;
+      const getCount = comments => {
+        total += comments.length;
+        comments.forEach(item => {
+          getCount(item.comments);
+        });
+      };
+      getCount(comments);
+      return total;
     }
   }),
   mounted() {
