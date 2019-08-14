@@ -34,7 +34,7 @@
           @blur="onEditorBlur"
         />
         <div class="comment-btn-wrap">
-          <Tooltip content="支持除标题外的其它Markdown语法" transfer>
+          <Tooltip content="显示Markdown速查表" transfer>
             <a @click="mcsShow = true">
               <font-awesome-icon :icon="['fab', 'markdown']" style="font-size: 14px"></font-awesome-icon>
               <span>支持Markdown语法</span>
@@ -59,7 +59,7 @@
           @blur="onEditorReplyBlur"
         />
         <div class="comment-btn-wrap">
-          <Tooltip content="支持除标题外的其它Markdown语法" transfer>
+          <Tooltip content="显示Markdown速查表" transfer>
             <a @click="mcsShow = true">
               <font-awesome-icon :icon="['fab', 'markdown']" style="font-size: 14px"></font-awesome-icon>
               <span>支持Markdown语法</span>
@@ -153,6 +153,7 @@
       </ul>
     </div>
     <Modal v-model="mcsShow" title="Markdown 速查表" width="630">
+      <Alert type="warning" show-icon closable>评论及留言不支持1~4级标题。</Alert>
       <md-cheat-sheet></md-cheat-sheet>
       <div slot="footer">
         <Button type="primary" size="large" @click="mcsShow = false">关闭</Button>
@@ -163,7 +164,6 @@
 <script>
 import MdCheatSheet from "~/components/MdCheatSheet.vue";
 import { mapState } from "vuex";
-import { setTimeout } from "timers";
 export default {
   components: {
     MdCheatSheet
@@ -239,6 +239,7 @@ export default {
       await this.saveComment({
         content
       });
+      this.$Message.success(`${this.commentName}成功`);
       this.getLatestData();
       this.editorText = "";
     },
@@ -309,9 +310,9 @@ export default {
       const replyEl = document.querySelector(".editor-reply");
       linkEl.parentElement.parentElement.appendChild(replyEl);
       this.isEditorReplyShown = true;
-      setTimeout(() => {
+      this.$nextTick(() => {
         this.$refs.editorReply.invoke("focus");
-      }, 0);
+      });
     },
 
     hideReply() {
@@ -327,6 +328,7 @@ export default {
         content,
         pathId: this.pathId
       });
+      this.$Message.success('回复成功');
       this.getLatestData();
       this.editorReplyText = "";
       setTimeout(() => {
@@ -386,10 +388,10 @@ export default {
   box-shadow: inset 0 0 3px 2px rgba(45, 140, 240, 0.2);
 }
 
-.tui-editor-contents h1,
-.tui-editor-contents h2,
-.tui-editor-contents h3,
-.tui-editor-contents h4 {
+.comments-wrap .tui-editor-contents h1,
+.comments-wrap .tui-editor-contents h2,
+.comments-wrap .tui-editor-contents h3,
+.comments-wrap .tui-editor-contents h4 {
   font-weight: bold;
   font-size: 1rem;
   line-height: 17px;
@@ -397,6 +399,10 @@ export default {
   color: #333;
   border: 0;
   padding: 0;
+}
+
+.tui-editor-contents h4 {
+  font-weight: bold;
 }
 
 .tui-editor-contents .task-list-item {
@@ -576,6 +582,7 @@ export default {
 }
 
 .comment-footer {
+  margin-top: 10px;
   -webkit-user-select: none;
   user-select: none;
 }
