@@ -201,11 +201,14 @@ export default {
           "italic",
           "strike",
           "divider",
+          "hr",
+          "quote",
+          "divider",
           "ul",
           "ol",
+          "task",
           "divider",
           "table",
-          "image",
           "link",
           "divider",
           "code",
@@ -466,11 +469,11 @@ export default {
 }
 
 .avatar img {
-  transition: transform 0.2s;
+  transition: transform 0.5s;
 }
 
 .avatar img:hover {
-  transform: scale(1.2);
+  transform: scale(1.3);
 }
 
 .editor-wrap {

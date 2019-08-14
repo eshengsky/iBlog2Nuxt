@@ -114,8 +114,8 @@
             <code v-html="link"></code>
           </td>
           <td>
-						<viewer :value="link.replace(/<br>/g, '')" />
-					</td>
+            <viewer :value="link.replace(/<br>/g, '')" />
+          </td>
         </tr>
         <tr>
           <td>图片</td>
@@ -123,8 +123,8 @@
             <code v-html="image"></code>
           </td>
           <td>
-						<viewer :value="image.replace(/<br>/g, '')" />
-					</td>
+            <viewer :value="image.replace(/<br>/g, '')" />
+          </td>
         </tr>
         <tr>
           <td>表格</td>
@@ -132,8 +132,8 @@
             <code v-html="table"></code>
           </td>
           <td>
-						<viewer :value="table.replace(/<br>/g, '')" />
-					</td>
+            <viewer :value="table.replace(/<br>/g, '')" />
+          </td>
         </tr>
       </tbody>
     </table>
@@ -156,13 +156,13 @@ export default {
 <br>2. 第二项
 <br>3. 第三项
 <br>`,
-      ul: `- 第一项
-<br>- 第二项
-<br>- 第三项
+      ul: `* 第一项
+<br>* 第二项
+<br>* 第三项
 <br>`,
-      taskList: `- [x] 已完成
-<br>- [ ] 未完成1
-<br>- [ ] 未完成2`,
+      taskList: `* [x] 已完成
+<br>* [ ] 未完成1
+<br>* [ ] 未完成2`,
       code: "`code`",
       blockCode: `\`\`\`js
 <br>function foo() {
@@ -171,9 +171,9 @@ export default {
 <br>}
 <br>\`\`\``,
       hr: `---`,
-			link: `[链接地址](https://skysun.name)`,
-			image: `![alt text](https://avatars1.githubusercontent.com/u/9640122?s=460&v=4)`,
-			table: `| 框架 | 类型 |
+      link: `[链接地址](https://skysun.name)`,
+      image: `![logo](/images/iBlog2_logo.png)`,
+      table: `| 框架 | 类型 |
 <br>| ----------- | ----------- |
 <br>| Vue.js | 前端 |
 <br>| Express.js | 后端 |`
@@ -188,14 +188,20 @@ export default {
   border-collapse: collapse;
 }
 
+.mcs-table th {
+  background-color: #7b8184;
+  font-weight: 300;
+  color: #fff;
+}
+
 .mcs-table th,
 .mcs-table td {
   border: 1px solid #eee;
   padding: 10px;
-	word-break: break-all;
+  word-break: break-all;
 }
 
 .mcs-table img {
-	width: 100px;
+  width: 100px;
 }
 </style>

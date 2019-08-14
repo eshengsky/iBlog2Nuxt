@@ -8,6 +8,7 @@
 <script>
 import { mapState } from "vuex";
 import CommentList from "~/components/CommentList.vue";
+import "highlight.js/styles/tomorrow.css";
 export default {
   components: {
     CommentList

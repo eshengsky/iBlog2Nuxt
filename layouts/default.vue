@@ -86,6 +86,10 @@ img {
   user-select: none;
 }
 
+th {
+  text-align: center;
+}
+
 pre,
 code {
   font-family: Consolas, "Courier New", monospace;
