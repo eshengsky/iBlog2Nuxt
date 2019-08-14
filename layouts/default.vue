@@ -166,4 +166,12 @@ pre code {
   border-radius: 6px;
   background-color: #f5f5f5;
 }
+
+.ivu-modal {
+  margin-bottom: 20px;
+}
+
+.ivu-modal-body {
+  font-size: 13px;
+}
 </style>

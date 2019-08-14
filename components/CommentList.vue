@@ -35,7 +35,7 @@
         />
         <div class="comment-btn-wrap">
           <Tooltip content="支持除标题外的其它Markdown语法" transfer>
-            <a href="https://www.jianshu.com/p/191d1e21f7ed" target="_blank">
+            <a @click="mcsShow = true">
               <font-awesome-icon :icon="['fab', 'markdown']" style="font-size: 14px"></font-awesome-icon>
               <span>支持Markdown语法</span>
             </a>
@@ -60,7 +60,7 @@
         />
         <div class="comment-btn-wrap">
           <Tooltip content="支持除标题外的其它Markdown语法" transfer>
-            <a href="https://www.jianshu.com/p/191d1e21f7ed" target="_blank">
+            <a @click="mcsShow = true">
               <font-awesome-icon :icon="['fab', 'markdown']" style="font-size: 14px"></font-awesome-icon>
               <span>支持Markdown语法</span>
             </a>
@@ -152,15 +152,26 @@
         </li>
       </ul>
     </div>
+    <Modal v-model="mcsShow" title="Markdown 速查表" width="630">
+      <md-cheat-sheet></md-cheat-sheet>
+      <div slot="footer">
+        <Button type="primary" size="large" @click="mcsShow = false">关闭</Button>
+      </div>
+    </Modal>
   </div>
 </template>
 <script>
+import MdCheatSheet from "~/components/MdCheatSheet.vue";
 import { mapState } from "vuex";
 import { setTimeout } from "timers";
 export default {
+  components: {
+    MdCheatSheet
+  },
   props: ["comments", "from"],
   data() {
     return {
+      mcsShow: false,
       editorText: "",
       editorReplyText: "",
       isEditorReplyShown: true,
@@ -379,12 +390,17 @@ export default {
 .tui-editor-contents h2,
 .tui-editor-contents h3,
 .tui-editor-contents h4 {
+  font-weight: bold;
   font-size: 1rem;
   line-height: 17px;
   margin: 10px 0 -4px;
   color: #333;
   border: 0;
   padding: 0;
+}
+
+.tui-editor-contents .task-list-item {
+  margin-left: -15px;
 }
 
 .te-markdown-tab-section {

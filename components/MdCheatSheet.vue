@@ -1,0 +1,201 @@
+<template>
+  <div>
+    <table class="mcs-table">
+      <thead>
+        <tr>
+          <th>元素</th>
+          <th>Markdown 语法</th>
+          <th>效果</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>标题</td>
+          <td>
+            <code v-html="title"></code>
+          </td>
+          <td>
+            <viewer :value="title.replace(/<br>/g, '')" />
+          </td>
+        </tr>
+        <tr>
+          <td>加粗</td>
+          <td>
+            <code v-html="bold"></code>
+          </td>
+          <td>
+            <viewer :value="bold.replace(/<br>/g, '')" />
+          </td>
+        </tr>
+        <tr>
+          <td>斜体</td>
+          <td>
+            <code v-html="italic"></code>
+          </td>
+          <td>
+            <viewer :value="italic.replace(/<br>/g, '')" />
+          </td>
+        </tr>
+        <tr>
+          <td>删除</td>
+          <td>
+            <code v-html="strike"></code>
+          </td>
+          <td>
+            <viewer :value="strike.replace(/<br>/g, '')" />
+          </td>
+        </tr>
+        <tr>
+          <td>引用</td>
+          <td>
+            <code v-html="blockquote"></code>
+          </td>
+          <td>
+            <viewer :value="blockquote.replace(/<br>/g, '')" />
+          </td>
+        </tr>
+        <tr>
+          <td>有序列表</td>
+          <td>
+            <code v-html="ol"></code>
+          </td>
+          <td>
+            <viewer :value="ol.replace(/<br>/g, '')" />
+          </td>
+        </tr>
+        <tr>
+          <td>无序列表</td>
+          <td>
+            <code v-html="ul"></code>
+          </td>
+          <td>
+            <viewer :value="ul.replace(/<br>/g, '')" />
+          </td>
+        </tr>
+        <tr>
+          <td>任务列表</td>
+          <td>
+            <code v-html="taskList"></code>
+          </td>
+          <td>
+            <viewer :value="taskList.replace(/<br>/g, '')" />
+          </td>
+        </tr>
+        <tr>
+          <td>行内代码</td>
+          <td>
+            <code v-html="code"></code>
+          </td>
+          <td>
+            <viewer :value="code.replace(/<br>/g, '')" />
+          </td>
+        </tr>
+        <tr>
+          <td>块级代码</td>
+          <td>
+            <code v-html="blockCode"></code>
+          </td>
+          <td>
+            <viewer :value="blockCode.replace(/<br>/g, '').replace(/&nbsp;/g, ' ')" />
+          </td>
+        </tr>
+        <tr>
+          <td>分隔线</td>
+          <td>
+            <code v-html="hr"></code>
+          </td>
+          <td>
+            <viewer :value="hr.replace(/<br>/g, '')" />
+          </td>
+        </tr>
+        <tr>
+          <td>链接</td>
+          <td>
+            <code v-html="link"></code>
+          </td>
+          <td>
+						<viewer :value="link.replace(/<br>/g, '')" />
+					</td>
+        </tr>
+        <tr>
+          <td>图片</td>
+          <td style="max-width: 270px;">
+            <code v-html="image"></code>
+          </td>
+          <td>
+						<viewer :value="image.replace(/<br>/g, '')" />
+					</td>
+        </tr>
+        <tr>
+          <td>表格</td>
+          <td>
+            <code v-html="table"></code>
+          </td>
+          <td>
+						<viewer :value="table.replace(/<br>/g, '')" />
+					</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</template>
+<script>
+export default {
+  data() {
+    return {
+      title: `# 1级标题
+<br>## 2级标题
+<br>### 3级标题
+<br>#### 4级标题
+<br>##### 5级标题`,
+      bold: `**加粗文本**`,
+      italic: `*斜体文本*`,
+      strike: `~~已删除文本~~`,
+      blockquote: `> 引用内容`,
+      ol: `1. 第一项
+<br>2. 第二项
+<br>3. 第三项
+<br>`,
+      ul: `- 第一项
+<br>- 第二项
+<br>- 第三项
+<br>`,
+      taskList: `- [x] 已完成
+<br>- [ ] 未完成1
+<br>- [ ] 未完成2`,
+      code: "`code`",
+      blockCode: `\`\`\`js
+<br>function foo() {
+<br>&nbsp;&nbsp;const name = "iBlog2";
+<br>&nbsp;&nbsp;console.log(name);
+<br>}
+<br>\`\`\``,
+      hr: `---`,
+			link: `[链接地址](https://skysun.name)`,
+			image: `![alt text](https://avatars1.githubusercontent.com/u/9640122?s=460&v=4)`,
+			table: `| 框架 | 类型 |
+<br>| ----------- | ----------- |
+<br>| Vue.js | 前端 |
+<br>| Express.js | 后端 |`
+    };
+  }
+};
+</script>
+<style>
+.mcs-table {
+  width: 100%;
+  border: 1px solid #eee;
+  border-collapse: collapse;
+}
+
+.mcs-table th,
+.mcs-table td {
+  border: 1px solid #eee;
+  padding: 10px;
+	word-break: break-all;
+}
+
+.mcs-table img {
+	width: 100px;
+}
+</style>
