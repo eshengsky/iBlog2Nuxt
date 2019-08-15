@@ -15,7 +15,7 @@
             <code v-html="title"></code>
           </td>
           <td>
-            <viewer :value="title.replace(/<br>/g, '')" />
+            <viewer :value="title | clean" />
           </td>
         </tr>
         <tr>
@@ -24,7 +24,7 @@
             <code v-html="bold"></code>
           </td>
           <td>
-            <viewer :value="bold.replace(/<br>/g, '')" />
+            <viewer :value="bold | clean" />
           </td>
         </tr>
         <tr>
@@ -33,7 +33,7 @@
             <code v-html="italic"></code>
           </td>
           <td>
-            <viewer :value="italic.replace(/<br>/g, '')" />
+            <viewer :value="italic | clean" />
           </td>
         </tr>
         <tr>
@@ -42,7 +42,7 @@
             <code v-html="strike"></code>
           </td>
           <td>
-            <viewer :value="strike.replace(/<br>/g, '')" />
+            <viewer :value="strike | clean" />
           </td>
         </tr>
         <tr>
@@ -51,7 +51,7 @@
             <code v-html="blockquote"></code>
           </td>
           <td>
-            <viewer :value="blockquote.replace(/<br>/g, '')" />
+            <viewer :value="blockquote | clean" />
           </td>
         </tr>
         <tr>
@@ -60,7 +60,7 @@
             <code v-html="ol"></code>
           </td>
           <td>
-            <viewer :value="ol.replace(/<br>/g, '')" />
+            <viewer :value="ol | clean" />
           </td>
         </tr>
         <tr>
@@ -69,7 +69,7 @@
             <code v-html="ul"></code>
           </td>
           <td>
-            <viewer :value="ul.replace(/<br>/g, '')" />
+            <viewer :value="ul | clean" />
           </td>
         </tr>
         <tr>
@@ -78,7 +78,7 @@
             <code v-html="taskList"></code>
           </td>
           <td>
-            <viewer :value="taskList.replace(/<br>/g, '')" />
+            <viewer :value="taskList | clean" />
           </td>
         </tr>
         <tr>
@@ -87,7 +87,7 @@
             <code v-html="code"></code>
           </td>
           <td>
-            <viewer :value="code.replace(/<br>/g, '')" />
+            <viewer :value="code | clean" />
           </td>
         </tr>
         <tr>
@@ -96,7 +96,7 @@
             <code v-html="blockCode"></code>
           </td>
           <td>
-            <viewer :value="blockCode.replace(/<br>/g, '').replace(/&nbsp;/g, ' ')" />
+            <viewer :value="blockCode | clean" />
           </td>
         </tr>
         <tr>
@@ -105,7 +105,7 @@
             <code v-html="hr"></code>
           </td>
           <td>
-            <viewer :value="hr.replace(/<br>/g, '')" />
+            <viewer :value="hr | clean" />
           </td>
         </tr>
         <tr>
@@ -114,7 +114,7 @@
             <code v-html="link"></code>
           </td>
           <td>
-            <viewer :value="link.replace(/<br>/g, '')" />
+            <viewer :value="link | clean" />
           </td>
         </tr>
         <tr>
@@ -123,7 +123,7 @@
             <code v-html="image"></code>
           </td>
           <td>
-            <viewer :value="image.replace(/<br>/g, '')" />
+            <viewer :value="image | clean" />
           </td>
         </tr>
         <tr>
@@ -132,7 +132,7 @@
             <code v-html="table"></code>
           </td>
           <td>
-            <viewer :value="table.replace(/<br>/g, '')" />
+            <viewer :value="table | clean" />
           </td>
         </tr>
       </tbody>
@@ -178,7 +178,12 @@ export default {
 <br>| Vue.js | 前端 |
 <br>| Express.js | 后端 |`
     };
-  }
+	},
+	filters: {
+		clean(val) {
+			return val.replace(/<br>/g, '').replace(/&nbsp;/g, ' ');
+		}
+	}
 };
 </script>
 <style>

@@ -2,7 +2,7 @@ const GuestbookModel = require('../models/guestbook');
 exports.getGuestbook = async () => {
     let guestbook;
     try {
-        guestbook = await GuestbookModel.find().exec();
+        guestbook = await GuestbookModel.find().sort('-createTime').exec();
     } catch (err) {
         console.error(err);
     }

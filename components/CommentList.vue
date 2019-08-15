@@ -34,7 +34,7 @@
           @blur="onEditorBlur"
         />
         <div class="comment-btn-wrap">
-          <Tooltip content="显示Markdown速查表" transfer>
+          <Tooltip content="打开Markdown速查表" transfer>
             <a @click="mcsShow = true">
               <font-awesome-icon :icon="['fab', 'markdown']" style="font-size: 14px"></font-awesome-icon>
               <span>支持Markdown语法</span>
@@ -59,7 +59,7 @@
           @blur="onEditorReplyBlur"
         />
         <div class="comment-btn-wrap">
-          <Tooltip content="显示Markdown速查表" transfer>
+          <Tooltip content="打开Markdown速查表" transfer>
             <a @click="mcsShow = true">
               <font-awesome-icon :icon="['fab', 'markdown']" style="font-size: 14px"></font-awesome-icon>
               <span>支持Markdown语法</span>
