@@ -16,7 +16,8 @@ export default {
         keyword: '',
         sortBy: 'date',
         user: null,
-        guestbook: []
+        guestbook: [],
+        authName: 'eshengsky'
     }),
 
     mutations: {

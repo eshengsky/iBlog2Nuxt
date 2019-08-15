@@ -3,7 +3,7 @@
     <div class="navbar-header">
       <a class="navbar-brand" href="/">
         <img src="/images/iBlog2_logo.png" />
-        <span>xxx</span>
+        <span>iBlog</span>
       </a>
     </div>
     <div class="navbar-collapse">

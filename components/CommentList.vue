@@ -81,6 +81,7 @@
             </div>
             <div class="comment-right">
               <div class="comment-title">
+                <span v-if="comment1.username === authGithub" class="auth-tag">作者</span>
                 <Tooltip :content="comment1.username" transfer>
                   <a
                     class="comment-username"
@@ -107,6 +108,7 @@
                 </div>
                 <div class="comment-right">
                   <div class="comment-title">
+                    <span v-if="comment1.username === authGithub" class="auth-tag">作者</span>
                     <Tooltip :content="comment2.username" transfer>
                       <a
                         class="comment-username"
@@ -133,6 +135,7 @@
                     </div>
                     <div class="comment-right">
                       <div class="comment-title">
+                        <span v-if="comment1.username === authGithub" class="auth-tag">作者</span>
                         <Tooltip :content="comment3.username" transfer>
                           <a
                             class="comment-username"
@@ -186,7 +189,8 @@ export default {
   },
   computed: {
     ...mapState({
-      user: state => state.user
+      user: state => state.user,
+      authGithub: state => state.config.authGithub
     }),
     commentName() {
       return this.from === 2 ? "评论" : "留言";
@@ -331,7 +335,7 @@ export default {
         content,
         pathId: this.pathId
       });
-      this.$Message.success('回复成功');
+      this.$Message.success("回复成功");
       this.getLatestData();
       this.editorReplyText = "";
       setTimeout(() => {
@@ -601,5 +605,14 @@ export default {
 
 .tui-editor-defaultUI .CodeMirror pre.CodeMirror-placeholder {
   padding-left: 12px;
+}
+
+.auth-tag {
+  display: inline-block;
+  border-radius: 3px;
+  font-size: 12px;
+  padding: 3px 5px 2px;
+  background: #f90;
+  color: #fff;
 }
 </style>
