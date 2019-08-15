@@ -14,9 +14,12 @@ export default {
     CommentList
   },
   async asyncData({ req, store }) {
-    store.commit("setData", {
-      user: req.user
-    });
+    if (process.server) {
+      store.commit("setData", {
+        user: req.user
+      });
+    }
+
     await store.dispatch("getGuestbook");
   },
   computed: mapState({

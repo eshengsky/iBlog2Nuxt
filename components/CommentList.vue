@@ -19,7 +19,7 @@
         </template>
       </div>
     </div>
-    <div class="post-wrap" v-if="user">
+    <div class="gituser-wrap" v-if="user">
       <div class="avatar">
         <img :src="user._json.avatar_url" @error="imgLoadError($event)" />
       </div>
@@ -266,19 +266,19 @@ export default {
     },
 
     onEditorLoad() {
-      document.querySelector(".post-wrap .comment-btn-wrap").style.display =
+      document.querySelector(".gituser-wrap .comment-btn-wrap").style.display =
         "flex";
     },
 
     onEditorFocus() {
       document
-        .querySelector(".post-wrap .te-md-container .CodeMirror")
+        .querySelector(".gituser-wrap .te-md-container .CodeMirror")
         .classList.add("editor-focus");
     },
 
     onEditorBlur() {
       document
-        .querySelector(".post-wrap .te-md-container .CodeMirror")
+        .querySelector(".gituser-wrap .te-md-container .CodeMirror")
         .classList.remove("editor-focus");
     },
 
@@ -452,7 +452,7 @@ export default {
   padding-bottom: 15px;
 }
 
-.post-wrap {
+.gituser-wrap {
   display: -webkit-flex;
   display: flex;
   margin-bottom: 20px;

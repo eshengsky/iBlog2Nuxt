@@ -8,9 +8,21 @@
     </div>
     <div class="navbar-collapse">
       <ul>
-        <li>a</li>
-        <li>b</li>
-        <li>c</li>
+        <li>
+          <nuxt-link to="/">
+            <font-awesome-icon :icon="['fas', 'pen-nib']"></font-awesome-icon>博客
+          </nuxt-link>
+        </li>
+        <li>
+          <nuxt-link to="/guestbook">
+            <font-awesome-icon :icon="['fas', 'comment-dots']"></font-awesome-icon>留言
+          </nuxt-link>
+        </li>
+        <li>
+          <nuxt-link to="/about">
+            <font-awesome-icon :icon="['fas', 'user']"></font-awesome-icon>关于
+          </nuxt-link>
+        </li>
       </ul>
     </div>
   </div>
@@ -43,5 +55,28 @@
   display: inline-block;
   margin-top: -4px;
   margin-right: 6px;
+}
+
+.navbar-collapse ul {
+  display: flex;
+}
+
+.navbar-collapse a {
+  font-size: 16px;
+  line-height: 69px;
+  padding: 0 13px;
+  border-bottom: 1px solid transparent;
+  color: #333;
+  -ms-opacity: 0.8;
+  opacity: 0.8;
+}
+
+.navbar-collapse a:hover {
+  -ms-opacity: 1;
+  opacity: 1;
+}
+
+.navbar-collapse svg {
+  margin-right: 4px;
 }
 </style>
