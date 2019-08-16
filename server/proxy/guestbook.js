@@ -11,11 +11,11 @@ exports.getGuestbook = async () => {
     };
 }
 
-exports.saveGuestbook = async (params) => {
+exports.saveGuestbook = async (params, user) => {
     try {
-        const username = params.username;
-        const displayName = params.displayName;
-        const avatar = params.avatar;
+        const username = user.username;
+        const displayName = user.displayName;
+        const avatar = user._json.avatar_url;
         const content = params.content;
         const pathId = params.pathId;
         const now = new Date();

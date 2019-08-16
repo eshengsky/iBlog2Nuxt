@@ -8,26 +8,29 @@
     </div>
     <div class="navbar-collapse">
       <ul>
-        <li>
+        <li :class="{ 'blog-active': $route.path === '/' || $route.path.startsWith('/blog') }">
           <nuxt-link to="/">
             <font-awesome-icon :icon="['fas', 'pen-nib']"></font-awesome-icon>博客
           </nuxt-link>
+          <div class="nav-line"></div>
         </li>
-        <li>
+        <li :class="{ 'guestbook-active': $route.path === '/guestbook' }">
           <nuxt-link to="/guestbook">
             <font-awesome-icon :icon="['fas', 'comment-dots']"></font-awesome-icon>留言
           </nuxt-link>
+          <div class="nav-line"></div>
         </li>
-        <li>
-          <nuxt-link to="/about">
+        <li :class="{ 'profile-active': $route.path === '/profile' }">
+          <nuxt-link to="/profile">
             <font-awesome-icon :icon="['fas', 'user']"></font-awesome-icon>关于
           </nuxt-link>
+          <div class="nav-line"></div>
         </li>
       </ul>
     </div>
   </div>
 </template>
-<style scoped>
+<style>
 .navbar {
   position: fixed;
   top: 0;
@@ -61,7 +64,12 @@
   display: flex;
 }
 
+.navbar-collapse li {
+  position: relative;
+}
+
 .navbar-collapse a {
+  display: block;
   font-size: 16px;
   line-height: 69px;
   padding: 0 13px;
@@ -78,5 +86,72 @@
 
 .navbar-collapse svg {
   margin-right: 4px;
+}
+
+.navbar-collapse li.blog-active a {
+  color: #ff6600;
+}
+
+.navbar-collapse li.blog-active .nav-line {
+  display: block;
+  background: #ff6600cc;
+}
+
+.navbar-collapse li.guestbook-active a {
+  color: #d243ff;
+}
+
+.navbar-collapse li.guestbook-active .nav-line {
+  display: block;
+  background: #d243ffcc;
+}
+
+.navbar-collapse li.profile-active a {
+  color: #01b7ee;
+}
+
+.navbar-collapse li.profile-active .nav-line {
+  display: block;
+  background: #01b7eecc;
+}
+
+.nav-line {
+  display: none;
+  position: absolute;
+  height: 3px;
+  border-radius: 5px;
+  bottom: 0;
+  right: 14px;
+  width: 30px;
+  -webkit-animation: fadeInLeft 1s;
+  animation: fadeInLeft 1s;
+}
+
+@-webkit-keyframes fadeInLeft {
+  0% {
+    opacity: 0;
+    -webkit-transform: translate3d(-60%, 0, 0);
+    transform: translate3d(-60%, 0, 0);
+  }
+
+  100% {
+    opacity: 1;
+    -webkit-transform: none;
+    transform: none;
+  }
+}
+
+@keyframes fadeInLeft {
+  0% {
+    opacity: 0;
+    -webkit-transform: translate3d(-60%, 0, 0);
+    transform: translate3d(-60%, 0, 0);
+  }
+
+  100% {
+    opacity: 1;
+    -webkit-transform: none;
+    transform: none;
+  }
 }
 </style>

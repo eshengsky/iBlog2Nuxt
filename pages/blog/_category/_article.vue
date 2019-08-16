@@ -4,11 +4,6 @@
 <script>
 import BlogArticle from "~/components/BlogArticle.vue";
 export default {
-  asyncData({ req, store }) {
-    store.commit("setData", {
-      user: req.user
-    });
-  },
   components: {
     BlogArticle
   },

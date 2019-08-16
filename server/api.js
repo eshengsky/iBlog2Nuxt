@@ -5,49 +5,101 @@ const express = require('express');
 const router = express.Router();
 
 router.get('/categories', async (req, res, next) => {
-    const categories = await categoryProxy.getCategories(true);
-    res.json({
-        code: '1',
-        data: categories
-    });
+    try {
+        const categories = await categoryProxy.getCategories(true);
+        res.json({
+            code: '1',
+            data: categories
+        });
+    } catch (err) {
+        res.json({
+            code: '-1'
+        });
+    }
 });
 
 router.get('/posts', async (req, res, next) => {
-    const data = await postProxy.getPosts(req.query);
-    res.json({
-        code: '1',
-        data
-    });
+    try {
+        const data = await postProxy.getPosts(req.query);
+        res.json({
+            code: '1',
+            data
+        });
+    } catch (err) {
+        res.json({
+            code: '-1'
+        });
+    }
 });
 
 router.get('/article', async (req, res, next) => {
-    const data = await postProxy.getArticle(req.query);
-    res.json({
-        code: '1',
-        data
-    });
+    try {
+        const data = await postProxy.getArticle(req.query);
+        res.json({
+            code: '1',
+            data
+        });
+    } catch (err) {
+        res.json({
+            code: '-1'
+        });
+    }
+
 });
 
 router.get('/guestbook', async (req, res, next) => {
-    const data = await guestbookProxy.getGuestbook();
-    res.json({
-        code: '1',
-        data
-    });
+    try {
+        const data = await guestbookProxy.getGuestbook();
+        res.json({
+            code: '1',
+            data
+        });
+    } catch (err) {
+        res.json({
+            code: '-1'
+        });
+    }
 });
 
 router.post('/saveComment', async (req, res, next) => {
-    await postProxy.saveComment(req.body);
-    res.json({
-        code: '1'
-    });
+    const user = req.user;
+    if (!user) {
+        return res.json({
+            code: '-2'
+        });
+    }
+    try {
+        await postProxy.saveComment(req.body, user);
+        res.json({
+            code: '1'
+        });
+    } catch (err) {
+        console.error(err);
+        res.json({
+            code: '-1'
+        });
+    }
 });
 
 router.post('/saveGuestbook', async (req, res, next) => {
-    await guestbookProxy.saveGuestbook(req.body);
-    res.json({
-        code: '1'
-    });
+    const user = req.user;
+    if (!user) {
+        return res.json({
+            code: '-2'
+        });
+    }
+    try {
+        await guestbookProxy.saveGuestbook(req.body, user);
+        res.json({
+            code: '1'
+        });
+    } catch (err) {
+        console.error(err);
+        res.json({
+            code: '-1'
+        });
+    }
+
 });
 
 module.exports = router;

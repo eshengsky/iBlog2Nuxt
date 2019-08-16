@@ -96,15 +96,15 @@ exports.getArticle = async (params) => {
     };
 }
 
-exports.saveComment = async (params) => {
+exports.saveComment = async (params, user) => {
     try {
         const articleId = params.articleId;
-        const postEntry = await PostModel.findById(articleId).exec();
-        const username = params.username;
-        const displayName = params.displayName;
-        const avatar = params.avatar;
         const content = params.content;
         const pathId = params.pathId;
+        const postEntry = await PostModel.findById(articleId).exec();
+        const username = user.username;
+        const displayName = user.displayName;
+        const avatar = user._json.avatar_url;
         let parentComments = postEntry.comments;
         if (pathId) {
             const commentIdArr = pathId.split('>');

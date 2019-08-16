@@ -24,15 +24,17 @@
         <img :src="user._json.avatar_url" @error="imgLoadError($event)" />
       </div>
       <div class="editor-wrap">
-        <editor
-          ref="editor"
-          v-model="editorText"
-          height="150px"
-          :options="editorOptions"
-          @load="onEditorLoad"
-          @focus="onEditorFocus"
-          @blur="onEditorBlur"
-        />
+        <no-ssr>
+          <editor
+            ref="editor"
+            v-model="editorText"
+            height="150px"
+            :options="editorOptions"
+            @load="onEditorLoad"
+            @focus="onEditorFocus"
+            @blur="onEditorBlur"
+          />
+        </no-ssr>
         <div class="comment-btn-wrap">
           <Tooltip content="打开Markdown速查表" transfer>
             <a @click="mcsShow = true">
@@ -49,15 +51,17 @@
     </div>
     <div class="comment-list">
       <div class="editor-wrap editor-reply" v-show="isEditorReplyShown">
-        <editor
-          ref="editorReply"
-          v-model="editorReplyText"
-          height="85px"
-          :options="editorReplyOptions"
-          @load="onEditorReplyLoad"
-          @focus="onEditorReplyFocus"
-          @blur="onEditorReplyBlur"
-        />
+        <no-ssr>
+          <editor
+            ref="editorReply"
+            v-model="editorReplyText"
+            height="85px"
+            :options="editorReplyOptions"
+            @load="onEditorReplyLoad"
+            @focus="onEditorReplyFocus"
+            @blur="onEditorReplyBlur"
+          />
+        </no-ssr>
         <div class="comment-btn-wrap">
           <Tooltip content="打开Markdown速查表" transfer>
             <a @click="mcsShow = true">
@@ -75,79 +79,28 @@
       </div>
       <ul>
         <li v-for="comment1 in comments" :key="comment1._id">
-          <div class="comment-item">
-            <div class="avatar">
-              <img :src="comment1.avatar" @error="imgLoadError($event)" />
-            </div>
-            <div class="comment-right">
-              <div class="comment-title">
-                <span v-if="comment1.username === authGithub" class="auth-tag">作者</span>
-                <Tooltip :content="comment1.username" transfer>
-                  <a
-                    class="comment-username"
-                    :href="`https://github.com/${comment1.username}`"
-                    target="_blank"
-                  >{{ comment1.displayName }}</a>
-                </Tooltip>
-                <span class="comment-time">{{ comment1.commentTimeStr }}</span>
-              </div>
-              <viewer :value="comment1.content" />
-              <div class="comment-footer">
-                <a @click="showReply($event, comment1._id)" v-if="user">
-                  <font-awesome-icon :icon="['fas', 'reply']"></font-awesome-icon>
-                  <span>回复</span>
-                </a>
-              </div>
-            </div>
-          </div>
+          <comment-item
+            :comment="comment1"
+            :pathId="comment1._id"
+            @showReply="showReply"
+            @imgLoadError="imgLoadError"
+          ></comment-item>
           <ul v-if="comment1.comments && comment1.comments.length">
             <li v-for="comment2 in comment1.comments" :key="comment2._id">
-              <div class="comment-item">
-                <div class="avatar">
-                  <img :src="comment2.avatar" @error="imgLoadError($event)" />
-                </div>
-                <div class="comment-right">
-                  <div class="comment-title">
-                    <span v-if="comment1.username === authGithub" class="auth-tag">作者</span>
-                    <Tooltip :content="comment2.username" transfer>
-                      <a
-                        class="comment-username"
-                        :href="`https://github.com/${comment2.username}`"
-                        target="_blank"
-                      >{{ comment2.displayName }}</a>
-                    </Tooltip>
-                    <span class="comment-time">{{ comment2.commentTimeStr }}</span>
-                  </div>
-                  <viewer :value="comment2.content" />
-                  <div class="comment-footer">
-                    <a @click="showReply($event, `${comment1._id}>${comment2._id}`)" v-if="user">
-                      <font-awesome-icon :icon="['fas', 'reply']"></font-awesome-icon>
-                      <span>回复</span>
-                    </a>
-                  </div>
-                </div>
-              </div>
+              <comment-item
+                :comment="comment2"
+                :pathId="`${comment1._id}>${comment2._id}`"
+                @showReply="showReply"
+                @imgLoadError="imgLoadError"
+              ></comment-item>
               <ul v-if="comment2.comments && comment2.comments.length">
                 <li v-for="comment3 in comment2.comments" :key="comment3._id">
-                  <div class="comment-item">
-                    <div class="avatar">
-                      <img :src="comment3.avatar" @error="imgLoadError($event)" />
-                    </div>
-                    <div class="comment-right">
-                      <div class="comment-title">
-                        <span v-if="comment1.username === authGithub" class="auth-tag">作者</span>
-                        <Tooltip :content="comment3.username" transfer>
-                          <a
-                            class="comment-username"
-                            :href="`https://github.com/${comment3.username}`"
-                            target="_blank"
-                          >{{ comment3.displayName }}</a>
-                        </Tooltip>
-                        <span class="comment-time">{{ comment3.commentTimeStr }}</span>
-                      </div>
-                      <viewer :value="comment3.content" />
-                    </div>
-                  </div>
+                  <comment-item
+                    :comment="comment3"
+                    :hideReply="true"
+                    @showReply="showReply"
+                    @imgLoadError="imgLoadError"
+                  ></comment-item>
                 </li>
               </ul>
             </li>
@@ -155,20 +108,24 @@
         </li>
       </ul>
     </div>
-    <Modal v-model="mcsShow" title="Markdown 速查表" width="630">
-      <Alert type="warning" show-icon closable>评论及留言不支持1~4级标题。</Alert>
-      <md-cheat-sheet></md-cheat-sheet>
-      <div slot="footer">
-        <Button type="primary" size="large" @click="mcsShow = false">关闭</Button>
-      </div>
-    </Modal>
+    <no-ssr>
+      <Modal v-model="mcsShow" title="Markdown 速查表" width="630">
+        <Alert type="warning" show-icon closable>评论及留言不支持1~4级标题。</Alert>
+        <md-cheat-sheet></md-cheat-sheet>
+        <div slot="footer">
+          <Button type="primary" size="large" @click="mcsShow = false">关闭</Button>
+        </div>
+      </Modal>
+    </no-ssr>
   </div>
 </template>
 <script>
+import CommentItem from "~/components/CommentItem.vue";
 import MdCheatSheet from "~/components/MdCheatSheet.vue";
 import { mapState } from "vuex";
 export default {
   components: {
+    CommentItem,
     MdCheatSheet
   },
   props: ["comments", "from"],
@@ -189,8 +146,7 @@ export default {
   },
   computed: {
     ...mapState({
-      user: state => state.user,
-      authGithub: state => state.config.authGithub
+      user: state => state.user
     }),
     commentName() {
       return this.from === 2 ? "评论" : "留言";
@@ -235,7 +191,9 @@ export default {
   },
   mounted() {
     // 回复框需默认显示，此处再手动设为隐藏，以确保tui-editor渲染正常
-    this.isEditorReplyShown = false;
+    this.$nextTick(function() {
+      this.isEditorReplyShown = false;
+    });
   },
   methods: {
     async postComment() {
@@ -243,12 +201,18 @@ export default {
       if (!content) {
         return this.$refs.editor.invoke("focus");
       }
-      await this.saveComment({
+      const result = await this.saveComment({
         content
       });
-      this.$Message.success(`${this.commentName}成功`);
-      this.getLatestData();
-      this.editorText = "";
+      if (result.code === "1") {
+        this.$Message.success(`${this.commentName}成功`);
+        this.getLatestData();
+        this.editorText = "";
+      } else if (result.code === '-2') {
+        this.$Message.error(`请登录后再${this.commentName}`);
+      } else {
+        this.$Message.error(`${this.commentName}失败`);
+      }
     },
 
     getLatestData() {

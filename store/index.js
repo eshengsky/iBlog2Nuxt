@@ -37,6 +37,13 @@ export default {
     },
 
     actions: {
+        nuxtServerInit({ commit }, { req }) {
+            if (req.user) {
+                commit('setData', {
+                    user: req.user
+                })
+            }
+        },
         async getCategories({ commit }) {
             let result = [];
             try {
@@ -121,9 +128,6 @@ export default {
             try {
                 await this.$axios.$post('/api/saveComment', {
                     articleId: state.article._id,
-                    username: state.user.username,
-                    displayName: state.user.displayName,
-                    avatar: state.user._json.avatar_url,
                     pathId: payload.pathId,
                     content: payload.content
                 });
@@ -133,17 +137,10 @@ export default {
         },
 
         async saveGuestbook({ state }, payload) {
-            try {
-                await this.$axios.$post('/api/saveGuestbook', {
-                    username: state.user.username,
-                    displayName: state.user.displayName,
-                    avatar: state.user._json.avatar_url,
-                    pathId: payload.pathId,
-                    content: payload.content
-                });
-            } catch (err) {
-                console.error(err);
-            }
+            return await this.$axios.$post('/api/saveGuestbook', {
+                pathId: payload.pathId,
+                content: payload.content
+            });
         }
     }
 }
