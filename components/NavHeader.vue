@@ -90,6 +90,7 @@
 
 .navbar-collapse li.blog-active a {
   color: #ff6600;
+  opacity: 1;
 }
 
 .navbar-collapse li.blog-active .nav-line {
@@ -99,6 +100,7 @@
 
 .navbar-collapse li.guestbook-active a {
   color: #d243ff;
+  opacity: 1;
 }
 
 .navbar-collapse li.guestbook-active .nav-line {
@@ -108,6 +110,7 @@
 
 .navbar-collapse li.profile-active a {
   color: #01b7ee;
+  opacity: 1;
 }
 
 .navbar-collapse li.profile-active .nav-line {
