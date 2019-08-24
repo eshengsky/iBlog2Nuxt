@@ -20,12 +20,15 @@ module.exports = {
     host: 'localhost',
   },
   serverMiddleware: [
-    { path: '/api', handler: '~/server/api.js' }
+    {
+      path: '/api',
+      handler: '~/server/api.js'
+    }
   ],
   /*
   ** Customize the progress-bar color
   */
-  loading: { color: '#fff' },
+  loading: { color: '#f80' },
   /*
   ** Global CSS
   */
@@ -50,17 +53,6 @@ module.exports = {
     '@nuxtjs/axios',
     // '@nuxtjs/pwa',
   ],
-  auth: {
-    redirect: {
-      callback: '/auth/github/callback'
-    },
-    strategies: {
-      github: {
-        client_id: '7dc9bb0e0fd4e9a92de9',
-        client_secret: 'a3d9f400defcee58bef9ce90f5e8ddf3bb71c6bf'
-      },
-    }
-  },
   /*
   ** Axios module configuration
   ** See https://axios.nuxtjs.org/options
