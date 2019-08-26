@@ -125,15 +125,11 @@ export default {
         },
 
         async saveComment({ state }, payload) {
-            try {
-                await this.$axios.$post('/api/saveComment', {
-                    articleId: state.article._id,
-                    pathId: payload.pathId,
-                    content: payload.content
-                });
-            } catch (err) {
-                console.error(err);
-            }
+            return await this.$axios.$post('/api/saveComment', {
+                articleId: state.article._id,
+                pathId: payload.pathId,
+                content: payload.content
+            });
         },
 
         async saveGuestbook({ state }, payload) {
