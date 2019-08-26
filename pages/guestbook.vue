@@ -1,7 +1,15 @@
 <template>
   <div class="guestbook-wrap">
     <article class="list-wrap">
-      <comment-list :comments="guestbook" :from="1"></comment-list>
+      <comment-list
+        :comments="comments"
+        :page="page"
+        :hasNext="hasNext"
+        :loading="loading"
+        :total="total"
+        :from="1"
+        @loadNext="loadNext"
+      ></comment-list>
     </article>
   </div>
 </template>
@@ -13,12 +21,30 @@ export default {
   components: {
     CommentList
   },
-  async asyncData({ req, store }) {
-    await store.dispatch("getGuestbook");
+  created() {
+    this.$store.commit("guestbook/setData", {
+      loading: true
+    });
+  },
+  mounted() {
+    this.$store.dispatch("guestbook/getGuestbook");
   },
   computed: mapState({
-    guestbook: state => state.guestbook
-  })
+    comments: state => state.guestbook.commentList,
+    page: state => state.guestbook.page,
+    total: state => state.guestbook.total,
+    hasNext: state => state.guestbook.hasNext,
+    loading: state => state.guestbook.loading
+  }),
+  methods: {
+    // 加载下一页
+    loadNext() {
+      this.$store.commit("guestbook/setData", {
+        page: this.page + 1
+      });
+      this.$store.dispatch("guestbook/getGuestbook");
+    }
+  }
 };
 </script>
 <style scoped>

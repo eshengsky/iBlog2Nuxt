@@ -106,6 +106,21 @@
             </li>
           </ul>
         </li>
+        <li class="last-li">
+          <div class="dot-loading" v-if="loading">
+            <div></div>
+            <div></div>
+            <div></div>
+          </div>
+          <Button
+            class="btn-load"
+            size="large"
+            @click="$emit('loadNext')"
+            v-else-if="comments.length > 0 && hasNext"
+            :loading="loading"
+          >查看更多</Button>
+          <div class="no-data" v-else-if="!comments.length">暂无{{ commentName }}</div>
+        </li>
       </ul>
     </div>
     <no-ssr>
@@ -128,7 +143,7 @@ export default {
     CommentItem,
     MdCheatSheet
   },
-  props: ["comments", "from"],
+  props: ["comments", "page", "total", "hasNext", "loading", "from"],
   data() {
     return {
       mcsShow: false,
@@ -177,6 +192,12 @@ export default {
       };
     },
     commentCount() {
+      // 留言条数，取传过来的total值
+      if (this.from === 1) {
+        return this.total;
+      }
+
+      // 评论条数自己算
       let total = 0;
       let comments = this.comments;
       const getCount = comments => {
@@ -208,7 +229,7 @@ export default {
         this.$Message.success(`${this.commentName}成功`);
         this.getLatestData();
         this.editorText = "";
-      } else if (result.code === '-2') {
+      } else if (result.code === "-2") {
         this.$Message.error(`请登录后再${this.commentName}`);
       } else {
         this.$Message.error(`${this.commentName}失败`);
@@ -217,14 +238,14 @@ export default {
 
     getLatestData() {
       if (this.from === 1) {
-        return this.$store.dispatch("getGuestbook");
+        return this.$store.dispatch("guestbook/getGuestbook");
       }
       return this.$store.dispatch("getArticle");
     },
 
     saveComment(data) {
       if (this.from === 1) {
-        return this.$store.dispatch("saveGuestbook", data);
+        return this.$store.dispatch("guestbook/saveGuestbook", data);
       }
       return this.$store.dispatch("saveComment", data);
     },

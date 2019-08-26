@@ -49,7 +49,7 @@ router.get('/article', async (req, res, next) => {
 
 router.get('/guestbook', async (req, res, next) => {
     try {
-        const data = await guestbookProxy.getGuestbook();
+        const data = await guestbookProxy.getGuestbook(req.query);
         res.json({
             code: '1',
             data
