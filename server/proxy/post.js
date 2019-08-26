@@ -1,5 +1,5 @@
 const PostModel = require('../models/post');
-const pageSize = 10;
+const pageSize = 3;
 
 /**
  * 为首页数据查询构建条件对象
