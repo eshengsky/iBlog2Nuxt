@@ -1,7 +1,9 @@
 <template>
   <div>
-    <category-list></category-list>
-    <post-list></post-list>
+    <category-list :categories="categories"></category-list>
+    <no-ssr>
+      <post-list :categories="categories"></post-list>
+    </no-ssr>
   </div>
 </template>
 
@@ -13,15 +15,30 @@ export default {
     CategoryList,
     PostList
   },
-  async validate({ params, store }) {
-    const category = params.category || '';
-    await store.dispatch('getCategories');
-    return store.state.categoryList.some(
-      item => item.alias === category
-    );
+
+  data() {
+    return {
+      categories: []
+    };
+  },
+
+  async asyncData({ $axios, params, error }) {
+    const { code, data } = await $axios.$get("/api/categories");
+    if (code === 1) {
+      const category = params.category || "";
+      if (data.some(item => item.alias === category)) {
+        return { categories: data };
+      }
+      error({
+        statusCode: 404,
+        message: "未找到该页面"
+      });
+    } else {
+      error({
+        statusCode: 500,
+        message: "内部服务器错误"
+      });
+    }
   }
 };
 </script>
-
-<style>
-</style>

@@ -30,7 +30,7 @@ export default {
 .list-wrap {
   max-width: 1012px;
   margin: 0 auto 20px;
-  padding: 0 30px 40px;
+  padding: 0 30px 10px;
   background: #fff;
   border-color: #e7eaec;
   border-style: solid solid none;

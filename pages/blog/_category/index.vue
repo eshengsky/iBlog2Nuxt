@@ -1,4 +1,3 @@
 <script>
-import index from '../../index.vue';
-export default index;
+export { default } from '../../index.vue';
 </script>

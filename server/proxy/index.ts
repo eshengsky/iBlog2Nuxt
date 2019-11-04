@@ -1,4 +1,8 @@
-const PostModel = require('../models/post');
+import DB from "../db";
+import { ICategoryModel, ICategory } from "../models/category";
+import { IComment } from "../models/comment";
+import { IPost } from "../models/post";
+const { Post, Category, Guestbook } = DB.Models;
 const pageSize = 3;
 
 /**
@@ -6,7 +10,7 @@ const pageSize = 3;
  * @param params 查询参数对象
  */
 function getPostsQuery(params) {
-    const query = {};
+    const query: any = {};
     query.isActive = true;
     query.isDraft = false;
     if (params.cateId) {
@@ -55,53 +59,75 @@ function getPostsQuery(params) {
     return query;
 }
 
-exports.getPosts = async (params) => {
+async function getCategories (includeAll = false) {
+    const categories = await Category.find().exec();
+    if (includeAll) {
+        categories.unshift({
+            _id: '',
+            cateName: '全部分类',
+            alias: '',
+            img: '/images/全部分类.svg'
+        } as ICategory);
+        categories.push({
+            _id: '5d380b18ba304f18c455eb38',
+            cateName: '未分类',
+            alias: 'others',
+            img: '/images/未分类.svg'
+        } as ICategory);
+    }
+    return categories;
+}
+
+async function getPosts (params) {
     let page = 1;
-    let postList = [];
+    let postList: any[] = [];
     let pageCount = 0;
+    let count = 0;
     try {
         page = parseInt(params.pageIndex) || 1;
         page = page > 0 ? page : 1;
-        const options = {};
+        const options: any = {};
         options.skip = (page - 1) * pageSize;
         options.limit = pageSize;
         options.sort = params.sortBy === 'title' ? 'title -createTime' : '-createTime';
         const query = getPostsQuery(params);
         const data = await Promise.all([
-            PostModel.find(query, {}, options).populate('category').exec(),
-            PostModel.countDocuments(query).exec()
+            Post.find(query, {}, options).populate('category').exec(),
+            Post.countDocuments(query).exec()
         ]);
         postList = data[0];
-        const count = data[1];
-        pageCount = count % pageSize === 0 ? parseInt(count / pageSize) : parseInt(count / pageSize) + 1;
+        count = data[1];
+        pageCount = count % pageSize === 0 ? (count / pageSize) : (count / pageSize + 1);
     } catch (err) {
         console.error(err);
     }
     return {
         postList,
+        count,
         hasNext: pageCount > page
     };
 }
 
-exports.getArticle = async (params) => {
+async function getArticle (params) {
     let article;
     try {
         const alias = params.alias;
-        article = await PostModel.findOne({ alias }).exec();
+        article = await Post.findOne({ alias }).exec();
     } catch (err) {
         console.error(err);
     }
-    return {
-        article
-    };
+    return article;
 }
 
-exports.saveComment = async (params, user) => {
+async function saveComment (params, user) {
     try {
         const articleId = params.articleId;
         const content = params.content;
         const pathId = params.pathId;
-        const postEntry = await PostModel.findById(articleId).exec();
+        const postEntry = await Post.findById(articleId).exec();
+        if (!postEntry) {
+            throw new Error(`未找到评论数据！`);
+        }
         const username = user.username;
         const displayName = user.displayName;
         const avatar = user._json.avatar_url;
@@ -120,9 +146,69 @@ exports.saveComment = async (params, user) => {
             content,
             createTime: now,
             modifyTime: now
-        });
+        } as IComment);
         postEntry.save();
     } catch (err) {
         console.error(err);
     }
+}
+
+async function getGuestbook() {
+    let guestbook;
+    try {
+        guestbook = await Guestbook.find().sort('-createTime').exec();
+    } catch (err) {
+        console.error(err);
+    }
+    return {
+        guestbook
+    };
+}
+
+async function saveGuestbook (params, user) {
+    try {
+        const username = user.username;
+        const displayName = user.displayName;
+        const avatar = user._json.avatar_url;
+        const content = params.content;
+        const pathId = params.pathId;
+        const now = new Date();
+        const item = {
+            username,
+            displayName,
+            avatar,
+            content,
+            createTime: now,
+            modifyTime: now
+        } as IComment;
+        if (pathId) {
+            const commentIdArr = pathId.split('>');
+            const rootComment = await Guestbook.findById(commentIdArr[0]).exec();
+            if (!rootComment) {
+                throw new Error('未找到评论数据！');
+            }
+            let parentComments = rootComment.comments;
+            commentIdArr.forEach((commentId, index) => {
+                if (index > 0) {
+                    parentComments = parentComments.id(commentId).comments;
+                }
+            });
+            parentComments.unshift(item);
+            await rootComment.save();
+        } else {
+            const newItem = new Guestbook(item)
+            newItem.save();
+        }
+    } catch (err) {
+        console.error(err);
+    }
+}
+
+export default {
+    getCategories,
+    getPosts,
+    getArticle,
+    saveComment,
+    getGuestbook,
+    saveGuestbook
 }

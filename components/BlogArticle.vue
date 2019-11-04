@@ -18,16 +18,22 @@
   </div>
 </template>
 <script>
-import { mapState } from "vuex";
 import "highlight.js/styles/tomorrow.css";
 import CommentList from "~/components/CommentList.vue";
 export default {
   components: {
     CommentList
   },
-  computed: mapState({
-    article: state => state.article
-  })
+  props: {
+    article: {
+      type: Object,
+      default() {
+        return {
+          comments: []
+        };
+      }
+    }
+  }
 };
 </script>
 <style>
@@ -61,6 +67,7 @@ export default {
 .article-title h1 {
   font-size: 25px;
   font-weight: 500;
+  margin-top: 8px;
 }
 
 .article-main {

@@ -1,5 +1,5 @@
 <template>
-  <blog-article></blog-article>
+  <blog-article :article="article"></blog-article>
 </template>
 <script>
 import BlogArticle from "~/components/BlogArticle.vue";
@@ -7,13 +7,30 @@ export default {
   components: {
     BlogArticle
   },
-  async validate({ params, store }) {
+  data() {
+    return {
+      article: {
+        comments: []
+      }
+    };
+  },
+  async asyncData({ $axios, params, error }) {
     const alias = params.article;
-    store.commit("setData", {
-      articleAlias: alias
+    const { code, data: article } = await $axios.$get("/api/article", {
+      params: {
+        alias
+      }
     });
-    await store.dispatch("getArticle");
-    return !!store.state.article;
+    if (code === 1 && article) {
+      return {
+        article
+      };
+    } else {
+      error({
+        statusCode: 404,
+        message: "未找到该页面"
+      });
+    }
   }
 };
 </script>

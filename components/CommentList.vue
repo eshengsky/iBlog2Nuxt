@@ -42,7 +42,7 @@
               <span>支持Markdown语法</span>
             </a>
           </Tooltip>
-          <Button type="primary" size="large" @click="postComment">
+          <Button type="primary" @click="postComment">
             <font-awesome-icon :icon="['far', 'paper-plane']"></font-awesome-icon>
             <span>{{ commentName }}</span>
           </Button>
@@ -78,7 +78,7 @@
         </div>
       </div>
       <ul>
-        <li v-for="comment1 in comments" :key="comment1._id">
+        <li v-for="comment1 in pagedComments" :key="comment1._id">
           <comment-item
             :comment="comment1"
             :pathId="comment1._id"
@@ -106,6 +106,9 @@
             </li>
           </ul>
         </li>
+        <li class="comments-last-li" v-if="hasNext">
+          <Button class="btn-load" size="large" @click="loadNext">查看更多</Button>
+        </li>
       </ul>
     </div>
     <no-ssr>
@@ -113,7 +116,7 @@
         <Alert type="warning" show-icon closable>评论及留言不支持1~4级标题。</Alert>
         <md-cheat-sheet></md-cheat-sheet>
         <div slot="footer">
-          <Button type="primary" size="large" @click="mcsShow = false">关闭</Button>
+          <Button type="primary" @click="mcsShow = false">关闭</Button>
         </div>
       </Modal>
     </no-ssr>
@@ -131,6 +134,8 @@ export default {
   props: ["comments", "from"],
   data() {
     return {
+      page: 1,
+      pageSize: 20,
       mcsShow: false,
       editorText: "",
       editorReplyText: "",
@@ -148,6 +153,18 @@ export default {
     ...mapState({
       user: state => state.user
     }),
+    pagedComments() {
+      const start = (this.page - 1) * this.pageSize;
+      return this.comments.slice(0, start + this.pageSize);
+    },
+    hasNext() {
+      const count = this.comments.length;
+      const pageCount =
+        count % this.pageSize === 0
+          ? parseInt(count / this.pageSize)
+          : parseInt(count / this.pageSize) + 1;
+      return pageCount > this.page;
+    },
     commentName() {
       return this.from === 2 ? "评论" : "留言";
     },
@@ -191,7 +208,7 @@ export default {
   },
   mounted() {
     // 回复框需默认显示，此处再手动设为隐藏，以确保tui-editor渲染正常
-    this.$nextTick(function() {
+    this.$nextTick(() => {
       this.isEditorReplyShown = false;
     });
   },
@@ -208,7 +225,7 @@ export default {
         this.$Message.success(`${this.commentName}成功`);
         this.getLatestData();
         this.editorText = "";
-      } else if (result.code === '-2') {
+      } else if (result.code === "-2") {
         this.$Message.error(`请登录后再${this.commentName}`);
       } else {
         this.$Message.error(`${this.commentName}失败`);
@@ -305,6 +322,10 @@ export default {
       setTimeout(() => {
         this.hideReply();
       }, 0);
+    },
+
+    loadNext() {
+      this.page++;
     }
   }
 };
@@ -578,5 +599,10 @@ export default {
   padding: 3px 5px 2px;
   background: #f90;
   color: #fff;
+}
+
+.comment-list > ul > li.comments-last-li {
+  border: 0;
+  margin-bottom: 0;
 }
 </style>

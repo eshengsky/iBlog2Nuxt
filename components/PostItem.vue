@@ -32,7 +32,16 @@
 </template>
 <script>
 export default {
-  props: ["post"],
+  props: {
+    post: {
+      type: Object,
+      default() {
+        return {
+          category: {}
+        }
+      }
+    }
+  },
   methods: {
     preview() {
       this.$store.commit("setData", {
@@ -76,6 +85,11 @@ export default {
   word-break: break-all;
   white-space: nowrap;
   max-width: 100%;
+  color: #444;
+}
+
+.blog-item h4 a:hover {
+  color: #2d8cf0;
 }
 
 .blog-item p {
@@ -83,8 +97,9 @@ export default {
 }
 
 .blog-item p,
-.blog-item span {
-  color: #777;
+.blog-item span,
+.blog-item a {
+  color: #555;
 }
 
 .hr-line-dashed {

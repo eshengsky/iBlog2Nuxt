@@ -2,8 +2,8 @@
   <div class="post-wrap">
     <div class="post-top">
       <div class="post-top-left">
-        <a>日期</a>
-        <a>标题</a>
+        <a @click="sortList('date')" :class="{ active: sortBy === 'date' }">日期</a>
+        <a @click="sortList('title')" :class="{ active: sortBy === 'title' }">标题</a>
       </div>
       <div class="post-top-right">
         <Select v-model="filterTypeVal" @on-change="filterTypeChange" style="width: 70px">
@@ -20,7 +20,7 @@
           clearable
           ref="inputComp"
           @on-enter="search"
-        ></Input>
+        />
         <DatePicker
           v-if="filterTypeVal === 'date'"
           v-model="inputDate"
@@ -40,11 +40,17 @@
       </div>
     </div>
     <ul class="post-list">
+      <li class="filter-li" v-show="alertShow">
+        <div class="alert-filter">
+          <div>共有<span>{{ count }}</span>条筛选结果</div>
+          <a @click="clearSearch">清除搜索</a>
+        </div>
+      </li>
       <li v-for="item in posts" :key="item._id">
         <post-item :post="item"></post-item>
       </li>
       <li class="last-li">
-        <div class="dot-loading" v-if="loading">
+        <div class="dot-loading" v-if="isLoading">
           <div></div>
           <div></div>
           <div></div>
@@ -54,7 +60,7 @@
           size="large"
           @click="loadNext"
           v-else-if="posts.length > 0 && hasNext"
-          :loading="loading"
+          :loading="isLoading"
         >下一页</Button>
         <div class="no-more" v-else-if="posts.length > 0 && !hasNext">没有更多数据</div>
         <div class="no-data" v-else>暂无数据</div>
@@ -71,9 +77,8 @@
     >
       <article class="preview-article" v-html="article.html"></article>
       <footer class="preview-footer">
-        <i-button size="large" @click="closeDrawer">关闭</i-button>
+        <i-button @click="closeDrawer">关闭</i-button>
         <i-button
-          size="large"
           type="primary"
           :to="`/blog/${article.category.alias}/${article.alias}`"
           target="_blank"
@@ -91,11 +96,28 @@ export default {
   components: {
     PostItem
   },
+  props: {
+    categories: {
+      type: Array,
+      default() {
+        return [];
+      }
+    }
+  },
   data() {
     return {
+      posts: [],
+      cateId: "",
+      isLoading: false,
+      hasNext: false,
+      count: 0,
+      sortBy: "date",
+      keyword: "",
       filterTypeVal: "text",
       inputTxt: "",
-      inputDate: "",
+      inputDate: ["", ""],
+      page: 1,
+      alertShow: false,
       dateOpts: {
         shortcuts: [
           {
@@ -145,27 +167,12 @@ export default {
     };
   },
   created() {
-    this.$store.commit("setData", {
-      loading: true
-    });
-  },
-  mounted() {
-    this.$store.commit("setData", {
-      postList: [],
-      hasNext: false,
-      filterType: "text",
-      keyword: ""
-    });
+    this.isLoading = true;
     const category = this.$route.params.category || "";
-    const findOne = this.$store.state.categoryList.find(
-      item => item.alias === category
-    );
+    const findOne = this.categories.find(item => item.alias === category);
     if (findOne) {
-      this.$store.commit("setData", {
-        page: 1,
-        cateId: findOne._id
-      });
-      this.$store.dispatch("getPosts");
+      this.cateId = findOne._id;
+      this.getPosts();
     }
   },
   computed: {
@@ -191,28 +198,52 @@ export default {
       return placeholder;
     },
     ...mapState({
-      page: state => state.page,
-      posts: state => state.postList,
-      hasNext: state => state.hasNext,
-      loading: state => state.loading,
-      drawer: state => state.drawer,
-      article: state => state.article
+      article: state => state.article,
+      drawer: state => state.drawer
     })
   },
   methods: {
-    loadNext() {
-      this.$store.commit("setData", {
-        page: this.page + 1
+    async getPosts() {
+      this.isLoading = true;
+      const startTime = new Date();
+      const { code, data } = await this.$axios.$get("/api/posts", {
+        params: {
+          cateId: this.cateId,
+          pageIndex: this.page,
+          filterType: this.filterType,
+          keyword: this.keyword,
+          sortBy: this.sortBy
+        }
       });
-      this.$store.dispatch("getPosts");
+
+      // loading 时间过短体验也不好，这里设置一个最少 loading 时间
+      const duration = new Date() - startTime;
+      const minLoadingTimeout = 1000;
+      const timeout =
+        duration > minLoadingTimeout ? 0 : minLoadingTimeout - duration;
+      await new Promise(resolve => {
+        setTimeout(() => {
+          if (code === 1) {
+            this.posts.push(...data.postList);
+            this.hasNext = data.hasNext;
+            this.count = data.count;
+          }
+          this.isLoading = false;
+          resolve();
+        }, timeout);
+      });
+    },
+    loadNext() {
+      this.page++;
+      this.getPosts();
     },
     closeDrawer() {
       this.$store.commit("setData", {
         drawer: false
       });
     },
-    filterTypeChange(val) {
-      this.$nextTick(function() {
+    filterTypeChange() {
+      this.$nextTick(() => {
         if (this.filterTypeVal !== "date") {
           this.$refs.inputComp.focus();
         } else {
@@ -220,21 +251,48 @@ export default {
         }
       });
     },
-    search() {
+    async search(checkKeyword = true) {
       let input = "";
       if (this.filterTypeVal === "date") {
         input = this.inputDate;
+        if (checkKeyword && !input[0] && !input[1]) {
+          document.querySelector(".ivu-date-picker input").click();
+          return;
+        }
       } else {
         input = this.inputTxt;
+        if (checkKeyword && !input) {
+          this.$refs.inputComp.focus();
+          return;
+        }
       }
-      this.$store.commit("setData", {
-        postList: [],
-        page: 1,
-        hasNext: false,
-        keyword: input,
-        filterType: this.filterTypeVal
-      });
-      this.$store.dispatch("getPosts");
+      this.alertShow = false;
+      this.posts = [];
+      this.page = 1;
+      this.hasNext = false;
+      this.keyword = input;
+      this.filterType = this.filterTypeVal;
+      await this.getPosts();
+      if (input) {
+        this.alertShow = true;
+      }
+    },
+    clearSearch() {
+      this.alertShow = false;
+      this.posts = [];
+      this.page = 1;
+      this.hasNext = false;
+      this.keyword = "";
+      this.inputTxt = "";
+      this.inputDate = ["", ""];
+      this.getPosts();
+    },
+    async sortList(sortBy) {
+      if (this.sortBy === sortBy) {
+        return;
+      }
+      this.sortBy = sortBy;
+      this.search(false);
     }
   }
 };
@@ -265,6 +323,10 @@ export default {
   cursor: pointer;
 }
 
+.post-top-left a.active {
+  color: #555;
+}
+
 .post-top-right {
   display: flex;
 }
@@ -279,6 +341,7 @@ export default {
 .btn-load {
   width: 100%;
   margin-bottom: 20px;
+  font-size: 15px;
 }
 
 .ivu-drawer-header-inner {
@@ -487,5 +550,23 @@ export default {
 .last-li {
   position: relative;
   height: 60px;
+}
+
+.alert-filter {
+  display: flex;
+  justify-content: space-between;
+  border: 1px solid #abdcff;
+  background-color: #f0faff;
+  padding: 10px 12px;
+  font-size: 14px;
+  position: relative;
+  border-radius: 4px;
+  margin-bottom: 20px;
+  color: #555;
+  line-height: 1.5;
+}
+
+.alert-filter span {
+  margin: 0 2px;
 }
 </style>
