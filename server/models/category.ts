@@ -8,7 +8,14 @@ interface ICategory extends Document {
   link: string;
 }
 
-export {ICategory};
+const noCategory = {
+  _id: "other",
+  cateName: "未分类",
+  alias: "others",
+  img: "/images/未分类.svg"
+} as ICategory;
+
+export { ICategory, noCategory };
 
 export interface ICategoryModel extends Model<ICategory> {}
 

@@ -107,20 +107,32 @@
             <Col>
               <Button type="primary" @click="getList">
                 <font-awesome-icon :icon="['fas', 'search']"></font-awesome-icon>
-                搜索
-                </Button>
+                <span>搜索</span>
+              </Button>
               <Button @click="reset">重置</Button>
             </Col>
           </Row>
         </Form>
       </div>
       <div class="data-wrap">
+        <div class="btn-wrap">
+          <Button type="error" :disabled="delDisabled">
+            <font-awesome-icon :icon="['far', 'trash-alt']"></font-awesome-icon>
+            <span class="badge-count" v-show="!delDisabled">{{ selection.length }}</span>
+          </Button>
+          <Button to="/admin/article">
+            <font-awesome-icon :icon="['fas', 'plus']"></font-awesome-icon>
+            <span>新的文章</span>
+          </Button>
+        </div>
+
         <Table
           :data="postList"
           :columns="tableColumns"
           :loading="isLoading"
           stripe
           @on-sort-change="changeSort"
+          @on-selection-change="changeSelect"
         >
           <template slot-scope="{ row }" slot="category">
             <a :href="`/blog/${row.category.alias}`" target="_blank">{{ row.category.cateName }}</a>
@@ -153,7 +165,6 @@
   </div>
 </template>
 <script lang="ts">
-import Vue from "vue";
 import { IResp } from "@/server/types";
 export default {
   name: "PageAdminIndex",
@@ -226,6 +237,7 @@ export default {
       postList: [],
       total: 0,
       isLoading: false,
+      selection: [],
       tableColumns: [
         {
           type: "selection",
@@ -235,13 +247,14 @@ export default {
         {
           title: "分类",
           slot: "category",
-          minWidth: 150,
+          minWidth: 150
         },
         {
           title: "标题",
           slot: "title",
+          key: "title",
           sortable: "custom",
-          minWidth: 300,
+          minWidth: 300
         },
         {
           title: "发布时间",
@@ -286,6 +299,9 @@ export default {
       const start = new Date();
       start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
       return start;
+    },
+    delDisabled() {
+      return this.selection.length === 0;
     }
   },
 
@@ -299,12 +315,14 @@ export default {
       }
     },
     async getList() {
+      this.selection = [];
       this.isLoading = true;
       const { code, data }: IResp = await this.$axios.$get("/admin/api/posts", {
         params: {
           pageIndex: this.page,
           pageSize: this.pageSize,
           sortBy: this.sortBy,
+          order: this.order,
           ...this.filters
         }
       });
@@ -332,14 +350,18 @@ export default {
 
     changeSort({ key, order }: { key: string; order: string }) {
       let sortBy = key;
-      if (key === 'createTimeStr') {
-        sortBy = 'createTime';
-      } else if (key === 'modifyTimeStr') {
-        sortBy = 'modifyTime';
+      if (key === "createTimeStr") {
+        sortBy = "createTime";
+      } else if (key === "modifyTimeStr") {
+        sortBy = "modifyTime";
       }
       this.sortBy = sortBy;
       this.order = order;
       this.getList();
+    },
+
+    changeSelect(selection) {
+      this.selection = selection;
     },
 
     reset() {
@@ -360,7 +382,7 @@ export default {
 <style>
 .filter-wrap {
   max-width: 800px;
-    margin: 10px auto;
+  margin: 10px auto 20px;
 }
 
 .page-wrap {
@@ -372,5 +394,19 @@ export default {
 .action-td button {
   width: 36px;
   padding: 0;
+}
+
+.badge-count {
+  border-radius: 30px;
+  padding: 0 5px;
+  background: #fff;
+  color: #ed4014;
+  font-weight: bold;
+  font-size: 12px;
+  line-height: 2;
+}
+
+.btn-wrap {
+  margin-bottom: 10px;
 }
 </style>

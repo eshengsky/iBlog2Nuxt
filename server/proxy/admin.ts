@@ -1,5 +1,5 @@
 import DB from "../db";
-import { ICategoryModel, ICategory } from "../models/category";
+import { noCategory } from "../models/category";
 const { Category, Post, Guestbook } = DB.Models;
 
 interface IPostParams {
@@ -96,19 +96,13 @@ function getPostsQuery(params: IPostParams) {
 
 async function getCategories() {
   const categories = await Category.find().exec();
-  categories.push({
-    _id: "5d380b18ba304f18c455eb38",
-    cateName: "未分类",
-    alias: "others",
-    img: "/images/未分类.svg"
-  } as ICategory);
+  categories.push(noCategory);
   return categories;
 }
 
 const getPosts = async (params: IPostParams) => {
   const page = parseInt(params.pageIndex);
   const pageSize = parseInt(params.pageSize);
-
   const options: any = {};
   options.skip = (page - 1) * pageSize;
   options.limit = pageSize;

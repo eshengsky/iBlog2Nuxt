@@ -13,11 +13,13 @@ import {
     faPenNib,
     faCommentDots,
     faUser,
-    faPencilAlt
+    faPencilAlt,
+    faPlus,
+    faExternalLinkAlt
 } from '@fortawesome/free-solid-svg-icons';
 import {
     faMarkdown
 } from '@fortawesome/free-brands-svg-icons'
 config.autoAddCss = false;
-library.add(faClock, faMapSigns, faSearch, faMarkdown, faPaperPlane, faTrashAlt, faReply, faPenNib, faCommentDots, faUser, faPencilAlt);
+library.add(faClock, faMapSigns, faSearch, faMarkdown, faPaperPlane, faTrashAlt, faReply, faPenNib, faCommentDots, faUser, faPencilAlt, faPlus, faExternalLinkAlt);
 Vue.component('font-awesome-icon', FontAwesomeIcon);

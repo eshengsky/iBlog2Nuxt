@@ -487,15 +487,15 @@ export default {
   font-size: 14px;
 }
 
-.ivu-select-single .ivu-select-selection .ivu-select-placeholder,
-.ivu-select-single .ivu-select-selection .ivu-select-selected-value {
+.post-top-right .ivu-select-single .ivu-select-selection .ivu-select-placeholder,
+.post-top-right .ivu-select-single .ivu-select-selection .ivu-select-selected-value {
   font-size: 14px;
   padding-left: 12px;
 }
 
-.ivu-select-visible .ivu-select-selection,
-.ivu-select-selection-focused,
-.ivu-select-selection:hover {
+.post-top-right .ivu-select-visible .ivu-select-selection,
+.post-top-right .ivu-select-selection-focused,
+.post-top-right .ivu-select-selection:hover {
   border-color: #dcdee3;
   box-shadow: none;
 }
@@ -510,13 +510,13 @@ export default {
   margin-right: -1px;
 }
 
-.ivu-input {
+.post-top-right .ivu-input {
   border-radius: 0;
   font-size: 13px;
 }
 
-.ivu-input:hover,
-.ivu-input:focus {
+.post-top-right .ivu-input:hover,
+.post-top-right .ivu-input:focus {
   border-color: #dcdee2;
   box-shadow: none;
 }
@@ -530,7 +530,7 @@ export default {
   z-index: 1;
 }
 
-.ivu-date-picker-focused input {
+.post-top-right .ivu-date-picker-focused input {
   border-color: #dcdee2;
   box-shadow: none;
 }
