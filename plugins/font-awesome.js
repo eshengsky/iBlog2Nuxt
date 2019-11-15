@@ -3,8 +3,11 @@ import { library, config } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import {
     faClock,
+    faTrashAlt,
     faPaperPlane,
-    faTrashAlt
+    faFileAlt,
+    faSave,
+    faQuestionCircle
 } from '@fortawesome/free-regular-svg-icons';
 import {
     faMapSigns,
@@ -15,11 +18,37 @@ import {
     faUser,
     faPencilAlt,
     faPlus,
-    faExternalLinkAlt
+    faExternalLinkAlt,
+    faUndo,
+    faHistory,
+    faTimes,
+    faTrashAlt as fasTrashAlt
 } from '@fortawesome/free-solid-svg-icons';
 import {
     faMarkdown
 } from '@fortawesome/free-brands-svg-icons'
 config.autoAddCss = false;
-library.add(faClock, faMapSigns, faSearch, faMarkdown, faPaperPlane, faTrashAlt, faReply, faPenNib, faCommentDots, faUser, faPencilAlt, faPlus, faExternalLinkAlt);
+library.add(
+    faClock,
+    faMapSigns,
+    faSearch,
+    faMarkdown,
+    faPaperPlane,
+    faTrashAlt,
+    fasTrashAlt,
+    faReply,
+    faPenNib,
+    faCommentDots,
+    faUser,
+    faPencilAlt,
+    faPlus,
+    faExternalLinkAlt,
+    faUndo,
+    faSave,
+    faHistory,
+    faFileAlt,
+    faTimes,
+    faQuestionCircle
+);
 Vue.component('font-awesome-icon', FontAwesomeIcon);
+

@@ -2,8 +2,9 @@
   <blog-article :article="article"></blog-article>
 </template>
 <script>
+import Vue from "vue";
 import BlogArticle from "~/components/BlogArticle.vue";
-export default {
+export default Vue.extend({
   components: {
     BlogArticle
   },
@@ -32,5 +33,5 @@ export default {
       });
     }
   }
-};
+});
 </script>

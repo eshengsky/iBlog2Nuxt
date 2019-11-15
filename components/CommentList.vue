@@ -123,10 +123,11 @@
   </div>
 </template>
 <script>
+import Vue from "vue";
 import CommentItem from "~/components/CommentItem.vue";
 import MdCheatSheet from "~/components/MdCheatSheet.vue";
 import { mapState } from "vuex";
-export default {
+export default Vue.extend({
   components: {
     CommentItem,
     MdCheatSheet
@@ -185,6 +186,7 @@ export default {
           "ol",
           "task",
           "divider",
+          "image",
           "table",
           "link",
           "divider",
@@ -222,13 +224,13 @@ export default {
         content
       });
       if (result.code === "1") {
-        this.$Message.success(`${this.commentName}成功`);
+        this.$message.success(`${this.commentName}成功`);
         this.getLatestData();
         this.editorText = "";
       } else if (result.code === "-2") {
-        this.$Message.error(`请登录后再${this.commentName}`);
+        this.$message.error(`请登录后再${this.commentName}`);
       } else {
-        this.$Message.error(`${this.commentName}失败`);
+        this.$message.error(`${this.commentName}失败`);
       }
     },
 
@@ -316,7 +318,7 @@ export default {
         content,
         pathId: this.pathId
       });
-      this.$Message.success("回复成功");
+      this.$message.success("回复成功");
       this.getLatestData();
       this.editorReplyText = "";
       setTimeout(() => {
@@ -328,7 +330,7 @@ export default {
       this.page++;
     }
   }
-};
+});
 </script>
 <style>
 .tui-editor-defaultUI {

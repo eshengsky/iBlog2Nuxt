@@ -13,7 +13,8 @@
   </div>
 </template>
 <script>
-export default {
+import Vue from "vue";
+export default Vue.extend({
   props: {
     categories: {
       type: Array,
@@ -22,7 +23,7 @@ export default {
       }
     }
   }
-};
+});
 </script>
 <style scoped>
 .category-wrap {

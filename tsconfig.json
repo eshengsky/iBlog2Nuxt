@@ -14,7 +14,7 @@
       "~/*": ["./*"],
       "@/*": ["./*"]
     },
-    "types": ["@types/node", "@nuxt/types", "@nuxt/vue-app", "@nuxtjs/axios"]
+    "types": ["@types/node", "@nuxt/types", "@nuxt/vue-app", "@nuxtjs/axios", "ant-design-vue/types"]
   },
   "exclude": ["node_modules"]
 }

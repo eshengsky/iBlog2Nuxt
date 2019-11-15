@@ -28,8 +28,9 @@
   </no-ssr>
 </template>
 <script>
+import Vue from "vue";
 import { mapState } from "vuex";
-export default {
+export default Vue.extend({
   props: ["comment", "pathId", "hideReply"],
   computed: {
     ...mapState({
@@ -37,5 +38,5 @@ export default {
       authGithub: state => state.config.authGithub
     })
   }
-};
+});
 </script>

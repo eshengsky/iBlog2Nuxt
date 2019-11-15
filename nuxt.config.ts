@@ -32,18 +32,16 @@ const config: Configuration = {
    */
   css: [
     "@fortawesome/fontawesome-svg-core/styles.css",
-    "view-design/dist/styles/iview.css",
+    "ant-design-vue/dist/antd.css",
     "~/static/main.css"
   ],
   /*
    ** Plugins to load before mounting the App
    */
   plugins: [
-    "@/plugins/composition-api",
-    "@/plugins/view-design",
+    "@/plugins/ant-design",
     "@/plugins/font-awesome",
-    { src: "@/plugins/tui-editor", ssr: false },
-    { src: "@/plugins/tui-viewer", ssr: false }
+    { src: "@/plugins/tui-editor", mode: "client" }
   ],
   buildModules: ["@nuxt/typescript-build"],
   /*
@@ -51,7 +49,7 @@ const config: Configuration = {
    */
   modules: [
     // Doc: https://axios.nuxtjs.org/usage
-    "@nuxtjs/axios",
+    "@nuxtjs/axios"
     // '@nuxtjs/pwa',
   ],
   /*
@@ -68,7 +66,7 @@ const config: Configuration = {
      */
     extend(config, ctx) {}
   },
-  watch: ['~/server']
+  watch: ["~/server"]
 };
 
 export default config;

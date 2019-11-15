@@ -18,9 +18,10 @@
   </div>
 </template>
 <script>
+import Vue from "vue";
 import "highlight.js/styles/tomorrow.css";
 import CommentList from "~/components/CommentList.vue";
-export default {
+export default Vue.extend({
   components: {
     CommentList
   },
@@ -34,7 +35,7 @@ export default {
       }
     }
   }
-};
+});
 </script>
 <style>
 .detail-wrap {

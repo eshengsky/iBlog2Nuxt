@@ -13,8 +13,8 @@ function getPostsQuery(params) {
     const query: any = {};
     query.isActive = true;
     query.isDraft = false;
-    if (params.cateId) {
-        query.category = params.cateId;
+    if (params.category) {
+        query.category = params.category;
     }
     const keyword = params.keyword;
     if (keyword) {
@@ -59,22 +59,8 @@ function getPostsQuery(params) {
     return query;
 }
 
-async function getCategories (includeAll = false) {
-    const categories = await Category.find().exec();
-    if (includeAll) {
-        categories.unshift({
-            _id: '',
-            cateName: '全部分类',
-            alias: '',
-            img: '/images/全部分类.svg'
-        } as ICategory);
-        categories.push({
-            _id: '5d380b18ba304f18c455eb38',
-            cateName: '未分类',
-            alias: 'others',
-            img: '/images/未分类.svg'
-        } as ICategory);
-    }
+async function getCategories () {
+    const categories = await Category.find({}, {}, { sort: 'sequence cateName' }).exec();
     return categories;
 }
 

@@ -31,7 +31,8 @@
   </div>
 </template>
 <script>
-export default {
+import Vue from "vue";
+export default Vue.extend({
   props: {
     post: {
       type: Object,
@@ -50,7 +51,7 @@ export default {
       });
     }
   }
-};
+});
 </script>
 <style scoped>
 .blog-item {

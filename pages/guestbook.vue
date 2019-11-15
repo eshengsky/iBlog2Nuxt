@@ -6,10 +6,11 @@
   </div>
 </template>
 <script>
+import Vue from "vue";
 import { mapState } from "vuex";
 import CommentList from "~/components/CommentList.vue";
 import "highlight.js/styles/tomorrow.css";
-export default {
+export default Vue.extend({
   components: {
     CommentList
   },
@@ -19,7 +20,7 @@ export default {
   computed: mapState({
     guestbook: state => state.guestbook
   })
-};
+});
 </script>
 <style scoped>
 .guestbook-wrap {

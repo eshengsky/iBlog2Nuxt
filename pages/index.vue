@@ -7,10 +7,11 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import Vue from "vue";
 import CategoryList from "~/components/CategoryList.vue";
 import PostList from "~/components/PostList.vue";
-export default {
+export default Vue.extend({
   components: {
     CategoryList,
     PostList
@@ -22,7 +23,7 @@ export default {
     };
   },
 
-  async asyncData({ $axios, params, error }) {
+  async asyncData({ $axios, params, error }: any) {
     const { code, data } = await $axios.$get("/api/categories");
     if (code === 1) {
       const category = params.category || "";
@@ -40,5 +41,5 @@ export default {
       });
     }
   }
-};
+});
 </script>

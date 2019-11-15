@@ -6,7 +6,7 @@ const router = express.Router();
 router.get('/categories', async (req, res, next) => {
     let resp: IResp;
     try {
-        const categories = await proxy.getCategories(true);
+        const categories = await proxy.getCategories();
         resp = {
             code: 1,
             data: categories

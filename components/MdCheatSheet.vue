@@ -140,7 +140,8 @@
   </div>
 </template>
 <script>
-export default {
+import Vue from "vue";
+export default Vue.extend({
   data() {
     return {
       title: `# 1级标题
@@ -184,7 +185,7 @@ export default {
 			return val.replace(/<br>/g, '').replace(/&nbsp;/g, ' ');
 		}
 	}
-};
+});
 </script>
 <style>
 .mcs-table {

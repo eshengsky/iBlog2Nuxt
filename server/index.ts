@@ -67,7 +67,7 @@ app.get(
 );
 
 app.get("/logout", function(req, res) {
-  (req as any).logout();
+  req.logout();
   const url = req.headers.referer || "/";
   res.redirect(url);
 });

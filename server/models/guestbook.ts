@@ -1,4 +1,4 @@
-import { model, Document, Model } from "mongoose";
+import { model, models, Document, Model } from "mongoose";
 import CommentSchema, { IComment } from "./comment";
 
 export interface IGuestbookModel extends Model<IComment> {}
@@ -7,7 +7,11 @@ export class Guestbook {
   private _model: Model<IComment>;
 
   constructor() {
-    this._model = model<IComment>("guestbook", CommentSchema, "guestbook");
+    if (models["guestbook"]) {
+      this._model = models["guestbook"];
+    } else {
+      this._model = model<IComment>("guestbook", CommentSchema, "guestbook");
+    }
   }
 
   public get model(): Model<IComment> {

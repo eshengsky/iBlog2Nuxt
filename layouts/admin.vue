@@ -1,114 +1,81 @@
 <template>
-  <div class="layout">
-    <Layout>
-      <Sider
-        ref="side1"
-        hide-trigger
-        collapsible
-        :collapsed-width="78"
-        v-model="isCollapsed"
-        style="height: 100vh;"
-      >
-        <Menu active-name="1-1" theme="dark" width="auto" :class="menuitemClasses">
-          <MenuItem name="1-1" to="/admin/categoryManage">
-            <Icon type="ios-navigate"></Icon>
-            <span>文章管理</span>
-          </MenuItem>
-          <MenuItem name="1-2" to="/admin/">
-            <Icon type="ios-search"></Icon>
-            <span>分类管理</span>
-          </MenuItem>
-          <MenuItem name="1-3" to="/admin/commentManage">
-            <Icon type="ios-settings"></Icon>
-            <span>评论管理</span>
-          </MenuItem>
-        </Menu>
-      </Sider>
-      <Layout>
-        <Header :style="{padding: 0}" class="layout-header-bar">
-          <Icon
-            @click.native="collapsedSider"
-            :class="rotateIcon"
-            :style="{margin: '0 20px'}"
-            type="md-menu"
-            size="24"
-          ></Icon>
-        </Header>
-        <Content :style="{margin: '20px', padding: '16px', background: '#fff', minHeight: '260px'}">
+  <a-locale-provider :locale="zh_CN">
+    <a-layout id="components-layout-demo-custom-trigger">
+      <a-layout-sider :trigger="null" collapsible v-model="collapsed" class="layout-sider">
+        <div class="logo" />
+        <a-menu theme="dark" mode="inline" :defaultSelectedKeys="['article-manage']">
+          <a-menu-item key="article-manage" title="文章管理">
+            <a href="/admin/article-manage">
+              <a-icon type="video-camera" />
+              <span>文章管理</span>
+            </a>
+          </a-menu-item>
+          <a-menu-item key="category-manage" title="分类管理">
+            <a href="/admin/category-manage">
+              <a-icon type="user" />
+              <span>分类管理</span>
+            </a>
+          </a-menu-item>
+          <a-menu-item key="3">
+            <a-icon type="upload" />
+            <span>nav 3</span>
+          </a-menu-item>
+        </a-menu>
+      </a-layout-sider>
+      <a-layout :style="{ marginLeft: '200px' }">
+        <a-layout-header style="background: #fff; padding: 0">
+          <a-icon
+            class="trigger"
+            :type="collapsed ? 'menu-unfold' : 'menu-fold'"
+            @click="()=> collapsed = !collapsed"
+          />
+        </a-layout-header>
+        <a-layout-content
+          :style="{ margin: '24px 16px', padding: '24px', background: '#fff', minHeight: '80vh' }"
+        >
           <nuxt />
-        </Content>
-      </Layout>
-    </Layout>
-  </div>
+        </a-layout-content>
+      </a-layout>
+    </a-layout>
+  </a-locale-provider>
 </template>
 <script>
+import zh_CN from "ant-design-vue/lib/locale-provider/zh_CN";
+import moment from "moment";
+import "moment/locale/zh-cn";
+moment.locale("zh-cn");
 export default {
   data() {
     return {
-      isCollapsed: false
+      collapsed: false,
+      zh_CN
     };
-  },
-  computed: {
-    rotateIcon() {
-      return ["menu-icon", this.isCollapsed ? "rotate-icon" : ""];
-    },
-    menuitemClasses() {
-      return ["menu-item", this.isCollapsed ? "collapsed-menu" : ""];
-    }
-  },
-  methods: {
-    collapsedSider() {
-      this.$refs.side1.toggleCollapse();
-    }
   }
 };
 </script>
-<style scoped>
-.layout {
-  background: #f5f7f9;
-  position: relative;
-  overflow: hidden;
+<style>
+#components-layout-demo-custom-trigger .trigger {
+  font-size: 18px;
+  line-height: 64px;
+  padding: 0 24px;
+  cursor: pointer;
+  transition: color 0.3s;
 }
-.layout-header-bar {
-  background: #fff;
-  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+
+#components-layout-demo-custom-trigger .trigger:hover {
+  color: #1890ff;
 }
-.layout-logo-left {
-  width: 90%;
-  height: 30px;
-  background: #5b6270;
-  border-radius: 3px;
-  margin: 15px auto;
+
+#components-layout-demo-custom-trigger .logo {
+  height: 32px;
+  background: rgba(255, 255, 255, 0.2);
+  margin: 16px;
 }
-.menu-icon {
-  transition: all 0.3s;
-}
-.rotate-icon {
-  transform: rotate(-90deg);
-}
-.menu-item span {
-  display: inline-block;
-  overflow: hidden;
-  width: 69px;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  vertical-align: bottom;
-  transition: width 0.2s ease 0.2s;
-}
-.menu-item i {
-  transform: translateX(0px);
-  transition: font-size 0.2s ease, transform 0.2s ease;
-  vertical-align: middle;
-  font-size: 16px;
-}
-.collapsed-menu span {
-  width: 0px;
-  transition: width 0.2s ease;
-}
-.collapsed-menu i {
-  transform: translateX(5px);
-  transition: font-size 0.2s ease 0.2s, transform 0.2s ease 0.2s;
-  vertical-align: middle;
-  font-size: 22px;
+
+.layout-sider {
+  overflow: auto;
+  height: 100vh;
+  position: fixed;
+  left: 0;
 }
 </style>

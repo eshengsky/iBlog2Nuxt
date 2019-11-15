@@ -18,11 +18,18 @@ export default class DB {
   private _models: IModels;
 
   private constructor() {
+    // 连接 MongoDB
     connect(
       config.mongoUrl,
       { 
+        useUnifiedTopology: true,
         useNewUrlParser: true,
-        useCreateIndex: true
+        useCreateIndex: true,
+        useFindAndModify: false
+      },
+      () => {
+        // 设置默认数据
+        (this._models.Category as any).initData();
       }
     );
     this._db = connection;

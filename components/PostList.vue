@@ -88,10 +88,11 @@
   </div>
 </template>
 <script>
+import Vue from "vue";
 import { mapState } from "vuex";
 import PostItem from "~/components/PostItem.vue";
 import "highlight.js/styles/tomorrow.css";
-export default {
+export default Vue.extend({
   scrollToTop: true,
   components: {
     PostItem
@@ -107,7 +108,7 @@ export default {
   data() {
     return {
       posts: [],
-      cateId: "",
+      category: "",
       isLoading: false,
       hasNext: false,
       count: 0,
@@ -171,7 +172,7 @@ export default {
     const category = this.$route.params.category || "";
     const findOne = this.categories.find(item => item.alias === category);
     if (findOne) {
-      this.cateId = findOne._id;
+      this.category = findOne._id;
       this.getPosts();
     }
   },
@@ -208,7 +209,7 @@ export default {
       const startTime = new Date();
       const { code, data } = await this.$axios.$get("/api/posts", {
         params: {
-          cateId: this.cateId,
+          category: this.category,
           pageIndex: this.page,
           filterType: this.filterType,
           keyword: this.keyword,
@@ -295,7 +296,7 @@ export default {
       this.search(false);
     }
   }
-};
+});
 </script>
 <style>
 .post-wrap {
