@@ -2,7 +2,7 @@
   <no-ssr>
     <div class="comment-item">
       <div class="avatar">
-        <img :src="comment.avatar" @error="$emit('imgLoadError', $event)" />
+        <img :data-src="comment.avatar" class="lazyload" @error="$emit('imgLoadError', $event)" />
       </div>
       <div class="comment-right">
         <div class="comment-title">

@@ -21,7 +21,7 @@
     </div>
     <div class="gituser-wrap" v-if="user">
       <div class="avatar">
-        <img :src="user._json.avatar_url" @error="imgLoadError($event)" />
+        <img :data-src="user._json.avatar_url" class="lazyload" @error="imgLoadError($event)" />
       </div>
       <div class="editor-wrap">
         <no-ssr>
@@ -124,6 +124,7 @@
 </template>
 <script>
 import Vue from "vue";
+import "lazysizes";
 import CommentItem from "~/components/CommentItem.vue";
 import MdCheatSheet from "~/components/MdCheatSheet.vue";
 import { mapState } from "vuex";
@@ -460,7 +461,7 @@ export default Vue.extend({
 }
 
 .avatar img {
-  transition: transform 0.5s;
+  transition: transform 0.5s, opacity 1.5s;
 }
 
 .avatar img:hover {
@@ -565,6 +566,8 @@ export default Vue.extend({
   position: fixed;
   top: 50%;
   transform: translate(0, -50%);
+  box-shadow: 0px 0px 10px #aaa;
+  border-radius: 5px;
 }
 
 .comment-list li > ul {
@@ -606,5 +609,14 @@ export default Vue.extend({
 .comment-list > ul > li.comments-last-li {
   border: 0;
   margin-bottom: 0;
+}
+
+.lazyload,
+.lazyloading {
+  opacity: 0;
+}
+
+.lazyloaded {
+  opacity: 1;
 }
 </style>

@@ -30,6 +30,7 @@
     "express": "^4.16.4",
     "express-session": "^1.17.0",
     "highlight.js": "^9.16.2",
+    "lazysizes": "^5.2.0-beta1",
     "markdown-it": "^9.1.0",
     "moment": "^2.24.0",
     "mongoose": "^5.7.11",
