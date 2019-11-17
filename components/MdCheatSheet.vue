@@ -15,7 +15,7 @@
             <code v-html="title"></code>
           </td>
           <td>
-            <viewer :value="title | clean" />
+            <tui-editor-viewer :value="title | clean" />
           </td>
         </tr>
         <tr>
@@ -24,7 +24,7 @@
             <code v-html="bold"></code>
           </td>
           <td>
-            <viewer :value="bold | clean" />
+            <tui-editor-viewer :value="bold | clean" />
           </td>
         </tr>
         <tr>
@@ -33,7 +33,7 @@
             <code v-html="italic"></code>
           </td>
           <td>
-            <viewer :value="italic | clean" />
+            <tui-editor-viewer :value="italic | clean" />
           </td>
         </tr>
         <tr>
@@ -42,7 +42,7 @@
             <code v-html="strike"></code>
           </td>
           <td>
-            <viewer :value="strike | clean" />
+            <tui-editor-viewer :value="strike | clean" />
           </td>
         </tr>
         <tr>
@@ -51,7 +51,7 @@
             <code v-html="blockquote"></code>
           </td>
           <td>
-            <viewer :value="blockquote | clean" />
+            <tui-editor-viewer :value="blockquote | clean" />
           </td>
         </tr>
         <tr>
@@ -60,7 +60,7 @@
             <code v-html="ol"></code>
           </td>
           <td>
-            <viewer :value="ol | clean" />
+            <tui-editor-viewer :value="ol | clean" />
           </td>
         </tr>
         <tr>
@@ -69,7 +69,7 @@
             <code v-html="ul"></code>
           </td>
           <td>
-            <viewer :value="ul | clean" />
+            <tui-editor-viewer :value="ul | clean" />
           </td>
         </tr>
         <tr>
@@ -78,7 +78,7 @@
             <code v-html="taskList"></code>
           </td>
           <td>
-            <viewer :value="taskList | clean" />
+            <tui-editor-viewer :value="taskList | clean" />
           </td>
         </tr>
         <tr>
@@ -87,7 +87,7 @@
             <code v-html="code"></code>
           </td>
           <td>
-            <viewer :value="code | clean" />
+            <tui-editor-viewer :value="code | clean" />
           </td>
         </tr>
         <tr>
@@ -96,7 +96,7 @@
             <code v-html="blockCode"></code>
           </td>
           <td>
-            <viewer :value="blockCode | clean" />
+            <tui-editor-viewer :value="blockCode | clean" />
           </td>
         </tr>
         <tr>
@@ -105,7 +105,7 @@
             <code v-html="hr"></code>
           </td>
           <td>
-            <viewer :value="hr | clean" />
+            <tui-editor-viewer :value="hr | clean" />
           </td>
         </tr>
         <tr>
@@ -114,7 +114,7 @@
             <code v-html="link"></code>
           </td>
           <td>
-            <viewer :value="link | clean" />
+            <tui-editor-viewer :value="link | clean" />
           </td>
         </tr>
         <tr>
@@ -123,7 +123,7 @@
             <code v-html="image"></code>
           </td>
           <td>
-            <viewer :value="image | clean" />
+            <tui-editor-viewer :value="image | clean" />
           </td>
         </tr>
         <tr>
@@ -132,14 +132,14 @@
             <code v-html="table"></code>
           </td>
           <td>
-            <viewer :value="table | clean" />
+            <tui-editor-viewer :value="table | clean" />
           </td>
         </tr>
       </tbody>
     </table>
   </div>
 </template>
-<script>
+<script lang="ts">
 import Vue from "vue";
 export default Vue.extend({
   data() {

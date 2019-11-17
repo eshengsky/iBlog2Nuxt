@@ -1,214 +1,169 @@
 <template>
   <div>
-    <div class="filter-wrap">
-      <a-form v-model="filters">
-        <a-row>
-          <a-col :xs="24" :sm="24" :md="10">
-            <a-form-item label="分类" :colon="false">
-              <a-select v-model="filters.category" allowClear>
-                <a-select-option
-                  v-for="(item, index) in categories"
-                  :value="item._id"
-                  :key="index"
-                  >{{ item.cateName }}</a-select-option
-                >
-              </a-select>
-            </a-form-item>
-          </a-col>
-          <a-col :xs="24" :sm="24" :md="{ span: 10, offset: 2 }">
-            <a-form-item label="标题" :colon="false">
-              <a-input
-                placeholder="标题关键字"
-                v-model="filters.title"
-                allowClear
-              />
-            </a-form-item>
-          </a-col>
-        </a-row>
-        <a-row>
-          <a-col :xs="24" :sm="24" :md="10">
-            <a-form-item label="全文" :colon="false">
-              <a-input
-                placeholder="全文关键字"
-                v-model="filters.content"
-                allowClear
-              />
-            </a-form-item>
-          </a-col>
-          <a-col :xs="24" :sm="24" :md="{ span: 10, offset: 2 }">
-            <a-form-item label="标签" :colon="false">
-              <a-input
-                placeholder="标签关键字"
-                v-model="filters.label"
-                allowClear
-              />
-            </a-form-item>
-          </a-col>
-        </a-row>
-        <a-row>
-          <a-col :xs="24" :sm="24" :md="10">
-            <a-form-item label="创建日期" :colon="false">
-              <a-range-picker
-                v-model="filters.createTimeMoment"
-                :ranges="rangeDate"
-                :defaultPickerValue="defaultRange"
-              ></a-range-picker>
-            </a-form-item>
-          </a-col>
-          <a-col :xs="24" :sm="24" :md="{ span: 10, offset: 2 }">
-            <a-form-item label="修改日期" :colon="false">
-              <a-range-picker
-                v-model="filters.modifyTimeMoment"
-                :ranges="rangeDate"
-                :defaultPickerValue="defaultRange"
-              ></a-range-picker>
-            </a-form-item>
-          </a-col>
-        </a-row>
-        <a-row>
-          <a-col :xs="24" :sm="11" :md="4">
-            <a-form-item label="是否外链" :colon="false">
-              <a-select v-model="filters.isLink" allowClear>
-                <a-select-option value="1">是</a-select-option>
-                <a-select-option value="-1">否</a-select-option>
-              </a-select>
-            </a-form-item>
-          </a-col>
-          <a-col
-            :xs="24"
-            :sm="{ span: 11, offset: 2 }"
-            :md="{ span: 4, offset: 2 }"
-          >
-            <a-form-item label="是否草稿" :colon="false">
-              <a-select v-model="filters.isDraft" allowClear>
-                <a-select-option value="1">是</a-select-option>
-                <a-select-option value="-1">否</a-select-option>
-              </a-select>
-            </a-form-item>
-          </a-col>
-          <a-col :xs="24" :sm="11" :md="{ span: 4, offset: 2 }">
-            <a-form-item label="是否有评论" :colon="false">
-              <a-select v-model="filters.hasComments" allowClear>
-                <a-select-option value="1">是</a-select-option>
-                <a-select-option value="-1">否</a-select-option>
-              </a-select>
-            </a-form-item>
-          </a-col>
-          <a-col
-            :xs="24"
-            :sm="{ span: 11, offset: 2 }"
-            :md="{ span: 4, offset: 2 }"
-          >
-            <a-form-item label="是否已删除" :colon="false">
-              <a-select v-model="filters.isDeleted" allowClear>
-                <a-select-option value="1">是</a-select-option>
-                <a-select-option value="-1">否</a-select-option>
-              </a-select>
-            </a-form-item>
-          </a-col>
-        </a-row>
-        <a-row type="flex" justify="center">
-          <a-col>
-            <a-button type="primary" @click="search">
-              <font-awesome-icon
-                :icon="['fas', 'search']"
-                style="margin-right: 4px;"
-              ></font-awesome-icon
-              >搜索
-            </a-button>
-            <a-button @click="reset">重置</a-button>
-          </a-col>
-        </a-row>
-      </a-form>
-    </div>
-    <div class="data-wrap">
-      <div class="btn-wrap">
-        <a-button type="error" :disabled="delDisabled" @click="delAll">
-          <span>删除</span>
-          <a-badge :count="selectedRowKeys.length" class="badge-count" />
-          <span v-show="selectedRowKeys.length">项</span>
-        </a-button>
-        <a-button href="/admin/article-edit" type="dashed">
-          <font-awesome-icon
-            :icon="['fas', 'plus']"
-            style="margin-right: 4px;"
-          ></font-awesome-icon
-          >新的文章
-        </a-button>
+    <div class="page-header">文章管理</div>
+    <div class="page-body">
+      <div class="filter-wrap">
+        <a-form v-model="filters">
+          <a-row>
+            <a-col :xs="24" :sm="24" :md="10">
+              <a-form-item label="分类" :colon="false">
+                <a-select v-model="filters.category" allowClear>
+                  <a-select-option
+                    v-for="(item, index) in categories"
+                    :value="item._id"
+                    :key="index"
+                  >{{ item.cateName }}</a-select-option>
+                </a-select>
+              </a-form-item>
+            </a-col>
+            <a-col :xs="24" :sm="24" :md="{ span: 10, offset: 2 }">
+              <a-form-item label="标题" :colon="false">
+                <a-input placeholder="标题关键字" v-model="filters.title" allowClear />
+              </a-form-item>
+            </a-col>
+          </a-row>
+          <a-row>
+            <a-col :xs="24" :sm="24" :md="10">
+              <a-form-item label="全文" :colon="false">
+                <a-input placeholder="全文关键字" v-model="filters.content" allowClear />
+              </a-form-item>
+            </a-col>
+            <a-col :xs="24" :sm="24" :md="{ span: 10, offset: 2 }">
+              <a-form-item label="标签" :colon="false">
+                <a-input placeholder="标签关键字" v-model="filters.label" allowClear />
+              </a-form-item>
+            </a-col>
+          </a-row>
+          <a-row>
+            <a-col :xs="24" :sm="24" :md="10">
+              <a-form-item label="创建日期" :colon="false">
+                <a-range-picker
+                  v-model="filters.createTimeMoment"
+                  :ranges="rangeDate"
+                  :defaultPickerValue="defaultRange"
+                ></a-range-picker>
+              </a-form-item>
+            </a-col>
+            <a-col :xs="24" :sm="24" :md="{ span: 10, offset: 2 }">
+              <a-form-item label="修改日期" :colon="false">
+                <a-range-picker
+                  v-model="filters.modifyTimeMoment"
+                  :ranges="rangeDate"
+                  :defaultPickerValue="defaultRange"
+                ></a-range-picker>
+              </a-form-item>
+            </a-col>
+          </a-row>
+          <a-row>
+            <a-col :xs="24" :sm="11" :md="4">
+              <a-form-item label="是否外链" :colon="false">
+                <a-select v-model="filters.isLink" allowClear>
+                  <a-select-option value="1">是</a-select-option>
+                  <a-select-option value="-1">否</a-select-option>
+                </a-select>
+              </a-form-item>
+            </a-col>
+            <a-col :xs="24" :sm="{ span: 11, offset: 2 }" :md="{ span: 4, offset: 2 }">
+              <a-form-item label="是否草稿" :colon="false">
+                <a-select v-model="filters.isDraft" allowClear>
+                  <a-select-option value="1">是</a-select-option>
+                  <a-select-option value="-1">否</a-select-option>
+                </a-select>
+              </a-form-item>
+            </a-col>
+            <a-col :xs="24" :sm="11" :md="{ span: 4, offset: 2 }">
+              <a-form-item label="是否有评论" :colon="false">
+                <a-select v-model="filters.hasComments" allowClear>
+                  <a-select-option value="1">是</a-select-option>
+                  <a-select-option value="-1">否</a-select-option>
+                </a-select>
+              </a-form-item>
+            </a-col>
+            <a-col :xs="24" :sm="{ span: 11, offset: 2 }" :md="{ span: 4, offset: 2 }">
+              <a-form-item label="是否已删除" :colon="false">
+                <a-select v-model="filters.isDeleted" allowClear>
+                  <a-select-option value="1">是</a-select-option>
+                  <a-select-option value="-1">否</a-select-option>
+                </a-select>
+              </a-form-item>
+            </a-col>
+          </a-row>
+          <a-row type="flex" justify="center">
+            <a-col>
+              <a-button type="primary" @click="search">
+                <font-awesome-icon :icon="['fas', 'search']" style="margin-right: 4px;"></font-awesome-icon>搜索
+              </a-button>
+              <a-button @click="reset">重置</a-button>
+            </a-col>
+          </a-row>
+        </a-form>
       </div>
+      <div class="data-wrap">
+        <div class="btn-wrap">
+          <a-button type="error" :disabled="delDisabled" @click="delAll">
+            <span>删除</span>
+            <a-badge :count="selectedRowKeys.length" class="badge-count" />
+            <span v-show="selectedRowKeys.length">项</span>
+          </a-button>
+          <a-button href="/admin/article-edit" type="dashed">
+            <font-awesome-icon :icon="['fas', 'plus']" style="margin-right: 4px;"></font-awesome-icon>新的文章
+          </a-button>
+        </div>
 
-      <a-table
-        :dataSource="postList"
-        :columns="tableColumns"
-        :pagination="pagination"
-        rowKey="_id"
-        :loading="isLoading"
-        :scroll="{ x: 1300 }"
-        :rowSelection="rowSelection"
-        @change="onTableChange"
-      >
-        <template slot="category" slot-scope="category">
-          <a
-            class="link-category"
-            :href="`/blog/${category.alias}`"
-            target="_blank"
-            :title="category.cateName"
-            >{{ category.cateName }}</a
-          >
-        </template>
-        <template slot="title1" slot-scope="title, row">
-          <a
-            class="link-title"
-            :class="{ 'title-deleted': !row.isActive }"
-            :href="`/blog/${row.category.alias}/${row.alias}`"
-            target="_blank"
-            :title="row.title"
-            >{{ row.title }}</a
-          >
-        </template>
-        <template slot="tags" slot-scope="text, row">
-          <a-tag
-            color="volcano"
-            v-if="!row.isActive"
-            title="已删除，所有人不可见，可恢复"
-            >已删除</a-tag
-          >
-          <a-tag
-            color="green"
-            v-else-if="!row.isDraft"
-            title="已发布，所有人可见"
-            >已发布</a-tag
-          >
-          <a-tag color="purple" v-else title="草稿，仅自己可见">草稿</a-tag>
-        </template>
-        <template slot="action" slot-scope="text, row">
-          <div class="action-td">
-            <template v-if="row.isActive">
-              <a-button
-                :href="`/admin/article-edit?uid=${row._id}`"
-                title="编辑"
-              >
-                <font-awesome-icon
-                  :icon="['fas', 'pencil-alt']"
-                ></font-awesome-icon>
-              </a-button>
-              <a-button @click="del(row._id)" title="删除">
-                <font-awesome-icon :icon="['fas', 'times']"></font-awesome-icon>
-              </a-button>
-            </template>
-            <template v-else>
-              <a-button @click="undo(row._id)" title="恢复">
-                <font-awesome-icon :icon="['fas', 'undo']"></font-awesome-icon>
-              </a-button>
-              <a-button @click="del2(row._id)" title="永久删除">
-                <font-awesome-icon
-                  :icon="['far', 'trash-alt']"
-                ></font-awesome-icon>
-              </a-button>
-            </template>
-          </div>
-        </template>
-      </a-table>
+        <a-table
+          :dataSource="postList"
+          :columns="tableColumns"
+          :pagination="pagination"
+          rowKey="_id"
+          :loading="isLoading"
+          :scroll="{ x: 1300 }"
+          :rowSelection="rowSelection"
+          @change="onTableChange"
+        >
+          <template slot="category" slot-scope="category">
+            <a
+              class="link-category"
+              :href="`/blog/${category.alias}`"
+              target="_blank"
+              :title="category.cateName"
+            >{{ category.cateName }}</a>
+          </template>
+          <template slot="title1" slot-scope="title, row">
+            <a
+              class="link-title"
+              :class="{ 'title-deleted': !row.isActive }"
+              :href="`/blog/${row.category.alias}/${row.alias}`"
+              target="_blank"
+              :title="row.title"
+            >{{ row.title }}</a>
+          </template>
+          <template slot="tags" slot-scope="text, row">
+            <a-tag color="volcano" v-if="!row.isActive" title="已删除，所有人不可见，可恢复">已删除</a-tag>
+            <a-tag color="green" v-else-if="!row.isDraft" title="已发布，所有人可见">已发布</a-tag>
+            <a-tag color="purple" v-else title="草稿，仅自己可见">草稿</a-tag>
+          </template>
+          <template slot="action" slot-scope="text, row">
+            <div class="action-td">
+              <template v-if="row.isActive">
+                <a-button :href="`/admin/article-edit?uid=${row._id}`" title="编辑">
+                  <font-awesome-icon :icon="['fas', 'pencil-alt']"></font-awesome-icon>
+                </a-button>
+                <a-button @click="del(row._id)" title="删除">
+                  <font-awesome-icon :icon="['fas', 'times']"></font-awesome-icon>
+                </a-button>
+              </template>
+              <template v-else>
+                <a-button @click="undo(row._id)" title="恢复">
+                  <font-awesome-icon :icon="['fas', 'undo']"></font-awesome-icon>
+                </a-button>
+                <a-button @click="del2(row._id)" title="永久删除">
+                  <font-awesome-icon :icon="['far', 'trash-alt']"></font-awesome-icon>
+                </a-button>
+              </template>
+            </div>
+          </template>
+        </a-table>
+      </div>
     </div>
   </div>
 </template>

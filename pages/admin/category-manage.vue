@@ -1,107 +1,102 @@
 <template>
   <div>
-    <div class="btn-wrap">
-      <a-button type="error" :disabled="delDisabled" @click="delAll">
-        <span>删除</span>
-        <a-badge :count="selectedRowKeys.length" class="badge-count" />
-        <span v-show="selectedRowKeys.length">项</span>
-      </a-button>
-      <a-button type="dashed" @click="addNew">
-        <font-awesome-icon
-          :icon="['fas', 'plus']"
-          style="margin-right: 4px;"
-        ></font-awesome-icon
-        >新的分类
-      </a-button>
-    </div>
-    <a-table
-      :dataSource="categories"
-      :columns="tableColumns"
-      :loading="isLoading"
-      :pagination="false"
-      rowKey="_id"
-      :scroll="{ x: 985 }"
-      :rowSelection="rowSelection"
-    >
-      <template slot="img" slot-scope="text, row">
-        <img class="tb-img" :src="row.img" />
-      </template>
-      <template slot="action" slot-scope="text, row">
-        <div class="action-td">
-          <a-button
-            title="编辑"
-            :disabled="!row._id"
-            @click="editCategory(row)"
-          >
-            <font-awesome-icon
-              :icon="['fas', 'pencil-alt']"
-            ></font-awesome-icon>
-          </a-button>
-          <a-button
-            @click="del(row._id)"
-            title="删除"
-            :disabled="['', otherCategoryId].indexOf(row._id) >= 0"
-          >
-            <font-awesome-icon :icon="['far', 'trash-alt']"></font-awesome-icon>
-          </a-button>
-        </div>
-      </template>
-    </a-table>
-    <a-modal
-      :title="modalTitle"
-      v-model="isModalShow"
-      @ok="saveCategory"
-      :confirmLoading="confirmLoading"
-      :destroyOnClose="true"
-    >
-      <a-form label-position="top" :form="form">
-        <a-form-item label="分类图标" :colon="false">
-          <a-upload
-            v-decorator="['upload', imgOpts]"
-            name="imgUpload"
-            :showUploadList="false"
-            list-type="picture-card"
-            :beforeUpload="beforeUpload"
-            @change="uploadChange"
-            accept="image/*"
-          >
-            <img v-if="imageUrl" :src="imageUrl" alt="image" />
-            <div v-else>
-              <a-icon :type="imgLoading ? 'loading' : 'plus'" />
-              <div class="ant-upload-text">上传图片</div>
+    <div class="page-header">分类管理</div>
+    <div class="page-body">
+      <div class="btn-wrap">
+        <a-button type="error" :disabled="delDisabled" @click="delAll">
+          <span>删除</span>
+          <a-badge :count="selectedRowKeys.length" class="badge-count" />
+          <span v-show="selectedRowKeys.length">项</span>
+        </a-button>
+        <a-button type="dashed" @click="addNew">
+          <font-awesome-icon :icon="['fas', 'plus']" style="margin-right: 4px;"></font-awesome-icon>新的分类
+        </a-button>
+      </div>
+      <a-table
+        :dataSource="categories"
+        :columns="tableColumns"
+        :loading="isLoading"
+        :pagination="false"
+        rowKey="_id"
+        :scroll="{ x: 985 }"
+        :rowSelection="rowSelection"
+      >
+        <template slot="img" slot-scope="text, row">
+          <img class="tb-img" :src="row.img" />
+        </template>
+        <template slot="action" slot-scope="text, row">
+          <div class="action-td">
+            <a-button title="编辑" :disabled="!row._id" @click="editCategory(row)">
+              <font-awesome-icon :icon="['fas', 'pencil-alt']"></font-awesome-icon>
+            </a-button>
+            <a-button
+              @click="del(row._id)"
+              title="删除"
+              :disabled="['', otherCategoryId].indexOf(row._id) >= 0"
+            >
+              <font-awesome-icon :icon="['far', 'trash-alt']"></font-awesome-icon>
+            </a-button>
+          </div>
+        </template>
+      </a-table>
+      <a-modal
+        :title="modalTitle"
+        v-model="isModalShow"
+        @ok="saveCategory"
+        :confirmLoading="confirmLoading"
+        :maskClosable="false"
+        :closable="false"
+        :destroyOnClose="true"
+      >
+        <a-form label-position="top" :form="form">
+          <a-form-item label="分类图标" :colon="false">
+            <div class="img-tip">
+              <a-icon type="info-circle" />
+              <span>
+                你可以在
+                <a href="https://www.iconfont.cn/" target="_blank">阿里巴巴矢量图标库</a>
+                搜索和下载喜欢的图标。
+              </span>
             </div>
-          </a-upload>
-        </a-form-item>
-        <a-form-item label="分类名称" :colon="false">
-          <a-input
-            placeholder="请输入名称"
-            allowClear
-            v-decorator="['cateName', cateNameOpts]"
-          />
-        </a-form-item>
-        <a-form-item :colon="false">
-          <span slot="label">
-            Alias
-            <a-tooltip title="分类别名，如：nodejs，将作为URL的一部分">
-              <a-icon type="question-circle-o" />
-            </a-tooltip>
-          </span>
-          <a-input
-            placeholder="请输入Alias"
-            allowClear
-            v-decorator="['alias', aliasOpts]"
-          />
-        </a-form-item>
-        <a-form-item label="排序" :colon="false">
-          <a-input-number
-            v-decorator="['sequence', sequenceOpts]"
-            :min="0"
-            :max="10000"
-            :disabled="uid === otherCategoryId"
-          />
-        </a-form-item>
-      </a-form>
-    </a-modal>
+            <a-upload
+              v-decorator="['upload', imgOpts]"
+              name="imgUpload"
+              :showUploadList="false"
+              list-type="picture-card"
+              :beforeUpload="beforeUpload"
+              @change="uploadChange"
+              accept="image/*"
+            >
+              <img v-if="imageUrl" :src="imageUrl" alt="image" />
+              <div v-else>
+                <a-icon :type="imgLoading ? 'loading' : 'plus'" />
+                <div class="ant-upload-text">上传图片</div>
+              </div>
+            </a-upload>
+          </a-form-item>
+          <a-form-item label="分类名称" :colon="false">
+            <a-input placeholder="请输入名称" allowClear v-decorator="['cateName', cateNameOpts]" />
+          </a-form-item>
+          <a-form-item :colon="false">
+            <span slot="label">
+              Alias
+              <a-tooltip title="分类别名，如：nodejs，将作为URL的一部分">
+                <a-icon type="question-circle-o" />
+              </a-tooltip>
+            </span>
+            <a-input placeholder="请输入Alias" allowClear v-decorator="['alias', aliasOpts]" />
+          </a-form-item>
+          <a-form-item label="排序" :colon="false">
+            <a-input-number
+              v-decorator="['sequence', sequenceOpts]"
+              :min="0"
+              :max="10000"
+              :disabled="uid === otherCategoryId"
+            />
+          </a-form-item>
+        </a-form>
+      </a-modal>
+    </div>
   </div>
 </template>
 
@@ -159,8 +154,7 @@ export default Vue.extend({
         },
         {
           title: "Alias",
-          dataIndex: "alias",
-          width: 150
+          dataIndex: "alias"
         },
         {
           title: "创建时间",
@@ -499,5 +493,16 @@ export default Vue.extend({
 
 .del2 .ant-modal-confirm-content {
   color: #fa541c;
+}
+
+.img-tip {
+  font-size: 12px;
+  line-height: 1;
+  margin: 2px 0 17px;
+}
+
+.img-tip i {
+  position: relative;
+  top: -1px;
 }
 </style>

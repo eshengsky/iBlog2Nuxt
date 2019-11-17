@@ -24,8 +24,8 @@
         <img :data-src="user._json.avatar_url" class="lazyload" @error="imgLoadError($event)" />
       </div>
       <div class="editor-wrap">
-        <no-ssr>
-          <editor
+        <client-only>
+          <tui-editor
             ref="editor"
             v-model="editorText"
             height="150px"
@@ -34,25 +34,26 @@
             @focus="onEditorFocus"
             @blur="onEditorBlur"
           />
-        </no-ssr>
+        </client-only>
         <div class="comment-btn-wrap">
-          <Tooltip content="打开Markdown速查表" transfer>
+          <a-tooltip>
+            <template slot="title">打开Markdown速查表</template>
             <a @click="mcsShow = true">
               <font-awesome-icon :icon="['fab', 'markdown']" style="font-size: 14px"></font-awesome-icon>
               <span>支持Markdown语法</span>
             </a>
-          </Tooltip>
-          <Button type="primary" @click="postComment">
-            <font-awesome-icon :icon="['far', 'paper-plane']"></font-awesome-icon>
+          </a-tooltip>
+          <a-button type="primary" @click="postComment">
+            <font-awesome-icon :icon="['far', 'paper-plane']" style="margin-right: 4px;"></font-awesome-icon>
             <span>{{ commentName }}</span>
-          </Button>
+          </a-button>
         </div>
       </div>
     </div>
     <div class="comment-list">
       <div class="editor-wrap editor-reply" v-show="isEditorReplyShown">
-        <no-ssr>
-          <editor
+        <client-only>
+          <tui-editor
             ref="editorReply"
             v-model="editorReplyText"
             height="85px"
@@ -61,19 +62,20 @@
             @focus="onEditorReplyFocus"
             @blur="onEditorReplyBlur"
           />
-        </no-ssr>
+        </client-only>
         <div class="comment-btn-wrap">
-          <Tooltip content="打开Markdown速查表" transfer>
+          <a-tooltip>
+            <template slot="title">打开Markdown速查表</template>
             <a @click="mcsShow = true">
               <font-awesome-icon :icon="['fab', 'markdown']" style="font-size: 14px"></font-awesome-icon>
               <span>支持Markdown语法</span>
             </a>
-          </Tooltip>
+          </a-tooltip>
           <div>
-            <Button type="text" @click="hideReply">收起</Button>
-            <Button type="primary" @click="sendReply">
+            <a-button type="text" @click="hideReply">收起</a-button>
+            <a-button type="primary" @click="sendReply">
               <span>回复</span>
-            </Button>
+            </a-button>
           </div>
         </div>
       </div>
@@ -107,33 +109,40 @@
           </ul>
         </li>
         <li class="comments-last-li" v-if="hasNext">
-          <Button class="btn-load" size="large" @click="loadNext">查看更多</Button>
+          <a-button class="btn-load" size="large" @click="loadNext">查看更多</a-button>
         </li>
       </ul>
     </div>
-    <no-ssr>
-      <Modal v-model="mcsShow" title="Markdown 速查表" width="630">
-        <Alert type="warning" show-icon closable>评论及留言不支持1~4级标题。</Alert>
-        <md-cheat-sheet></md-cheat-sheet>
-        <div slot="footer">
-          <Button type="primary" @click="mcsShow = false">关闭</Button>
-        </div>
-      </Modal>
-    </no-ssr>
+    <a-modal v-model="mcsShow" title="Markdown 速查表" width="630px">
+      <a-alert type="warning" show-icon closable>评论及留言不支持1~4级标题。</a-alert>
+      <md-cheat-sheet></md-cheat-sheet>
+      <div slot="footer">
+        <a-button type="primary" @click="mcsShow = false">关闭</a-button>
+      </div>
+    </a-modal>
   </div>
 </template>
-<script>
-import Vue from "vue";
+<script lang="ts">
+import Vue, { PropOptions } from "vue";
 import "lazysizes";
-import CommentItem from "~/components/CommentItem.vue";
-import MdCheatSheet from "~/components/MdCheatSheet.vue";
-import { mapState } from "vuex";
+import CommentItem from "@/components/CommentItem.vue";
+import MdCheatSheet from "@/components/MdCheatSheet.vue";
+import { IComment } from "@/server/models/comment";
+import { IResp } from "@/server/types";
+import { RootState } from "@/store/index";
 export default Vue.extend({
   components: {
     CommentItem,
     MdCheatSheet
   },
-  props: ["comments", "from"],
+  props: {
+    comments: {
+      type: Array
+    } as PropOptions<Array<IComment>>,
+    from: {
+      type: Number
+    } as PropOptions<1 | 2>
+  },
   data() {
     return {
       page: 1,
@@ -152,25 +161,25 @@ export default Vue.extend({
     };
   },
   computed: {
-    ...mapState({
-      user: state => state.user
-    }),
-    pagedComments() {
+    user(): any {
+      return (this.$store.state as RootState).user;
+    },
+    pagedComments(): Array<IComment> {
       const start = (this.page - 1) * this.pageSize;
       return this.comments.slice(0, start + this.pageSize);
     },
-    hasNext() {
+    hasNext(): boolean {
       const count = this.comments.length;
       const pageCount =
         count % this.pageSize === 0
-          ? parseInt(count / this.pageSize)
-          : parseInt(count / this.pageSize) + 1;
+          ? count / this.pageSize
+          : count / this.pageSize + 1;
       return pageCount > this.page;
     },
-    commentName() {
+    commentName(): string {
       return this.from === 2 ? "评论" : "留言";
     },
-    editorOptions() {
+    editorOptions(): object {
       return {
         hideModeSwitch: true,
         language: "zh_CN",
@@ -196,7 +205,7 @@ export default Vue.extend({
         ]
       };
     },
-    commentCount() {
+    commentCount(): number {
       let total = 0;
       let comments = this.comments;
       const getCount = comments => {
@@ -219,68 +228,62 @@ export default Vue.extend({
     async postComment() {
       const content = this.editorText.trim();
       if (!content) {
-        return this.$refs.editor.invoke("focus");
+        return (this.$refs.editor as any).invoke("focus");
       }
-      const result = await this.saveComment({
+      const result = await this.$axios.$post("/api/comment", {
+        articleId: (this.$parent as any).article._id,
         content
       });
-      if (result.code === "1") {
-        this.$message.success(`${this.commentName}成功`);
-        this.getLatestData();
+      if (result.code === 1) {
+        // this.getLatestData();
         this.editorText = "";
-      } else if (result.code === "-2") {
+      } else if (result.code === -2) {
         this.$message.error(`请登录后再${this.commentName}`);
       } else {
         this.$message.error(`${this.commentName}失败`);
       }
     },
 
-    getLatestData() {
-      if (this.from === 1) {
-        return this.$store.dispatch("getGuestbook");
-      }
-      return this.$store.dispatch("getArticle");
-    },
-
     saveComment(data) {
       if (this.from === 1) {
         return this.$store.dispatch("saveGuestbook", data);
       }
-      return this.$store.dispatch("saveComment", data);
     },
 
     onEditorLoad() {
-      document.querySelector(".gituser-wrap .comment-btn-wrap").style.display =
-        "flex";
+      (<HTMLElement>(
+        document.querySelector(".gituser-wrap .comment-btn-wrap")
+      )).style.display = "flex";
     },
 
     onEditorFocus() {
-      document
-        .querySelector(".gituser-wrap .te-md-container .CodeMirror")
-        .classList.add("editor-focus");
+      (<HTMLElement>(
+        document.querySelector(".gituser-wrap .te-md-container .CodeMirror")
+      )).classList.add("editor-focus");
     },
 
     onEditorBlur() {
-      document
-        .querySelector(".gituser-wrap .te-md-container .CodeMirror")
-        .classList.remove("editor-focus");
+      (<HTMLElement>(
+        document.querySelector(".gituser-wrap .te-md-container .CodeMirror")
+      )).classList.remove("editor-focus");
     },
 
     onEditorReplyLoad() {
-      document.querySelector(".comment-list .comment-btn-wrap").style.display =
-        "flex";
+      (<HTMLElement>(
+        document.querySelector(".comment-list .comment-btn-wrap")
+      )).style.display = "flex";
     },
 
     onEditorReplyFocus() {
-      document
-        .querySelector(".comment-list .te-md-container .CodeMirror")
-        .classList.add("editor-focus");
+      (<HTMLElement>(
+        document.querySelector(".comment-list .te-md-container .CodeMirror")
+      )).classList.add("editor-focus");
     },
 
     onEditorReplyBlur() {
-      document
-        .querySelector(".comment-list .te-md-container .CodeMirror")
-        .classList.remove("editor-focus");
+      (<HTMLElement>(
+        document.querySelector(".comment-list .te-md-container .CodeMirror")
+      )).classList.remove("editor-focus");
     },
 
     // 头像加载失败时直接隐藏
@@ -302,7 +305,7 @@ export default Vue.extend({
       linkEl.parentElement.parentElement.appendChild(replyEl);
       this.isEditorReplyShown = true;
       this.$nextTick(() => {
-        this.$refs.editorReply.invoke("focus");
+        (this.$refs.editorReply as any).invoke("focus");
       });
     },
 
@@ -313,14 +316,13 @@ export default Vue.extend({
     async sendReply() {
       const content = this.editorReplyText.trim();
       if (!content) {
-        return this.$refs.editorReply.invoke("focus");
+        return (this.$refs.editorReply as any).invoke("focus");
       }
       await this.saveComment({
         content,
         pathId: this.pathId
       });
-      this.$message.success("回复成功");
-      this.getLatestData();
+      // this.getLatestData();
       this.editorReplyText = "";
       setTimeout(() => {
         this.hideReply();

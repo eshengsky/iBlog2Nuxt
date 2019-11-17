@@ -71,7 +71,7 @@ router.get('/guestbook', async (req, res, next) => {
     res.json(resp);
 });
 
-router.post('/saveComment', async (req, res, next) => {
+router.post('/comment', async (req, res, next) => {
     let resp: IResp;
     const user = req.user;
     if (!user) {
@@ -94,7 +94,7 @@ router.post('/saveComment', async (req, res, next) => {
     res.json(resp);
 });
 
-router.post('/saveGuestbook', async (req, res, next) => {
+router.post('/guestbook', async (req, res, next) => {
     let resp: IResp;
     const user = req.user;
     if (!user) {

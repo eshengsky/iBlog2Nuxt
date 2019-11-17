@@ -1,159 +1,115 @@
 <template>
   <div class="article-edit">
-    <a-form label-position="top" :form="form">
-      <div class="title-line">
-        <a-form-item label="标题" :colon="false">
-          <a-input
-            placeholder="请输入标题"
-            allowClear
-            v-decorator="['title', titleOpts]"
-          />
+    <div class="page-header">{{pageHeader}}</div>
+    <div class="page-body">
+      <a-form label-position="top" :form="form">
+        <div class="title-line">
+          <a-form-item label="标题" :colon="false">
+            <a-input placeholder="请输入标题" allowClear v-decorator="['title', titleOpts]" />
+          </a-form-item>
+          <a-form-item label="分类" :colon="false">
+            <a-select v-decorator="['category', categoryOpts]">
+              <a-select-option
+                v-for="(item, index) in categories"
+                :value="item._id"
+                :key="index"
+              >{{ item.cateName }}</a-select-option>
+              <div slot="dropdownRender" slot-scope="menu">
+                <v-nodes :vnodes="menu" />
+                <a-divider style="margin: 4px 0;" />
+                <a href="/admin/category-manage" target="_blank" class="link-category">
+                  <font-awesome-icon :icon="['fas', 'plus']" style="margin-right: 4px;"></font-awesome-icon>新的分类
+                </a>
+              </div>
+            </a-select>
+          </a-form-item>
+        </div>
+        <a-form-item :colon="false">
+          <span slot="label">
+            Alias
+            <a-tooltip title="文章别名，如：this-is-my-fist-post，将作为URL的一部分">
+              <a-icon type="question-circle-o" />
+            </a-tooltip>
+          </span>
+          <a-input placeholder="请输入Alias" v-decorator="['alias', aliasOpts]" allowClear>
+            <a-icon slot="suffix" type="info-circle" />
+          </a-input>
         </a-form-item>
-        <a-form-item label="分类" :colon="false">
-          <a-select v-decorator="['category', categoryOpts]">
-            <a-select-option
-              v-for="(item, index) in categories"
-              :value="item._id"
-              :key="index"
-              >{{ item.cateName }}</a-select-option
-            >
-            <div slot="dropdownRender" slot-scope="menu">
-              <v-nodes :vnodes="menu" />
-              <a-divider style="margin: 4px 0;" />
-              <a
-                href="/admin/category-manage"
-                target="_blank"
-                class="link-category"
-              >
-                <font-awesome-icon
-                  :icon="['fas', 'plus']"
-                  style="margin-right: 4px;"
-                ></font-awesome-icon
-                >新的分类
-              </a>
-            </div>
-          </a-select>
+        <a-form-item label="摘要" :colon="false">
+          <a-textarea v-decorator="['summary', summaryOpts]" placeholder="请输入摘要" :rows="2" />
         </a-form-item>
-      </div>
-      <a-form-item :colon="false">
-        <span slot="label">
-          Alias
-          <a-tooltip
-            title="文章别名，如：this-is-my-fist-post，将作为URL的一部分"
+        <a-form-item label="来源" :colon="false">
+          <a-radio-group
+            name="radioGroup"
+            v-decorator="['isLocal', isLocalOpts]"
+            @change="isLocalChange"
           >
-            <a-icon type="question-circle-o" />
-          </a-tooltip>
-        </span>
-        <a-input
-          placeholder="请输入Alias"
-          v-decorator="['alias', aliasOpts]"
-          allowClear
-        >
-          <a-icon slot="suffix" type="info-circle" />
-        </a-input>
-      </a-form-item>
-      <a-form-item label="摘要" :colon="false">
-        <a-textarea
-          v-decorator="['summary', summaryOpts]"
-          placeholder="请输入摘要"
-          :rows="2"
-        />
-      </a-form-item>
-      <a-form-item label="来源" :colon="false">
-        <a-radio-group
-          name="radioGroup"
-          v-decorator="['isLocal', isLocalOpts]"
-          @change="isLocalChange"
-        >
-          <a-radio :value="true">本地</a-radio>
-          <a-radio :value="false">外链</a-radio>
-        </a-radio-group>
-      </a-form-item>
-      <div v-show="!isLocal">
-        <a-form-item label="URL" :colon="false">
-          <a-input
-            placeholder="请输入链接地址"
-            ref="urlInputComp"
-            v-decorator="['url', urlOpts]"
-            allowClear
-          />
+            <a-radio :value="true">本地</a-radio>
+            <a-radio :value="false">外链</a-radio>
+          </a-radio-group>
         </a-form-item>
-      </div>
-      <div v-show="isLocal">
-        <a-form-item label="正文" :colon="false">
-          <no-ssr>
-            <tui-editor
-              v-model="content"
-              ref="editor"
-              previewStyle="vertical"
-              height="70vh"
-              :options="editorOptions"
+        <div v-show="!isLocal">
+          <a-form-item label="URL" :colon="false">
+            <a-input
+              placeholder="请输入链接地址"
+              ref="urlInputComp"
+              v-decorator="['url', urlOpts]"
+              allowClear
             />
-          </no-ssr>
-        </a-form-item>
-        <a-form-item label="标签" :colon="false">
-          <a-select
-            v-decorator="['labels', labelsOpts]"
-            mode="tags"
-            placeholder="回车新增"
-            notFoundContent
-          ></a-select>
-        </a-form-item>
-      </div>
-      <div>
-        <template v-if="!initialData._id">
-          <a-button type="primary" @click="publish">
-            <font-awesome-icon
-              :icon="['far', 'paper-plane']"
-              style="margin-right: 4px;"
-            ></font-awesome-icon
-            >发布文章
-          </a-button>
-          <a-button @click="saveDraft">
-            <font-awesome-icon
-              :icon="['far', 'file-alt']"
-              style="margin-right: 4px;"
-            ></font-awesome-icon
-            >存为草稿
-          </a-button>
-        </template>
-        <template v-else>
-          <template v-if="initialData.isDraft">
-            <a-button type="primary" @click="publish2">
-              <font-awesome-icon
-                :icon="['far', 'paper-plane']"
-                style="margin-right: 4px;"
-              ></font-awesome-icon
-              >发布文章
+          </a-form-item>
+        </div>
+        <div v-show="isLocal">
+          <a-form-item label="正文" :colon="false">
+            <no-ssr>
+              <tui-editor
+                v-model="content"
+                ref="editor"
+                previewStyle="vertical"
+                height="70vh"
+                :options="editorOptions"
+              />
+            </no-ssr>
+          </a-form-item>
+          <a-form-item label="标签" :colon="false">
+            <a-select
+              v-decorator="['labels', labelsOpts]"
+              mode="tags"
+              placeholder="回车新增"
+              notFoundContent
+            ></a-select>
+          </a-form-item>
+        </div>
+        <div>
+          <template v-if="!initialData._id">
+            <a-button type="primary" @click="publish">
+              <font-awesome-icon :icon="['far', 'paper-plane']" style="margin-right: 4px;"></font-awesome-icon>发布文章
             </a-button>
-            <a-button @click="save">
-              <font-awesome-icon
-                :icon="['far', 'save']"
-                style="margin-right: 4px;"
-              ></font-awesome-icon
-              >保存更改
+            <a-button @click="saveDraft">
+              <font-awesome-icon :icon="['far', 'file-alt']" style="margin-right: 4px;"></font-awesome-icon>存为草稿
             </a-button>
           </template>
           <template v-else>
-            <a-button type="primary" @click="save">
-              <font-awesome-icon
-                :icon="['far', 'save']"
-                style="margin-right: 4px;"
-              ></font-awesome-icon
-              >保存更改
-            </a-button>
-            <a-button @click="unpublish">
-              <font-awesome-icon
-                :icon="['fas', 'history']"
-                style="margin-right: 4px;"
-              ></font-awesome-icon
-              >取消发布
-            </a-button>
+            <template v-if="initialData.isDraft">
+              <a-button type="primary" @click="publish2">
+                <font-awesome-icon :icon="['far', 'paper-plane']" style="margin-right: 4px;"></font-awesome-icon>发布文章
+              </a-button>
+              <a-button @click="save">
+                <font-awesome-icon :icon="['far', 'save']" style="margin-right: 4px;"></font-awesome-icon>保存更改
+              </a-button>
+            </template>
+            <template v-else>
+              <a-button type="primary" @click="save">
+                <font-awesome-icon :icon="['far', 'save']" style="margin-right: 4px;"></font-awesome-icon>保存更改
+              </a-button>
+              <a-button @click="unpublish">
+                <font-awesome-icon :icon="['fas', 'history']" style="margin-right: 4px;"></font-awesome-icon>取消发布
+              </a-button>
+            </template>
           </template>
-        </template>
-        <a-button @click="back">返回</a-button>
-      </div>
-    </a-form>
+          <a-button @click="back">返回</a-button>
+        </div>
+      </a-form>
+    </div>
   </div>
 </template>
 
@@ -272,6 +228,9 @@ export default Vue.extend({
     }
   },
   computed: {
+    pageHeader(): string {
+      return this.initialData._id ? "编辑文章" : "新增文章";
+    },
     form(): any {
       return this.$form.createForm(this);
     },

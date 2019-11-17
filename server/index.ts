@@ -1,5 +1,6 @@
 import express from "express";
 import bodyParser from "body-parser";
+import cookieParser from "cookie-parser";
 import session from "express-session";
 import passport from "passport";
 import { Strategy as GitHubStrategy } from "passport-github2";
@@ -38,6 +39,7 @@ passport.use(
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
+app.use(cookieParser());
 app.use(
   session({
     secret: "iblog2commentsauthsecret",

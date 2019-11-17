@@ -164,6 +164,8 @@ export class Post {
     schema.virtual("html").get(function(this: any) {
       if (this.content) {
         const md = new MarkdownIt({
+          html: true,
+          linkify: true,
           highlight: function(str, lang) {
             let showLang = "";
             let code = "";
