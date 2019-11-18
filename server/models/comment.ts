@@ -7,9 +7,6 @@ interface IComment extends Document {
   avatar: string;
   content: string;
   createTime: Date;
-  modifyTime: Date;
-
-  comments: Types.DocumentArray<IComment>;
 }
 
 export { IComment };
@@ -29,10 +26,7 @@ const schema = new Schema(
     content: { type: String },
 
     // 创建时间
-    createTime: { type: Date, default: new Date() },
-
-    // 修改时间
-    modifyTime: { type: Date, default: new Date() }
+    createTime: { type: Date, default: new Date() }
   },
   {
     // 设置查询时默认返回虚拟字段
@@ -41,13 +35,8 @@ const schema = new Schema(
   }
 );
 
-schema.add({
-  // 回复列表
-  comments: [schema]
-});
-
 // 虚拟字段：评论时间字符串
 schema.virtual("commentTimeStr").get(function(this: any) {
-  return moment(this.createTime).format("YYYY年MM月DD日 hh:mm:ss");
+  return moment(this.createTime).format("YYYY-MM-DD hh:mm:ss");
 });
 export default schema;

@@ -81,9 +81,10 @@ router.post('/comment', async (req, res, next) => {
         return res.json(resp);
     }
     try {
-        await proxy.saveComment(req.body, user);
+        const article = await proxy.saveComment(req.body, user);
         resp = {
-            code: 1
+            code: 1,
+            data: article
         }
     } catch (err) {
         console.error(err);

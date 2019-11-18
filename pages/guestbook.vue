@@ -5,21 +5,27 @@
     </article>
   </div>
 </template>
-<script>
+<script lang="ts">
 import Vue from "vue";
-import { mapState } from "vuex";
-import CommentList from "~/components/CommentList.vue";
+import CommentList from "@/components/CommentList.vue";
 import "highlight.js/styles/tomorrow.css";
 export default Vue.extend({
   components: {
     CommentList
   },
-  async asyncData({ req, store }) {
-    await store.dispatch("getGuestbook");
+  data() {
+    return {
+      guestbook: []
+    }
   },
-  computed: mapState({
-    guestbook: state => state.guestbook
-  })
+  async asyncData({ $axios }) {
+    const { code, data } = await $axios.$get("/api/guestbook");
+    if (code === 1) {
+      return {
+        guestbook: data.guestbook
+      };
+    }
+  }
 });
 </script>
 <style scoped>

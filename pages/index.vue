@@ -1,9 +1,7 @@
 <template>
   <div>
     <category-list :categories="categories"></category-list>
-    <no-ssr>
-      <post-list :categories="categories"></post-list>
-    </no-ssr>
+    <post-list :categories="categories"></post-list>
   </div>
 </template>
 

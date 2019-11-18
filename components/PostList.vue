@@ -6,14 +6,14 @@
         <a @click="sortList('title')" :class="{ active: sortBy === 'title' }">标题</a>
       </div>
       <div class="post-top-right">
-        <Select v-model="filterTypeVal" @on-change="filterTypeChange" style="width: 70px">
-          <Option value="text">全文</Option>
-          <Option value="title">标题</Option>
-          <Option value="tag">标签</Option>
-          <Option value="date">日期</Option>
-        </Select>
-        <Input
-          v-if="filterTypeVal !== 'date'"
+        <a-select v-model="filterType" @on-change="filterTypeChange" style="width: 70px">
+          <a-select-option value="text">全文</a-select-option>
+          <a-select-option value="title">标题</a-select-option>
+          <a-select-option value="tag">标签</a-select-option>
+          <a-select-option value="date">日期</a-select-option>
+        </a-select>
+        <a-input
+          v-if="filterType !== 'date'"
           v-model="inputTxt"
           style="width: 200px"
           :placeholder="searchPhd"
@@ -21,8 +21,8 @@
           ref="inputComp"
           @on-enter="search"
         />
-        <DatePicker
-          v-if="filterTypeVal === 'date'"
+        <a-date-picker
+          v-if="filterType === 'date'"
           v-model="inputDate"
           type="daterange"
           split-panels
@@ -35,8 +35,8 @@
           :transfer="true"
           style="width: 200px"
           ref="dateComp"
-        ></DatePicker>
-        <Button @click="search">搜索</Button>
+        ></a-date-picker>
+        <a-button @click="search">搜索</a-button>
       </div>
     </div>
     <ul class="post-list">
@@ -55,19 +55,19 @@
           <div></div>
           <div></div>
         </div>
-        <Button
+        <a-button
           class="btn-load"
           size="large"
           @click="loadNext"
           v-else-if="posts.length > 0 && hasNext"
           :loading="isLoading"
-        >下一页</Button>
+        >下一页</a-button>
         <div class="no-more" v-else-if="posts.length > 0 && !hasNext">没有更多数据</div>
         <div class="no-data" v-else>暂无数据</div>
       </li>
     </ul>
     <footer class="copyright">2019 © All Rights Reserved | 浙ICP备15032882号 | 后台管理</footer>
-    <Drawer
+    <a-drawer
       :title="article.title"
       :value="drawer"
       placement="right"
@@ -84,12 +84,12 @@
           target="_blank"
         >完整模式</i-button>
       </footer>
-    </Drawer>
+    </a-drawer>
   </div>
 </template>
-<script>
-import Vue from "vue";
-import { mapState } from "vuex";
+<script lang="ts">
+import Vue, { PropOptions } from "vue";
+import { ICategory } from "@/server/models/category";
 import PostItem from "~/components/PostItem.vue";
 import "highlight.js/styles/tomorrow.css";
 export default Vue.extend({
@@ -103,21 +103,22 @@ export default Vue.extend({
       default() {
         return [];
       }
-    }
+    } as PropOptions<Array<ICategory>>
   },
   data() {
     return {
-      posts: [],
+      posts: [] as any[],
       category: "",
       isLoading: false,
       hasNext: false,
       count: 0,
       sortBy: "date",
       keyword: "",
-      filterTypeVal: "text",
+      filterType: "text",
       inputTxt: "",
       inputDate: ["", ""],
       page: 1,
+      drawer: false,
       alertShow: false,
       dateOpts: {
         shortcuts: [
@@ -184,7 +185,7 @@ export default Vue.extend({
     },
     searchPhd() {
       let placeholder = "";
-      switch (this.filterTypeVal) {
+      switch (this.filterType) {
         case "text":
           placeholder = "全文关键字";
           break;
@@ -197,16 +198,12 @@ export default Vue.extend({
         default:
       }
       return placeholder;
-    },
-    ...mapState({
-      article: state => state.article,
-      drawer: state => state.drawer
-    })
+    }
   },
   methods: {
     async getPosts() {
       this.isLoading = true;
-      const startTime = new Date();
+      const startTime = new Date().getTime();
       const { code, data } = await this.$axios.$get("/api/posts", {
         params: {
           category: this.category,
@@ -218,7 +215,7 @@ export default Vue.extend({
       });
 
       // loading 时间过短体验也不好，这里设置一个最少 loading 时间
-      const duration = new Date() - startTime;
+      const duration: number = new Date().getTime() - startTime;
       const minLoadingTimeout = 1000;
       const timeout =
         duration > minLoadingTimeout ? 0 : minLoadingTimeout - duration;
@@ -239,22 +236,20 @@ export default Vue.extend({
       this.getPosts();
     },
     closeDrawer() {
-      this.$store.commit("setData", {
-        drawer: false
-      });
+      this.drawer = false;
     },
     filterTypeChange() {
       this.$nextTick(() => {
-        if (this.filterTypeVal !== "date") {
-          this.$refs.inputComp.focus();
+        if (this.filterType !== "date") {
+          (this.$refs.inputComp as any).focus();
         } else {
-          document.querySelector(".ivu-date-picker input").click();
+          (<HTMLElement>document.querySelector(".ivu-date-picker input")).click();
         }
       });
     },
     async search(checkKeyword = true) {
       let input = "";
-      if (this.filterTypeVal === "date") {
+      if (this.filterType === "date") {
         input = this.inputDate;
         if (checkKeyword && !input[0] && !input[1]) {
           document.querySelector(".ivu-date-picker input").click();
@@ -272,7 +267,6 @@ export default Vue.extend({
       this.page = 1;
       this.hasNext = false;
       this.keyword = input;
-      this.filterType = this.filterTypeVal;
       await this.getPosts();
       if (input) {
         this.alertShow = true;

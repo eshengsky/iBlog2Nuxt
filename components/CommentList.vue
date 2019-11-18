@@ -21,7 +21,11 @@
     </div>
     <div class="gituser-wrap" v-if="user">
       <div class="avatar">
-        <img :data-src="user._json.avatar_url" class="lazyload" @error="imgLoadError($event)" />
+        <img
+          :data-src="user._json.avatar_url"
+          class="lazyload"
+          @error="imgLoadError($event)"
+        />
       </div>
       <div class="editor-wrap">
         <client-only>
@@ -37,84 +41,52 @@
         </client-only>
         <div class="comment-btn-wrap">
           <a-tooltip>
-            <template slot="title">打开Markdown速查表</template>
+            <template slot="title">打开Markdown语法速查</template>
             <a @click="mcsShow = true">
-              <font-awesome-icon :icon="['fab', 'markdown']" style="font-size: 14px"></font-awesome-icon>
+              <font-awesome-icon
+                :icon="['fab', 'markdown']"
+                style="font-size: 14px"
+              ></font-awesome-icon>
               <span>支持Markdown语法</span>
             </a>
           </a-tooltip>
-          <a-button type="primary" @click="postComment">
-            <font-awesome-icon :icon="['far', 'paper-plane']" style="margin-right: 4px;"></font-awesome-icon>
+          <a-button type="primary" @click="postComment" :disabled="!editorText">
+            <font-awesome-icon
+              :icon="['far', 'paper-plane']"
+              style="margin-right: 4px;"
+            ></font-awesome-icon>
             <span>{{ commentName }}</span>
           </a-button>
         </div>
       </div>
     </div>
     <div class="comment-list">
-      <div class="editor-wrap editor-reply" v-show="isEditorReplyShown">
-        <client-only>
-          <tui-editor
-            ref="editorReply"
-            v-model="editorReplyText"
-            height="85px"
-            :options="editorReplyOptions"
-            @load="onEditorReplyLoad"
-            @focus="onEditorReplyFocus"
-            @blur="onEditorReplyBlur"
-          />
-        </client-only>
-        <div class="comment-btn-wrap">
-          <a-tooltip>
-            <template slot="title">打开Markdown速查表</template>
-            <a @click="mcsShow = true">
-              <font-awesome-icon :icon="['fab', 'markdown']" style="font-size: 14px"></font-awesome-icon>
-              <span>支持Markdown语法</span>
-            </a>
-          </a-tooltip>
-          <div>
-            <a-button type="text" @click="hideReply">收起</a-button>
-            <a-button type="primary" @click="sendReply">
-              <span>回复</span>
-            </a-button>
-          </div>
-        </div>
-      </div>
       <ul>
-        <li v-for="comment1 in pagedComments" :key="comment1._id">
+        <li
+          v-for="comment in pagedComments"
+          :key="comment._id"
+          class="comment-li"
+        >
           <comment-item
-            :comment="comment1"
-            :pathId="comment1._id"
-            @showReply="showReply"
+            :comment="comment"
+            :commentId="comment._id"
+            @referenceReply="referenceReply"
             @imgLoadError="imgLoadError"
           ></comment-item>
-          <ul v-if="comment1.comments && comment1.comments.length">
-            <li v-for="comment2 in comment1.comments" :key="comment2._id">
-              <comment-item
-                :comment="comment2"
-                :pathId="`${comment1._id}>${comment2._id}`"
-                @showReply="showReply"
-                @imgLoadError="imgLoadError"
-              ></comment-item>
-              <ul v-if="comment2.comments && comment2.comments.length">
-                <li v-for="comment3 in comment2.comments" :key="comment3._id">
-                  <comment-item
-                    :comment="comment3"
-                    :hideReply="true"
-                    @showReply="showReply"
-                    @imgLoadError="imgLoadError"
-                  ></comment-item>
-                </li>
-              </ul>
-            </li>
-          </ul>
-        </li>
-        <li class="comments-last-li" v-if="hasNext">
-          <a-button class="btn-load" size="large" @click="loadNext">查看更多</a-button>
         </li>
       </ul>
+      <div class="btn-next-wrap" v-if="hasNext">
+        <a-button size="large" @click="loadNext">查看更多</a-button>
+      </div>
     </div>
-    <a-modal v-model="mcsShow" title="Markdown 速查表" width="630px">
-      <a-alert type="warning" show-icon closable>评论及留言不支持1~4级标题。</a-alert>
+    <a-modal v-model="mcsShow" title="Markdown 语法速查" width="640px">
+      <a-alert
+        type="warning"
+        message="评论及留言不支持1~4级标题。"
+        showIcon
+        closable
+        style="margin-bottom: 10px;"
+      />
       <md-cheat-sheet></md-cheat-sheet>
       <div slot="footer">
         <a-button type="primary" @click="mcsShow = false">关闭</a-button>
@@ -149,15 +121,7 @@ export default Vue.extend({
       pageSize: 20,
       mcsShow: false,
       editorText: "",
-      editorReplyText: "",
-      isEditorReplyShown: true,
-      pathId: "",
-      editorReplyOptions: {
-        hideModeSwitch: true,
-        language: "zh_CN",
-        placeholder: "输入回复内容",
-        toolbarItems: []
-      }
+      commentId: ""
     };
   },
   computed: {
@@ -170,10 +134,7 @@ export default Vue.extend({
     },
     hasNext(): boolean {
       const count = this.comments.length;
-      const pageCount =
-        count % this.pageSize === 0
-          ? count / this.pageSize
-          : count / this.pageSize + 1;
+      const pageCount = Math.ceil(count / this.pageSize);
       return pageCount > this.page;
     },
     commentName(): string {
@@ -206,38 +167,20 @@ export default Vue.extend({
       };
     },
     commentCount(): number {
-      let total = 0;
-      let comments = this.comments;
-      const getCount = comments => {
-        total += comments.length;
-        comments.forEach(item => {
-          getCount(item.comments);
-        });
-      };
-      getCount(comments);
-      return total;
+      return this.comments.length;
     }
-  },
-  mounted() {
-    // 回复框需默认显示，此处再手动设为隐藏，以确保tui-editor渲染正常
-    this.$nextTick(() => {
-      this.isEditorReplyShown = false;
-    });
   },
   methods: {
     async postComment() {
-      const content = this.editorText.trim();
-      if (!content) {
-        return (this.$refs.editor as any).invoke("focus");
-      }
-      const result = await this.$axios.$post("/api/comment", {
-        articleId: (this.$parent as any).article._id,
-        content
+      const parentVue = this.$parent as any;
+      const { code, data } = await this.$axios.$post("/api/comment", {
+        articleId: parentVue.article._id,
+        content: this.editorText
       });
-      if (result.code === 1) {
-        // this.getLatestData();
+      if (code === 1) {
+        parentVue.article.comments = data.article.comments;
         this.editorText = "";
-      } else if (result.code === -2) {
+      } else if (code === -2) {
         this.$message.error(`请登录后再${this.commentName}`);
       } else {
         this.$message.error(`${this.commentName}失败`);
@@ -292,41 +235,13 @@ export default Vue.extend({
       img.style.display = "none";
     },
 
-    showReply(event, pathId) {
-      if (pathId !== this.pathId) {
-        this.editorReplyText = "";
-      }
-      this.pathId = pathId;
-      let linkEl = event.target;
-      if (linkEl.nodeName !== "A") {
-        linkEl = linkEl.parentElement;
-      }
-      const replyEl = document.querySelector(".editor-reply");
-      linkEl.parentElement.parentElement.appendChild(replyEl);
-      this.isEditorReplyShown = true;
-      this.$nextTick(() => {
-        (this.$refs.editorReply as any).invoke("focus");
-      });
-    },
-
-    hideReply() {
-      this.isEditorReplyShown = false;
-    },
-
-    async sendReply() {
-      const content = this.editorReplyText.trim();
-      if (!content) {
-        return (this.$refs.editorReply as any).invoke("focus");
-      }
-      await this.saveComment({
-        content,
-        pathId: this.pathId
-      });
-      // this.getLatestData();
-      this.editorReplyText = "";
-      setTimeout(() => {
-        this.hideReply();
-      }, 0);
+    referenceReply(event, commentId, content) {
+      let refText = content.replace(/^.*(\n+|$)/gm, text => "> " + text);
+      refText += "\n\n";
+      this.editorText = refText;
+      const editorComp = this.$refs.editor as any;
+      editorComp.$el.scrollIntoViewIfNeeded();
+      editorComp.invoke("focus");
     },
 
     loadNext() {
@@ -490,40 +405,12 @@ export default Vue.extend({
   border-width: 8px;
 }
 
-.comment-item {
-  display: flex;
-  margin-bottom: 20px;
-}
-
-.comment-list > ul > li {
-  margin-bottom: 20px;
-  border-bottom: 1px solid #eee;
-}
-
-.comment-right {
-  flex: auto;
-  overflow: auto;
-}
-
 .te-md-container .te-preview {
   padding: 0 10px;
 }
 
-.comment-title {
-  line-height: 14px;
-  margin-bottom: 15px;
-  -webkit-user-select: none;
-  user-select: none;
-}
-
-.comment-username {
-  font-size: 14px;
-  font-weight: bold;
-}
-
-.comment-time {
-  color: #999;
-  font-size: 13px;
+.comment-list {
+  margin-left: 56px;
 }
 
 .comments-top-left {
@@ -572,45 +459,28 @@ export default Vue.extend({
   border-radius: 5px;
 }
 
-.comment-list li > ul {
-  margin-left: 66px;
-}
-
 .comment-list .te-toolbar-section {
   display: none;
-}
-
-.comment-footer {
-  margin-top: 10px;
-  -webkit-user-select: none;
-  user-select: none;
-}
-
-.comment-footer a {
-  font-size: 12px;
-  color: #888;
-}
-
-.comment-footer a:hover {
-  color: #444;
 }
 
 .tui-editor-defaultUI .CodeMirror pre.CodeMirror-placeholder {
   padding-left: 12px;
 }
 
-.auth-tag {
-  display: inline-block;
-  border-radius: 3px;
-  font-size: 12px;
-  padding: 3px 5px 2px;
-  background: #f90;
-  color: #fff;
+.comment-list ul li.comment-li:first-child .comment-item {
+  padding-top: 0;
 }
 
-.comment-list > ul > li.comments-last-li {
-  border: 0;
-  margin-bottom: 0;
+.comment-list ul li.comment-li:last-child .comment-item {
+  padding-bottom: 0;
+}
+
+.btn-next-wrap {
+  margin-left: -56px;
+}
+
+.btn-next-wrap button {
+  width: 100%;
 }
 
 .lazyload,

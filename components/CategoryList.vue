@@ -12,8 +12,9 @@
     </ul>
   </div>
 </template>
-<script>
-import Vue from "vue";
+<script lang="ts">
+import Vue, { PropOptions } from "vue";
+import { ICategory } from "@/server/models/category";
 export default Vue.extend({
   props: {
     categories: {
@@ -21,7 +22,7 @@ export default Vue.extend({
       default() {
         return [];
       }
-    }
+    } as PropOptions<Array<ICategory>>
   }
 });
 </script>
