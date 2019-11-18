@@ -47,9 +47,6 @@
 <script lang="ts">
 import Vue from "vue";
 import zh_CN from "ant-design-vue/lib/locale-provider/zh_CN";
-import moment from "moment";
-import "moment/locale/zh-cn";
-moment.locale("zh-cn");
 export default Vue.extend({
   data() {
     return {

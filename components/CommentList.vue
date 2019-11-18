@@ -21,11 +21,7 @@
     </div>
     <div class="gituser-wrap" v-if="user">
       <div class="avatar">
-        <img
-          :data-src="user._json.avatar_url"
-          class="lazyload"
-          @error="imgLoadError($event)"
-        />
+        <img :data-src="user._json.avatar_url" class="lazyload" @error="imgLoadError($event)" />
       </div>
       <div class="editor-wrap">
         <client-only>
@@ -43,18 +39,12 @@
           <a-tooltip>
             <template slot="title">打开Markdown语法速查</template>
             <a @click="mcsShow = true">
-              <font-awesome-icon
-                :icon="['fab', 'markdown']"
-                style="font-size: 14px"
-              ></font-awesome-icon>
+              <font-awesome-icon :icon="['fab', 'markdown']" style="font-size: 14px"></font-awesome-icon>
               <span>支持Markdown语法</span>
             </a>
           </a-tooltip>
           <a-button type="primary" @click="postComment" :disabled="!editorText">
-            <font-awesome-icon
-              :icon="['far', 'paper-plane']"
-              style="margin-right: 4px;"
-            ></font-awesome-icon>
+            <font-awesome-icon :icon="['far', 'paper-plane']" style="margin-right: 4px;"></font-awesome-icon>
             <span>{{ commentName }}</span>
           </a-button>
         </div>
@@ -62,11 +52,7 @@
     </div>
     <div class="comment-list">
       <ul>
-        <li
-          v-for="comment in pagedComments"
-          :key="comment._id"
-          class="comment-li"
-        >
+        <li v-for="comment in pagedComments" :key="comment._id" class="comment-li">
           <comment-item
             :comment="comment"
             :commentId="comment._id"
@@ -172,13 +158,13 @@ export default Vue.extend({
   },
   methods: {
     async postComment() {
-      const parentVue = this.$parent as any;
-      const { code, data } = await this.$axios.$post("/api/comment", {
-        articleId: parentVue.article._id,
-        content: this.editorText
-      });
+      const { code, data } = await this.saveComment();
       if (code === 1) {
-        parentVue.article.comments = data.article.comments;
+        if (this.from === 1) {
+          (this.$parent as any).guestbook.unshift(data.guestbookItem);
+        } else {
+          (this.$parent as any).article.comments = data.article.comments;
+        }
         this.editorText = "";
       } else if (code === -2) {
         this.$message.error(`请登录后再${this.commentName}`);
@@ -187,10 +173,16 @@ export default Vue.extend({
       }
     },
 
-    saveComment(data) {
+    saveComment() {
       if (this.from === 1) {
-        return this.$store.dispatch("saveGuestbook", data);
+        return this.$axios.$post("/api/guestbook", {
+          content: this.editorText
+        });
       }
+      return this.$axios.$post("/api/comment", {
+        articleId: (this.$parent as any).article._id,
+        content: this.editorText
+      });
     },
 
     onEditorLoad() {
@@ -296,8 +288,7 @@ export default Vue.extend({
 }
 
 .editor-focus {
-  border: 1px solid #57a3f3;
-  box-shadow: inset 0 0 3px 2px rgba(45, 140, 240, 0.2);
+  box-shadow: inset 0 0px 1px 1px rgb(64, 169, 255);
 }
 
 .comments-wrap .tui-editor-contents h1,

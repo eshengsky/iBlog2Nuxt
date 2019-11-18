@@ -171,6 +171,7 @@ export default Vue.extend({
   border-bottom: 1px solid #ddd;
   border-top-left-radius: 3px;
   border-top-right-radius: 3px;
+  user-select: none;
 }
 
 .comment-username {
@@ -197,7 +198,7 @@ export default Vue.extend({
 
 .comment-body {
   width: 100%;
-  padding: 15px;
+  padding: 12px 15px;
   overflow: visible;
   font-size: 14px;
 }

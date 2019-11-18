@@ -17,25 +17,20 @@
           v-model="inputTxt"
           style="width: 200px"
           :placeholder="searchPhd"
-          clearable
+          allowClear
           ref="inputComp"
           @on-enter="search"
         />
-        <a-date-picker
+        <a-range-picker
           v-if="filterType === 'date'"
           v-model="inputDate"
-          type="daterange"
-          split-panels
-          separator=" ~ "
-          placement="bottom-end"
           placeholder="选择日期范围"
-          :start-date="startDate"
-          :options="dateOpts"
-          :editable="false"
-          :transfer="true"
+          :disabledDate="disabledDate"
+          :ranges="rangeDate"
+          :defaultPickerValue="defaultRange"
           style="width: 200px"
           ref="dateComp"
-        ></a-date-picker>
+        ></a-range-picker>
         <a-button @click="search">搜索</a-button>
       </div>
     </div>
@@ -67,28 +62,27 @@
       </li>
     </ul>
     <footer class="copyright">2019 © All Rights Reserved | 浙ICP备15032882号 | 后台管理</footer>
-    <a-drawer
+    <!-- <a-drawer
       :title="article.title"
-      :value="drawer"
-      placement="right"
+      v-model="drawer"
       width="66.66%"
       :closable="false"
-      @input="closeDrawer"
     >
       <article class="preview-article" v-html="article.html"></article>
       <footer class="preview-footer">
         <i-button @click="closeDrawer">关闭</i-button>
         <i-button
           type="primary"
-          :to="`/blog/${article.category.alias}/${article.alias}`"
+          :href="`/blog/${article.category.alias}/${article.alias}`"
           target="_blank"
         >完整模式</i-button>
       </footer>
-    </a-drawer>
+    </a-drawer> -->
   </div>
 </template>
 <script lang="ts">
 import Vue, { PropOptions } from "vue";
+import moment from 'moment';
 import { ICategory } from "@/server/models/category";
 import PostItem from "~/components/PostItem.vue";
 import "highlight.js/styles/tomorrow.css";
@@ -98,17 +92,16 @@ export default Vue.extend({
     PostItem
   },
   props: {
-    categories: {
-      type: Array,
+    category: {
+      type: Object,
       default() {
-        return [];
+        return null;
       }
-    } as PropOptions<Array<ICategory>>
+    } as PropOptions<ICategory>
   },
   data() {
     return {
       posts: [] as any[],
-      category: "",
       isLoading: false,
       hasNext: false,
       count: 0,
@@ -120,69 +113,20 @@ export default Vue.extend({
       page: 1,
       drawer: false,
       alertShow: false,
-      dateOpts: {
-        shortcuts: [
-          {
-            text: "今天",
-            value() {
-              return [new Date(), new Date()];
-            }
-          },
-          {
-            text: "本周",
-            value() {
-              const end = new Date();
-              const start = new Date();
-              start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
-              return [start, end];
-            }
-          },
-          {
-            text: "本月",
-            value() {
-              const end = new Date();
-              const start = new Date();
-              start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
-              return [start, end];
-            }
-          },
-          {
-            text: "今年",
-            value() {
-              const end = new Date();
-              const start = new Date();
-              start.setTime(start.getTime() - 3600 * 1000 * 24 * 30 * 12);
-              return [start, end];
-            }
-          },
-          {
-            text: "全部",
-            value() {
-              return [];
-            }
-          }
-        ],
-        disabledDate(date) {
-          return date && date.valueOf() > Date.now();
-        }
+      defaultRange: [moment().subtract(30, "days"), moment()],
+      rangeDate: {
+        今天: [moment(), moment()],
+        最近一周: [moment().subtract(7, "days"), moment()],
+        最近一月: [moment().subtract(30, "days"), moment()],
+        最近一年: [moment().subtract(365, "days"), moment()]
       }
     };
   },
   created() {
     this.isLoading = true;
-    const category = this.$route.params.category || "";
-    const findOne = this.categories.find(item => item.alias === category);
-    if (findOne) {
-      this.category = findOne._id;
-      this.getPosts();
-    }
+    this.getPosts();
   },
   computed: {
-    startDate() {
-      const start = new Date();
-      start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
-      return start;
-    },
     searchPhd() {
       let placeholder = "";
       switch (this.filterType) {
@@ -201,12 +145,15 @@ export default Vue.extend({
     }
   },
   methods: {
+    disabledDate(date) {
+      return date && date > moment().endOf('day');
+    },
     async getPosts() {
       this.isLoading = true;
       const startTime = new Date().getTime();
       const { code, data } = await this.$axios.$get("/api/posts", {
         params: {
-          category: this.category,
+          category: this.category._id,
           pageIndex: this.page,
           filterType: this.filterType,
           keyword: this.keyword,
@@ -248,29 +195,29 @@ export default Vue.extend({
       });
     },
     async search(checkKeyword = true) {
-      let input = "";
-      if (this.filterType === "date") {
-        input = this.inputDate;
-        if (checkKeyword && !input[0] && !input[1]) {
-          document.querySelector(".ivu-date-picker input").click();
-          return;
-        }
-      } else {
-        input = this.inputTxt;
-        if (checkKeyword && !input) {
-          this.$refs.inputComp.focus();
-          return;
-        }
-      }
-      this.alertShow = false;
-      this.posts = [];
-      this.page = 1;
-      this.hasNext = false;
-      this.keyword = input;
-      await this.getPosts();
-      if (input) {
-        this.alertShow = true;
-      }
+      // let input = "";
+      // if (this.filterType === "date") {
+      //   input = this.inputDate;
+      //   if (checkKeyword && !input[0] && !input[1]) {
+      //     document.querySelector(".ivu-date-picker input").click();
+      //     return;
+      //   }
+      // } else {
+      //   input = this.inputTxt;
+      //   if (checkKeyword && !input) {
+      //     this.$refs.inputComp.focus();
+      //     return;
+      //   }
+      // }
+      // this.alertShow = false;
+      // this.posts = [];
+      // this.page = 1;
+      // this.hasNext = false;
+      // this.keyword = input;
+      // await this.getPosts();
+      // if (input) {
+      //   this.alertShow = true;
+      // }
     },
     clearSearch() {
       this.alertShow = false;

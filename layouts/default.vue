@@ -1,38 +1,53 @@
 <template>
-  <div class="container">
-    <div class="navbar">
-      <div class="navbar-header">
-        <a class="navbar-brand" href="/">
-          <img src="/images/iBlog2_logo.png" />
-          <span>iBlog2</span>
-        </a>
+  <a-locale-provider :locale="zh_CN">
+    <div class="container">
+      <div class="navbar">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="/">
+            <img src="/images/iBlog2_logo.png" />
+            <span>iBlog2</span>
+          </a>
+        </div>
+        <div class="navbar-collapse">
+          <ul>
+            <li :class="{ 'blog-active': $route.path === '/' || $route.path.startsWith('/blog') }">
+              <nuxt-link to="/">
+                <font-awesome-icon :icon="['fas', 'pen-nib']"></font-awesome-icon>博客
+              </nuxt-link>
+              <div class="nav-line"></div>
+            </li>
+            <li :class="{ 'guestbook-active': $route.path === '/guestbook' }">
+              <nuxt-link to="/guestbook">
+                <font-awesome-icon :icon="['fas', 'comment-dots']"></font-awesome-icon>留言
+              </nuxt-link>
+              <div class="nav-line"></div>
+            </li>
+            <li :class="{ 'profile-active': $route.path === '/profile' }">
+              <nuxt-link to="/profile">
+                <font-awesome-icon :icon="['fas', 'user']"></font-awesome-icon>关于
+              </nuxt-link>
+              <div class="nav-line"></div>
+            </li>
+          </ul>
+        </div>
       </div>
-      <div class="navbar-collapse">
-        <ul>
-          <li :class="{ 'blog-active': $route.path === '/' || $route.path.startsWith('/blog') }">
-            <nuxt-link to="/">
-              <font-awesome-icon :icon="['fas', 'pen-nib']"></font-awesome-icon>博客
-            </nuxt-link>
-            <div class="nav-line"></div>
-          </li>
-          <li :class="{ 'guestbook-active': $route.path === '/guestbook' }">
-            <nuxt-link to="/guestbook">
-              <font-awesome-icon :icon="['fas', 'comment-dots']"></font-awesome-icon>留言
-            </nuxt-link>
-            <div class="nav-line"></div>
-          </li>
-          <li :class="{ 'profile-active': $route.path === '/profile' }">
-            <nuxt-link to="/profile">
-              <font-awesome-icon :icon="['fas', 'user']"></font-awesome-icon>关于
-            </nuxt-link>
-            <div class="nav-line"></div>
-          </li>
-        </ul>
-      </div>
+      <nuxt />
+      <div class="layout-footer">iBlog2 ©{{year}} All Rights Reserved</div>
     </div>
-    <nuxt />
-  </div>
+  </a-locale-provider>
 </template>
+<script lang="ts">
+import Vue from "vue";
+import zh_CN from "ant-design-vue/lib/locale-provider/zh_CN";
+export default Vue.extend({
+  data() {
+    return {
+      year: new Date().getFullYear(),
+      zh_CN
+    };
+  }
+});
+</script>
 <style>
 .navbar {
   position: fixed;
@@ -159,5 +174,12 @@
     -webkit-transform: none;
     transform: none;
   }
+}
+
+.layout-footer {
+  text-align: center;
+  color: #888;
+  user-select: none;
+  padding: 24px 0;
 }
 </style>

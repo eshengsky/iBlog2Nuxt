@@ -166,7 +166,6 @@ async function saveGuestbook(params, user) {
     const displayName = user.displayName;
     const avatar = user._json.avatar_url;
     const content = params.content;
-    const pathId = params.pathId;
     const now = new Date();
     const item = {
       username,
@@ -176,7 +175,10 @@ async function saveGuestbook(params, user) {
       createTime: now
     } as IComment;
     const newItem = new Guestbook(item);
-    newItem.save();
+    const guestbookItem = await newItem.save();
+    return {
+        guestbookItem
+    }
   } catch (err) {
     console.error(err);
   }

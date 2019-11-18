@@ -14,7 +14,9 @@
       </main>
       <comment-list :comments="article.comments" :from="2"></comment-list>
     </article>
-    <aside>Menu</aside>
+    <aside>
+      <!-- 目录 -->
+    </aside>
   </div>
 </template>
 <script lang="ts">
@@ -61,7 +63,7 @@ export default Vue.extend({
 
 .article-wrap {
   max-width: 1012px;
-  margin: 0 auto 20px;
+  margin: 0 auto;
   padding: 40px 30px;
   background: #fff;
   border-color: #e7eaec;
