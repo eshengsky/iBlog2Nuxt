@@ -32,7 +32,7 @@
         </div>
       </div>
       <nuxt />
-      <div class="layout-footer">iBlog2 ©{{year}} All Rights Reserved</div>
+      <div class="layout-footer">iBlog2 ©{{year}} All Rights Reserved | <a href="/admin">后台管理</a></div>
     </div>
   </a-locale-provider>
 </template>

@@ -36,7 +36,7 @@
           </a-input>
         </a-form-item>
         <a-form-item label="摘要" :colon="false">
-          <a-textarea v-decorator="['summary', summaryOpts]" placeholder="请输入摘要" :rows="2" />
+          <a-textarea v-decorator="['summary', summaryOpts]" placeholder="请输入摘要" :rows="2" :autosize="{ minRows: 2, maxRows: 6 }"/>
         </a-form-item>
         <a-form-item label="来源" :colon="false">
           <a-radio-group
