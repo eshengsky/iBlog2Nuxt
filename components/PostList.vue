@@ -3,20 +3,12 @@
     <div class="post-left">
       <div class="post-top">
         <div class="post-top-left">
-          <a @click="sortList('date')" :class="{ active: sortBy === 'date' }"
-            >日期</a
-          >
-          <a @click="sortList('title')" :class="{ active: sortBy === 'title' }"
-            >标题</a
-          >
+          <a @click="sortList('date')" :class="{ active: sortBy === 'date' }">日期</a>
+          <a @click="sortList('title')" :class="{ active: sortBy === 'title' }">标题</a>
         </div>
         <div class="post-top-right">
           <a-input-group compact>
-            <a-select
-              v-model="filterType"
-              @change="filterTypeChange"
-              style="width: 75px"
-            >
+            <a-select v-model="filterType" @change="filterTypeChange" style="width: 75px">
               <a-select-option value="text">全文</a-select-option>
               <a-select-option value="title">标题</a-select-option>
               <a-select-option value="tag">标签</a-select-option>
@@ -48,8 +40,8 @@
         <li class="filter-li" v-show="alertShow">
           <div class="alert-filter">
             <div>
-              共有<span>{{ count }}</span
-              >条筛选结果
+              共有
+              <span>{{ count }}</span>条筛选结果
             </div>
             <a @click="clearSearch">清除搜索</a>
           </div>
@@ -71,11 +63,8 @@
                 @click="loadNext"
                 v-if="hasNext"
                 :loading="isLoading"
-                >下一页</a-button
-              >
-              <div class="no-more" v-else>
-                没有更多数据
-              </div>
+              >下一页</a-button>
+              <div class="no-more" v-else>没有更多数据</div>
             </template>
             <div class="no-data" v-else>暂无数据</div>
           </template>
@@ -83,14 +72,8 @@
       </ul>
     </div>
     <div class="post-right">
-      <div class="calendar-wrap">
-        <a-calendar
-          :fullscreen="false"
-          :disabledDate="disabledDate"
-          @panelChange="panelChange"
-          @select="selectDate"
-        />
-      </div>
+      <calendar-widget @selectCalendar="selectCalendar"></calendar-widget>
+      <pop-articles-widget></pop-articles-widget>
     </div>
   </div>
 </template>
@@ -100,12 +83,16 @@ import moment, { Moment } from "moment";
 import { ICategory } from "@/server/models/category";
 import { IPost } from "@/server/models/post";
 import { IResp } from "@/server/types";
-import PostItem from "~/components/PostItem.vue";
+import PostItem from "@/components/PostItem.vue";
+import CalendarWidget from "@/components/widgets/calendarWidget.vue";
+import PopArticlesWidget from "@/components/widgets/popArticlesWidget.vue";
 import "highlight.js/styles/tomorrow.css";
 export default Vue.extend({
   scrollToTop: true,
   components: {
-    PostItem
+    PostItem,
+    CalendarWidget,
+    PopArticlesWidget
   },
   props: {
     category: {
@@ -134,8 +121,7 @@ export default Vue.extend({
         最近一周: [moment().subtract(7, "days"), moment()],
         最近一月: [moment().subtract(30, "days"), moment()],
         最近一年: [moment().subtract(365, "days"), moment()]
-      },
-      dateMode: "month" as "month" | "year"
+      }
     };
   },
   created() {
@@ -245,19 +231,9 @@ export default Vue.extend({
       this.sortBy = sortBy;
       this.search(false);
     },
-    panelChange(date: Moment, mode: "month" | "year") {
-      this.dateMode = mode;
-    },
-    selectDate(date: Moment) {
+    selectCalendar(inputDateMoment: [Moment, Moment]) {
       this.filterType = "date";
-      if (this.dateMode === "year") {
-        const start = moment(date.startOf("month"));
-        const end = moment(date.endOf("month"));
-        this.inputDateMoment = [start, end];
-      } else {
-        this.inputDateMoment = [date, date];
-      }
-      window.scrollTo(0, 0);
+      this.inputDateMoment = inputDateMoment;
       this.search();
     }
   }
@@ -265,7 +241,7 @@ export default Vue.extend({
 </script>
 <style>
 .post-wrap {
-  margin: 30px 20px 0 280px;
+  padding: 30px 20px 0 280px;
   display: flex;
 }
 
@@ -273,6 +249,7 @@ export default Vue.extend({
   border-color: #e7eaec;
   border-style: solid solid none;
   border-width: 1px 0;
+  overflow: hidden;
   flex: 1;
 }
 
@@ -453,15 +430,26 @@ export default Vue.extend({
   margin-left: 15px;
 }
 
-.calendar-wrap {
-  border: 1px solid #e7eaec;
-  border-radius: 4px;
-  background: #fff;
-}
-
 .ant-fullcalendar table,
 .ant-fullcalendar th {
   background: #fff !important;
   border: 0 !important;
+}
+
+.widget-container {
+  border: 1px solid #e7eaec;
+  border-radius: 4px;
+  background: #fff;
+  margin-bottom: 15px;
+}
+
+.widget-header {
+  padding: 0 15px;
+  line-height: 40px;
+  border-bottom: 1px solid #e7eaec;
+}
+
+.widget-body {
+  padding: 15px;
 }
 </style>

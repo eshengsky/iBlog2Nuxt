@@ -37,6 +37,40 @@ router.get('/posts', async (req, res, next) => {
     res.json(resp);
 });
 
+router.get('/popArticles', async (req, res, next) => {
+    let resp: IResp;
+    try {
+        const data = await proxy.getPopArticles();
+        resp = {
+            code: 1,
+            data
+        }
+    } catch (err) {
+        console.error(err);
+        resp = {
+            code: -1,
+        }
+    }
+    res.json(resp);
+});
+
+router.get('/labels', async (req, res, next) => {
+    let resp: IResp;
+    try {
+        const data = await proxy.getAllLabels();
+        resp = {
+            code: 1,
+            data
+        }
+    } catch (err) {
+        console.error(err);
+        resp = {
+            code: -1,
+        }
+    }
+    res.json(resp);
+});
+
 router.get('/article', async (req, res, next) => {
     let resp: IResp;
     try {

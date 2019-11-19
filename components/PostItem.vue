@@ -18,7 +18,6 @@
         <a
           :title="post.title"
           :href="`/blog/${post.category.alias}/${post.alias}`"
-          target="_blank"
           >{{ post.title }}</a
         >
       </h4>

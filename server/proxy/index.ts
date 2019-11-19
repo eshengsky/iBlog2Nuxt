@@ -111,6 +111,23 @@ async function getPosts(params) {
   };
 }
 
+async function getPopArticles() {
+  const articles = await Post.find({}, "-content", {
+    sort: "-viewCount",
+    limit: 10
+  });
+  return {
+    articles
+  }
+}
+
+async function getAllLabels() {
+  const labels = await Post.distinct('labels').exec();
+  return {
+    labels
+  }
+}
+
 async function getArticle(params) {
   let article;
   try {
@@ -187,6 +204,8 @@ async function saveGuestbook(params, user) {
 export default {
   getCategories,
   getPosts,
+  getPopArticles,
+  getAllLabels,
   getArticle,
   saveComment,
   getGuestbook,

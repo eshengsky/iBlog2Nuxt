@@ -37,7 +37,7 @@ export default Vue.extend({
 .list-wrap {
   max-width: 1012px;
   margin: 0 auto 20px;
-  padding: 0 30px 10px;
+  padding: 0 30px 30px;
   background: #fff;
   border-color: #e7eaec;
   border-style: solid solid none;

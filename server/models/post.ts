@@ -3,6 +3,7 @@ import url from "url";
 import moment from "moment";
 import MarkdownIt from "markdown-it";
 import hljs from "highlight.js";
+import { ICategory } from "./category";
 import CommentSchema, { IComment } from "./comment";
 
 interface IPost extends Document {
@@ -31,7 +32,7 @@ interface IPost extends Document {
   /**
    * 分类
    */
-  category: Schema.Types.ObjectId;
+  category: ICategory;
 
   /**
    * 标签
