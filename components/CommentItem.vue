@@ -68,7 +68,7 @@ export default Vue.extend({
   },
   data() {
     return {
-      authGithub: config.adminGithubUser
+      authGithub: config.githubAdmin
     };
   },
   computed: {

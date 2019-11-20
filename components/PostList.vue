@@ -3,12 +3,20 @@
     <div class="post-left">
       <div class="post-top">
         <div class="post-top-left">
-          <a @click="sortList('date')" :class="{ active: sortBy === 'date' }">日期</a>
-          <a @click="sortList('title')" :class="{ active: sortBy === 'title' }">标题</a>
+          <a @click="sortList('date')" :class="{ active: sortBy === 'date' }"
+            >日期</a
+          >
+          <a @click="sortList('title')" :class="{ active: sortBy === 'title' }"
+            >标题</a
+          >
         </div>
         <div class="post-top-right">
           <a-input-group compact>
-            <a-select v-model="filterType" @change="filterTypeChange" style="width: 75px">
+            <a-select
+              v-model="filterType"
+              @change="filterTypeChange"
+              style="width: 75px"
+            >
               <a-select-option value="text">全文</a-select-option>
               <a-select-option value="title">标题</a-select-option>
               <a-select-option value="tag">标签</a-select-option>
@@ -40,8 +48,8 @@
         <li class="filter-li" v-show="alertShow">
           <div class="alert-filter">
             <div>
-              共有
-              <span>{{ count }}</span>条筛选结果
+              共有<span>{{ count }}</span
+              >条筛选结果
             </div>
             <a @click="clearSearch">清除搜索</a>
           </div>
@@ -63,17 +71,21 @@
                 @click="loadNext"
                 v-if="hasNext"
                 :loading="isLoading"
-              >下一页</a-button>
+                >下一页</a-button
+              >
               <div class="no-more" v-else>没有更多数据</div>
             </template>
-            <div class="no-data" v-else>暂无数据</div>
+            <div class="no-data" v-else>
+              <a-empty></a-empty>
+            </div>
           </template>
         </li>
       </ul>
     </div>
     <div class="post-right">
-      <calendar-widget @selectCalendar="selectCalendar"></calendar-widget>
-      <pop-articles-widget></pop-articles-widget>
+      <blog-intro v-if="settings.showBlogIntro"></blog-intro>
+      <article-calendar @selectCalendar="selectCalendar"></article-calendar>
+      <pop-articles></pop-articles>
     </div>
   </div>
 </template>
@@ -84,15 +96,17 @@ import { ICategory } from "@/server/models/category";
 import { IPost } from "@/server/models/post";
 import { IResp } from "@/server/types";
 import PostItem from "@/components/PostItem.vue";
-import CalendarWidget from "@/components/widgets/calendarWidget.vue";
-import PopArticlesWidget from "@/components/widgets/popArticlesWidget.vue";
+import BlogIntro from "@/components/widgets/blogIntro.vue";
+import ArticleCalendar from "@/components/widgets/articleCalendar.vue";
+import PopArticles from "@/components/widgets/popArticles.vue";
 import "highlight.js/styles/tomorrow.css";
 export default Vue.extend({
   scrollToTop: true,
   components: {
     PostItem,
-    CalendarWidget,
-    PopArticlesWidget
+    BlogIntro,
+    ArticleCalendar,
+    PopArticles
   },
   props: {
     category: {
@@ -104,6 +118,7 @@ export default Vue.extend({
   },
   data() {
     return {
+      settings: this.$store.state.settings,
       posts: [] as Array<IPost>,
       isLoading: false,
       hasNext: false,
@@ -114,6 +129,7 @@ export default Vue.extend({
       inputTxt: "",
       inputDateMoment: [] as Array<Moment>,
       page: 1,
+      pageSize: this.$store.state.settings.pageSize,
       alertShow: false,
       defaultRange: [moment().subtract(30, "days"), moment()],
       rangeDate: {
@@ -166,6 +182,7 @@ export default Vue.extend({
         params: {
           category: this.category._id,
           pageIndex: this.page,
+          pageSize: this.pageSize,
           filterType: this.filterType,
           keyword: this.keyword,
           sortBy: this.sortBy
@@ -438,18 +455,28 @@ export default Vue.extend({
 
 .widget-container {
   border: 1px solid #e7eaec;
-  border-radius: 4px;
+  border-radius: 5px;
   background: #fff;
   margin-bottom: 15px;
 }
 
 .widget-header {
   padding: 0 15px;
-  line-height: 40px;
+  line-height: 45px;
   border-bottom: 1px solid #e7eaec;
+  user-select: none;
 }
 
 .widget-body {
   padding: 15px;
+  min-height: 100px;
+  position: relative;
+}
+
+.widget-body .ant-spin {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin: -10px;
 }
 </style>

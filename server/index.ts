@@ -6,6 +6,7 @@ import passport from "passport";
 import { Strategy as GitHubStrategy } from "passport-github2";
 import api from "./api/index";
 import apiAdmin from "./api/admin";
+import config from "../blog.config";
 
 const app = express();
 
@@ -20,9 +21,9 @@ passport.deserializeUser(function(obj, done) {
 passport.use(
   new GitHubStrategy(
     {
-      clientID: "7dc9bb0e0fd4e9a92de9",
-      clientSecret: "a3d9f400defcee58bef9ce90f5e8ddf3bb71c6bf",
-      callbackURL: "http://localhost:8000/auth/github/callback"
+      clientID: config.githubClientID,
+      clientSecret: config.githubClientSecret,
+      callbackURL: config.githubCallbackURL
     },
     function(accessToken, refreshToken, profile, done) {
       // asynchronous verification, for effect...

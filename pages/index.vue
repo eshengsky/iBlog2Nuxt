@@ -19,6 +19,7 @@ export default Vue.extend({
 
   data() {
     return {
+      aaa: 123,
       categories: [],
       category: null
     };

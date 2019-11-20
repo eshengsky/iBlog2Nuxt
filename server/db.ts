@@ -2,13 +2,15 @@ import { connect, connection, Connection } from "mongoose";
 import { Post, IPostModel } from "./models/post";
 import { Category, ICategoryModel } from "./models/category";
 import { Guestbook, IGuestbookModel } from "./models/guestbook";
+import { Setting, ISettingModel } from "./models/setting";
 import config from "../blog.config";
 
 interface IModels {
   Post: IPostModel;
 
   Category: ICategoryModel,
-  Guestbook: IGuestbookModel
+  Guestbook: IGuestbookModel,
+  Setting: ISettingModel
 }
 
 export default class DB {
@@ -30,6 +32,7 @@ export default class DB {
       () => {
         // 设置默认数据
         (this._models.Category as any).initData();
+        (this._models.Setting as any).initData();
       }
     );
     this._db = connection;
@@ -39,7 +42,8 @@ export default class DB {
     this._models = {
       Post: new Post().model,
       Category: new Category().model,
-      Guestbook: new Guestbook().model
+      Guestbook: new Guestbook().model,
+      Setting: new Setting().model
     };
   }
 

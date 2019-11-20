@@ -2,9 +2,15 @@
   <div class="widget-container">
     <div class="widget-header">热门文章</div>
     <div class="widget-body">
+      <a-spin :spinning="spinning"/>
       <ul>
         <li v-for="(item, index) in list" :key="index">
-          <a class="pop-article-title" :href="articleUrl(item)" :title="item.title">{{ item.title }}</a>
+          <a
+            class="pop-article-title"
+            :href="articleUrl(item)"
+            :title="item.title"
+            >{{ item.title }}</a
+          >
         </li>
       </ul>
     </div>
@@ -18,12 +24,15 @@ import { IResp } from "@/server/types";
 export default Vue.extend({
   data() {
     return {
-      list: [] as Array<IPost>
+      list: [] as Array<IPost>,
+      spinning: false
     };
   },
   async created() {
+    this.spinning = true;
     const { code, data }: IResp = await this.$axios.$get("/api/popArticles");
     this.list = data.articles;
+    this.spinning = false;
   },
   methods: {
     articleUrl(item: IPost) {
@@ -44,5 +53,7 @@ export default Vue.extend({
   word-break: break-all;
   white-space: nowrap;
   max-width: 100%;
+  color: #444;
+  line-height: 30px;
 }
 </style>

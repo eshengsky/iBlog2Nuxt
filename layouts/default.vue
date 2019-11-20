@@ -4,8 +4,8 @@
       <div class="navbar">
         <div class="navbar-header">
           <a class="navbar-brand" href="/">
-            <img src="/images/iBlog2_logo.png" />
-            <span>iBlog2</span>
+            <img :src="$store.state.settings.blogLogo" />
+            <span>{{ $store.state.settings.blogName }}</span>
           </a>
         </div>
         <div class="navbar-collapse">

@@ -54,23 +54,6 @@ router.get('/popArticles', async (req, res, next) => {
     res.json(resp);
 });
 
-router.get('/labels', async (req, res, next) => {
-    let resp: IResp;
-    try {
-        const data = await proxy.getAllLabels();
-        resp = {
-            code: 1,
-            data
-        }
-    } catch (err) {
-        console.error(err);
-        resp = {
-            code: -1,
-        }
-    }
-    res.json(resp);
-});
-
 router.get('/article', async (req, res, next) => {
     let resp: IResp;
     try {
@@ -143,6 +126,23 @@ router.post('/guestbook', async (req, res, next) => {
         resp = {
             code: 1,
             data: guestbookItem
+        }
+    } catch (err) {
+        console.error(err);
+        resp = {
+            code: -1
+        }
+    }
+    res.json(resp);
+});
+
+router.get('/settings', async (req, res, next) => {
+    let resp: IResp;
+    try {
+        const settings = await proxy.getSettings();
+        resp = {
+            code: 1,
+            data: settings
         }
     } catch (err) {
         console.error(err);

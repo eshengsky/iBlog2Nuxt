@@ -10,6 +10,12 @@
       >
         <div class="logo" />
         <a-menu theme="dark" mode="inline" :defaultSelectedKeys="[currentKey]">
+          <a-menu-item key="index" title="数据统计">
+            <a href="/admin">
+              <a-icon type="video-camera" />
+              <span>数据统计</span>
+            </a>
+          </a-menu-item>
           <a-menu-item key="article-manage" title="文章管理">
             <a href="/admin/article-manage">
               <a-icon type="video-camera" />
@@ -22,9 +28,11 @@
               <span>分类管理</span>
             </a>
           </a-menu-item>
-          <a-menu-item key="3">
-            <a-icon type="upload" />
-            <span>nav 3</span>
+          <a-menu-item key="system-settings" title="系统设置">
+            <a href="/admin/system-settings">
+              <a-icon type="user" />
+              <span>系统设置</span>
+            </a>
           </a-menu-item>
         </a-menu>
       </a-layout-sider>
@@ -33,13 +41,15 @@
           <a-icon
             class="trigger"
             :type="collapsed ? 'menu-unfold' : 'menu-fold'"
-            @click="() => collapsed = !collapsed"
+            @click="() => (collapsed = !collapsed)"
           />
         </a-layout-header>
         <a-layout-content>
           <nuxt />
         </a-layout-content>
-        <a-layout-footer class="layout-footer">iBlog2 ©{{year}} All Rights Reserved</a-layout-footer>
+        <a-layout-footer class="layout-footer"
+          >iBlog2 ©{{ year }} All Rights Reserved</a-layout-footer
+        >
       </a-layout>
     </a-layout>
   </a-locale-provider>
@@ -60,12 +70,18 @@ export default Vue.extend({
       return this.collapsed ? "80px" : "200px";
     },
     currentKey(): string {
-      let path = this.$route.path.replace("/admin/", "");
+      let path = this.$route.path.replace("/admin", "");
+      if (path.substring(0, 1) === "/") {
+        path = path.substring(1);
+      }
       if (path.substring(path.length - 1) === "/") {
         path = path.substring(0, path.length - 1);
       }
+      if (!path) {
+        return "index";
+      }
       if (path === "article-edit") {
-        path = "article-manage";
+        return "article-manage";
       }
       return path;
     }
@@ -111,6 +127,7 @@ export default Vue.extend({
   font-weight: 100;
   padding: 16px 25px;
   border-bottom: 1px solid #e7eaec;
+  user-select: none;
 }
 
 .page-body {

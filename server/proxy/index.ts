@@ -2,8 +2,8 @@ import DB from "../db";
 import { ICategoryModel, ICategory } from "../models/category";
 import { IComment } from "../models/comment";
 import { IPost } from "../models/post";
-const { Post, Category, Guestbook } = DB.Models;
-const pageSize = 3;
+import { ISetting } from "../models/setting";
+const { Post, Category, Guestbook, Setting } = DB.Models;
 
 /**
  * 为首页数据查询构建条件对象
@@ -83,6 +83,7 @@ async function getPosts(params) {
   let postList: any[] = [];
   let pageCount = 0;
   let count = 0;
+  const pageSize = parseInt(params.pageSize);
   try {
     page = parseInt(params.pageIndex) || 1;
     page = page > 0 ? page : 1;
@@ -114,17 +115,10 @@ async function getPosts(params) {
 async function getPopArticles() {
   const articles = await Post.find({}, "-content", {
     sort: "-viewCount",
-    limit: 10
-  });
+    limit: 7
+  }).populate("category").exec();
   return {
     articles
-  }
-}
-
-async function getAllLabels() {
-  const labels = await Post.distinct('labels').exec();
-  return {
-    labels
   }
 }
 
@@ -201,13 +195,20 @@ async function saveGuestbook(params, user) {
   }
 }
 
+async function getSettings() {
+  const settings = await Setting.findOne().exec();
+  return {
+    settings
+  }
+}
+
 export default {
   getCategories,
   getPosts,
   getPopArticles,
-  getAllLabels,
   getArticle,
   saveComment,
   getGuestbook,
-  saveGuestbook
+  saveGuestbook,
+  getSettings
 };

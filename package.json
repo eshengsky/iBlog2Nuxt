@@ -38,9 +38,7 @@
     "mongoose": "^5.7.11",
     "nuxt": "^2.10.2",
     "passport": "^0.4.0",
-    "passport-github2": "^0.1.11",
-    "view-design": "^4.0.2",
-    "vue-property-decorator": "^8.3.0"
+    "passport-github2": "^0.1.11"
   },
   "devDependencies": {
     "@nuxt/typescript-build": "^0.3.4",

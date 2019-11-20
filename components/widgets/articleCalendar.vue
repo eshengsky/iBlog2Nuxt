@@ -21,7 +21,10 @@ export default Vue.extend({
   },
   methods: {
     disabledDate(date) {
-      return date && date > moment().endOf("month");
+      if (this.dateMode === 'year') {
+        return date && date > moment().endOf("month");
+      }
+      return date && date > moment().endOf("day");
     },
     panelChange(date, mode: "month" | "year") {
       this.dateMode = mode;
