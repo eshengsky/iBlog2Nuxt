@@ -3,6 +3,7 @@ import { ICategoryModel, ICategory } from "../models/category";
 import { IComment } from "../models/comment";
 import { IPost } from "../models/post";
 import { ISetting } from "../models/setting";
+import BadWords from "../bad_words/index";
 const { Post, Category, Comment, Guestbook, Setting } = DB.Models;
 
 /**
@@ -169,12 +170,14 @@ async function getComments(params) {
 }
 
 async function saveComment(params, user) {
+  let content = params.content;
+  content = BadWords.filter(content)
   const entity = new Comment({
     post: params.articleId,
     username: user.username,
     displayName: user.displayName,
     avatar: user._json.avatar_url,
-    content: params.content,
+    content,
     createTime: new Date()
   });
   const comment = await entity.save();
@@ -214,11 +217,13 @@ async function getGuestbook(params) {
 }
 
 async function saveGuestbook(params, user) {
+  let content = params.content;
+  content = BadWords.filter(content)
   const entity = new Guestbook({
     username: user.username,
     displayName: user.displayName,
     avatar: user._json.avatar_url,
-    content: params.content,
+    content,
     createTime: new Date()
   });
   const comment = await entity.save();

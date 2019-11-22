@@ -7,8 +7,12 @@ import { Strategy as GitHubStrategy } from "passport-github2";
 import api from "./api/index";
 import apiAdmin from "./api/admin";
 import config from "../blog.config";
+import BadWords from "./bad_words/index";
 
 const app = express();
+
+// 初始化敏感词数据
+new BadWords();
 
 passport.serializeUser(function(user, done) {
   done(null, user);
