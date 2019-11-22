@@ -2,9 +2,9 @@
   <div class="comments-wrap">
     <div class="comments-top">
       <div class="comments-top-left">
-        <span v-if="commentCount === 0">暂无{{ commentName }}</span>
+        <span v-if="count === 0">暂无{{ commentName }}</span>
         <span v-else>
-          <span style="margin: 0 1px;">{{ commentCount }}</span>
+          <span style="margin: 0 1px;">{{ count }}</span>
           条{{ commentName }}
         </span>
       </div>
@@ -21,7 +21,11 @@
     </div>
     <div class="gituser-wrap" v-if="user">
       <div class="avatar">
-        <img :data-src="user._json.avatar_url" class="lazyload" @error="imgLoadError($event)" />
+        <img
+          :data-src="user._json.avatar_url"
+          class="lazyload"
+          @error="imgLoadError($event)"
+        />
       </div>
       <div class="editor-wrap">
         <client-only>
@@ -39,12 +43,18 @@
           <a-tooltip>
             <template slot="title">打开Markdown语法速查</template>
             <a @click="mcsShow = true">
-              <font-awesome-icon :icon="['fab', 'markdown']" style="font-size: 14px"></font-awesome-icon>
+              <font-awesome-icon
+                :icon="['fab', 'markdown']"
+                style="font-size: 14px"
+              ></font-awesome-icon>
               <span>支持Markdown语法</span>
             </a>
           </a-tooltip>
           <a-button type="primary" @click="postComment" :disabled="!editorText">
-            <font-awesome-icon :icon="['far', 'paper-plane']" style="margin-right: 4px;"></font-awesome-icon>
+            <font-awesome-icon
+              :icon="['far', 'paper-plane']"
+              style="margin-right: 4px;"
+            ></font-awesome-icon>
             <span>{{ commentName }}</span>
           </a-button>
         </div>
@@ -52,7 +62,7 @@
     </div>
     <div class="comment-list">
       <ul>
-        <li v-for="comment in pagedComments" :key="comment._id" class="comment-li">
+        <li v-for="comment in comments" :key="comment._id" class="comment-li">
           <comment-item
             :comment="comment"
             :commentId="comment._id"
@@ -68,9 +78,8 @@
     <a-modal v-model="mcsShow" title="Markdown 语法速查" width="640px">
       <a-alert
         type="warning"
-        message="评论及留言不支持1~4级标题。"
+        message="评论及留言的内容不支持1-4级标题。"
         showIcon
-        closable
         style="margin-bottom: 10px;"
       />
       <md-cheat-sheet></md-cheat-sheet>
@@ -94,37 +103,37 @@ export default Vue.extend({
     MdCheatSheet
   },
   props: {
-    comments: {
-      type: Array
-    } as PropOptions<Array<IComment>>,
     from: {
       type: Number
-    } as PropOptions<1 | 2>
+    } as PropOptions<1 | 2>,
+    articleId: {
+      type: String
+    } as PropOptions<string>
   },
   data() {
     return {
+      comments: [] as Array<IComment>,
       page: 1,
-      pageSize: 20,
+      pageSize: 3,
       mcsShow: false,
       editorText: "",
-      commentId: ""
+      isLoading: false,
+      count: 0,
+      hasNext: false
     };
+  },
+  async created() {
+    this.getComments();
   },
   computed: {
     user(): any {
       return (this.$store.state as RootState).user;
     },
-    pagedComments(): Array<IComment> {
-      const start = (this.page - 1) * this.pageSize;
-      return this.comments.slice(0, start + this.pageSize);
-    },
-    hasNext(): boolean {
-      const count = this.comments.length;
-      const pageCount = Math.ceil(count / this.pageSize);
-      return pageCount > this.page;
+    isGuestbook(): boolean {
+      return this.from === 1;
     },
     commentName(): string {
-      return this.from === 2 ? "评论" : "留言";
+      return this.isGuestbook ? "留言" : "评论";
     },
     editorOptions(): object {
       return {
@@ -151,38 +160,46 @@ export default Vue.extend({
           "codeblock"
         ]
       };
-    },
-    commentCount(): number {
-      return this.comments.length;
     }
   },
   methods: {
-    async postComment() {
-      const { code, data } = await this.saveComment();
-      if (code === 1) {
-        if (this.from === 1) {
-          (this.$parent as any).guestbook.unshift(data.guestbookItem);
-        } else {
-          (this.$parent as any).article.comments = data.article.comments;
+    async getComments() {
+      this.isLoading = true;
+      const { code, data }: IResp = await this.$axios.$get(
+        `/api/${this.isGuestbook ? "guestbook" : "comments"}`,
+        {
+          params: {
+            articleId: this.articleId,
+            pageIndex: this.page,
+            pageSize: this.pageSize
+          }
         }
+      );
+
+      if (code === 1) {
+        this.comments.push(...data.comments);
+        this.hasNext = data.hasNext;
+        this.count = data.count;
+      }
+      this.isLoading = false;
+    },
+    async postComment() {
+      const { code, data } = await this.$axios.$post(
+        `/api/${this.isGuestbook ? "guestbook" : "comment"}`,
+        {
+          articleId: this.articleId,
+          content: this.editorText
+        }
+      );
+      if (code === 1) {
+        this.comments.unshift(data.comment);
+        this.count++;
         this.editorText = "";
       } else if (code === -2) {
         this.$message.error(`请登录后再${this.commentName}`);
       } else {
         this.$message.error(`${this.commentName}失败`);
       }
-    },
-
-    saveComment() {
-      if (this.from === 1) {
-        return this.$axios.$post("/api/guestbook", {
-          content: this.editorText
-        });
-      }
-      return this.$axios.$post("/api/comment", {
-        articleId: (this.$parent as any).article._id,
-        content: this.editorText
-      });
     },
 
     onEditorLoad() {
@@ -227,7 +244,7 @@ export default Vue.extend({
       img.style.display = "none";
     },
 
-    referenceReply(event, commentId, content) {
+    referenceReply(content) {
       let refText = content.replace(/^.*(\n+|$)/gm, text => "> " + text);
       refText += "\n\n";
       this.editorText = refText;
@@ -238,6 +255,7 @@ export default Vue.extend({
 
     loadNext() {
       this.page++;
+      this.getComments();
     }
   }
 });
@@ -289,6 +307,7 @@ export default Vue.extend({
 
 .editor-focus {
   box-shadow: inset 0 0px 1px 1px rgb(64, 169, 255);
+  border-radius: 3px;
 }
 
 .comments-wrap .tui-editor-contents h1,
@@ -468,10 +487,12 @@ export default Vue.extend({
 
 .btn-next-wrap {
   margin-left: -56px;
+  margin-top: 25px;
 }
 
 .btn-next-wrap button {
   width: 100%;
+  font-size: 15px;
 }
 
 .lazyload,

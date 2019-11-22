@@ -1,7 +1,7 @@
 <template>
   <div class="guestbook-wrap">
     <article class="list-wrap">
-      <comment-list :comments="guestbook" :from="1"></comment-list>
+      <comment-list :from="1"></comment-list>
     </article>
   </div>
 </template>
@@ -12,19 +12,6 @@ import "highlight.js/styles/tomorrow.css";
 export default Vue.extend({
   components: {
     CommentList
-  },
-  data() {
-    return {
-      guestbook: []
-    }
-  },
-  async asyncData({ $axios }) {
-    const { code, data } = await $axios.$get("/api/guestbook");
-    if (code === 1) {
-      return {
-        guestbook: data.guestbook
-      };
-    }
   }
 });
 </script>

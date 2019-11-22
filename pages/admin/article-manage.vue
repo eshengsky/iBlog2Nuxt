@@ -12,25 +12,38 @@
                     v-for="(item, index) in categories"
                     :value="item._id"
                     :key="index"
-                  >{{ item.cateName }}</a-select-option>
+                    >{{ item.cateName }}</a-select-option
+                  >
                 </a-select>
               </a-form-item>
             </a-col>
             <a-col :xs="24" :sm="24" :md="{ span: 10, offset: 2 }">
               <a-form-item label="标题" :colon="false">
-                <a-input placeholder="标题关键字" v-model="filters.title" allowClear />
+                <a-input
+                  placeholder="标题关键字"
+                  v-model="filters.title"
+                  allowClear
+                />
               </a-form-item>
             </a-col>
           </a-row>
           <a-row>
             <a-col :xs="24" :sm="24" :md="10">
               <a-form-item label="全文" :colon="false">
-                <a-input placeholder="全文关键字" v-model="filters.content" allowClear />
+                <a-input
+                  placeholder="全文关键字"
+                  v-model="filters.content"
+                  allowClear
+                />
               </a-form-item>
             </a-col>
             <a-col :xs="24" :sm="24" :md="{ span: 10, offset: 2 }">
               <a-form-item label="标签" :colon="false">
-                <a-input placeholder="标签关键字" v-model="filters.label" allowClear />
+                <a-input
+                  placeholder="标签关键字"
+                  v-model="filters.label"
+                  allowClear
+                />
               </a-form-item>
             </a-col>
           </a-row>
@@ -39,6 +52,7 @@
               <a-form-item label="创建日期" :colon="false">
                 <a-range-picker
                   v-model="filters.createTimeMoment"
+                  :disabledDate="disabledDate"
                   :ranges="rangeDate"
                   :defaultPickerValue="defaultRange"
                 ></a-range-picker>
@@ -48,6 +62,7 @@
               <a-form-item label="修改日期" :colon="false">
                 <a-range-picker
                   v-model="filters.modifyTimeMoment"
+                  :disabledDate="disabledDate"
                   :ranges="rangeDate"
                   :defaultPickerValue="defaultRange"
                 ></a-range-picker>
@@ -63,7 +78,11 @@
                 </a-select>
               </a-form-item>
             </a-col>
-            <a-col :xs="24" :sm="{ span: 11, offset: 2 }" :md="{ span: 4, offset: 2 }">
+            <a-col
+              :xs="24"
+              :sm="{ span: 11, offset: 2 }"
+              :md="{ span: 4, offset: 2 }"
+            >
               <a-form-item label="是否草稿" :colon="false">
                 <a-select v-model="filters.isDraft" allowClear>
                   <a-select-option value="1">是</a-select-option>
@@ -79,7 +98,11 @@
                 </a-select>
               </a-form-item>
             </a-col>
-            <a-col :xs="24" :sm="{ span: 11, offset: 2 }" :md="{ span: 4, offset: 2 }">
+            <a-col
+              :xs="24"
+              :sm="{ span: 11, offset: 2 }"
+              :md="{ span: 4, offset: 2 }"
+            >
               <a-form-item label="是否已删除" :colon="false">
                 <a-select v-model="filters.isDeleted" allowClear>
                   <a-select-option value="1">是</a-select-option>
@@ -91,7 +114,11 @@
           <a-row type="flex" justify="center">
             <a-col>
               <a-button type="primary" @click="search">
-                <font-awesome-icon :icon="['fas', 'search']" style="margin-right: 4px;"></font-awesome-icon>搜索
+                <font-awesome-icon
+                  :icon="['fas', 'search']"
+                  style="margin-right: 4px;"
+                ></font-awesome-icon
+                >搜索
               </a-button>
               <a-button @click="reset">重置</a-button>
             </a-col>
@@ -106,7 +133,11 @@
             <span v-show="selectedRowKeys.length">项</span>
           </a-button>
           <a-button href="/admin/article-edit" type="dashed">
-            <font-awesome-icon :icon="['fas', 'plus']" style="margin-right: 4px;"></font-awesome-icon>新的文章
+            <font-awesome-icon
+              :icon="['fas', 'plus']"
+              style="margin-right: 4px;"
+            ></font-awesome-icon
+            >新的文章
           </a-button>
         </div>
 
@@ -126,7 +157,8 @@
               :href="`/blog/${category.alias}`"
               target="_blank"
               :title="category.cateName"
-            >{{ category.cateName }}</a>
+              >{{ category.cateName }}</a
+            >
           </template>
           <template slot="title1" slot-scope="title, row">
             <a
@@ -135,29 +167,51 @@
               :href="`/blog/${row.category.alias}/${row.alias}`"
               target="_blank"
               :title="row.title"
-            >{{ row.title }}</a>
+              >{{ row.title }}</a
+            >
           </template>
           <template slot="tags" slot-scope="text, row">
-            <a-tag color="volcano" v-if="!row.isActive" title="已删除，所有人不可见，可恢复">已删除</a-tag>
-            <a-tag color="green" v-else-if="!row.isDraft" title="已发布，所有人可见">已发布</a-tag>
+            <a-tag
+              color="volcano"
+              v-if="!row.isActive"
+              title="已删除，所有人不可见，可恢复"
+              >已删除</a-tag
+            >
+            <a-tag
+              color="green"
+              v-else-if="!row.isDraft"
+              title="已发布，所有人可见"
+              >已发布</a-tag
+            >
             <a-tag color="purple" v-else title="草稿，仅自己可见">草稿</a-tag>
           </template>
           <template slot="action" slot-scope="text, row">
             <div class="action-td">
               <template v-if="row.isActive">
-                <a-button :href="`/admin/article-edit?uid=${row._id}`" title="编辑">
-                  <font-awesome-icon :icon="['fas', 'pencil-alt']"></font-awesome-icon>
+                <a-button
+                  :href="`/admin/article-edit?uid=${row._id}`"
+                  title="编辑"
+                >
+                  <font-awesome-icon
+                    :icon="['fas', 'pencil-alt']"
+                  ></font-awesome-icon>
                 </a-button>
                 <a-button @click="del(row._id)" title="删除">
-                  <font-awesome-icon :icon="['fas', 'times']"></font-awesome-icon>
+                  <font-awesome-icon
+                    :icon="['fas', 'times']"
+                  ></font-awesome-icon>
                 </a-button>
               </template>
               <template v-else>
                 <a-button @click="undo(row._id)" title="恢复">
-                  <font-awesome-icon :icon="['fas', 'undo']"></font-awesome-icon>
+                  <font-awesome-icon
+                    :icon="['fas', 'undo']"
+                  ></font-awesome-icon>
                 </a-button>
                 <a-button @click="del2(row._id)" title="永久删除">
-                  <font-awesome-icon :icon="['far', 'trash-alt']"></font-awesome-icon>
+                  <font-awesome-icon
+                    :icon="['far', 'trash-alt']"
+                  ></font-awesome-icon>
                 </a-button>
               </template>
             </div>
@@ -191,8 +245,9 @@ export default Vue.extend({
       categories: [],
       rangeDate: {
         今天: [moment(), moment()],
+        昨天: [moment().subtract(1, "days"), moment().subtract(1, "days")],
         最近一周: [moment().subtract(7, "days"), moment()],
-        最近一月: [moment().subtract(30, "days"), moment()],
+        最近一个月: [moment().subtract(30, "days"), moment()],
         最近一年: [moment().subtract(365, "days"), moment()]
       },
       defaultRange: [moment().subtract(30, "days"), moment()],
@@ -314,6 +369,9 @@ export default Vue.extend({
   },
 
   methods: {
+    disabledDate(date) {
+      return date && date > moment().endOf("day");
+    },
     async getCategories() {
       const { code, data }: IResp = await this.$axios.$get(
         "/admin/api/categories"
@@ -350,7 +408,6 @@ export default Vue.extend({
     },
 
     onTableChange(pagination, filters, sorter) {
-      console.log(arguments);
       this.pagination = pagination;
       this.sortBy = "modifyTime";
       this.order = "descend";

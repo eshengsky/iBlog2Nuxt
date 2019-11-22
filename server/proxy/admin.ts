@@ -1,6 +1,6 @@
 import DB from "../db";
 import { IPost } from "../models/post";
-const { Category, Post, Guestbook } = DB.Models;
+const { Category, Post, Comment, Guestbook } = DB.Models;
 import mongoose from "mongoose";
 import { otherCategoryItem } from "../models/category";
 
@@ -159,7 +159,9 @@ const newArticle = async params => {
 
 const editArticle = async (uid, params) => {
   params.modifyTime = new Date();
-  const article = await Post.findByIdAndUpdate(uid, params, { new: true }).exec();
+  const article = await Post.findByIdAndUpdate(uid, params, {
+    new: true
+  }).exec();
   return {
     article
   };
@@ -178,18 +180,23 @@ const deleteArticle = async (uids: Array<string> | string) => {
   };
 };
 
+// 永久删除文章，对应的评论也要删除
 const delete2Article = async uid => {
   const article = await Post.findByIdAndDelete(uid);
+  const result = await Promise.all([
+    Post.findByIdAndDelete(uid).exec(),
+    Comment.deleteMany({ post: uid }).exec()
+  ]);
   return {
-    article
-  }
+    result
+  };
 };
 
 const checkArticleAlias = async ({ alias, excludeUid }) => {
   const filter: any = {};
   filter.alias = alias;
   if (excludeUid) {
-    filter._id = { $ne: excludeUid }
+    filter._id = { $ne: excludeUid };
   }
   const exists = await Post.exists(filter);
   return {
@@ -201,7 +208,7 @@ const checkCategoryAlias = async ({ alias, excludeUid }) => {
   const filter: any = {};
   filter.alias = alias;
   if (excludeUid) {
-    filter._id = { $ne: excludeUid }
+    filter._id = { $ne: excludeUid };
   }
   const exists = await Category.exists(filter);
   return {
@@ -218,26 +225,131 @@ const newCategory = async params => {
   });
   const newCategory = await entity.save();
   return {
-    category: new Category
-  }
-}
+    category: new Category()
+  };
+};
 
 const editCategory = async (uid, params) => {
   params.modifyTime = new Date();
-  const category = await Category.findByIdAndUpdate(uid, params, { new: true }).exec();
+  const category = await Category.findByIdAndUpdate(uid, params, {
+    new: true
+  }).exec();
   return {
     category
-  }
-}
+  };
+};
 
 const deleteCategory = async (uids: Array<string> | string) => {
   if (!Array.isArray(uids)) {
     uids = [uids];
   }
   const result = await Promise.all([
-    Category.deleteMany({ _id: { $in: uids }}).exec(),
-    Post.updateMany({ category: { $in: uids } }, { category: otherCategoryItem._id.toHexString() }).exec()
-  ]); 
+    Category.deleteMany({ _id: { $in: uids } }).exec(),
+    Post.updateMany(
+      { category: { $in: uids } },
+      { category: otherCategoryItem._id.toHexString() }
+    ).exec()
+  ]);
+  return {
+    result
+  };
+};
+
+const getComments = async params => {
+  const page = parseInt(params.pageIndex || "1");
+  const pageSize = parseInt(params.pageSize || "10");
+  const options: any = {};
+  options.skip = (page - 1) * pageSize;
+  options.limit = pageSize;
+  options.sort = `${params.order === "descend" ? "-" : ""}${params.sortBy}`;
+  const query: any = {};
+  if (params.title) {
+    query["post.title"] = { $regex: params.title, $options: "gi" };
+  }
+  if (params.username) {
+    query.username = { $regex: params.username, $options: "gi" };
+  }
+  if (params.content) {
+    query.content = { $regex: params.content, $options: "gi" };
+  }
+  if (
+    Array.isArray(params.createTime) &&
+    params.createTime.length === 2 &&
+    params.createTime[0] &&
+    params.createTime[1]
+  ) {
+    const start = new Date(params.createTime[0]);
+    const end = new Date(params.createTime[1]);
+    query.createTime = { $gt: start, $lt: end };
+  }
+  const data = await Promise.all([
+    Comment.find(query, {}, options)
+      .populate({
+        path: "post",
+        select: "-content",
+        populate: {
+          path: "category",
+          select: "-img"
+        }
+      })
+      .exec(),
+    Comment.countDocuments(query).exec()
+  ]);
+  return {
+    comments: data[0],
+    count: data[1]
+  };
+};
+
+const deleteComment = async (uids: Array<string> | string) => {
+  if (!Array.isArray(uids)) {
+    uids = [uids];
+  }
+  const result = await Comment.deleteMany({ _id: { $in: uids } }).exec();
+  return {
+    result
+  };
+};
+
+const getGuestbook = async params => {
+  const page = parseInt(params.pageIndex || "1");
+  const pageSize = parseInt(params.pageSize || "10");
+  const options: any = {};
+  options.skip = (page - 1) * pageSize;
+  options.limit = pageSize;
+  options.sort = `${params.order === "descend" ? "-" : ""}${params.sortBy}`;
+  const query: any = {};
+  if (params.username) {
+    query.username = { $regex: params.username, $options: "gi" };
+  }
+  if (params.content) {
+    query.content = { $regex: params.content, $options: "gi" };
+  }
+  if (
+    Array.isArray(params.createTime) &&
+    params.createTime.length === 2 &&
+    params.createTime[0] &&
+    params.createTime[1]
+  ) {
+    const start = new Date(params.createTime[0]);
+    const end = new Date(params.createTime[1]);
+    query.createTime = { $gt: start, $lt: end };
+  }
+  const data = await Promise.all([
+    Guestbook.find(query, {}, options).exec(),
+    Guestbook.countDocuments(query).exec()
+  ]);
+  return {
+    comments: data[0],
+    count: data[1]
+  };
+};
+
+const deleteGuestbook = async (uids: Array<string> | string) => {
+  if (!Array.isArray(uids)) {
+    uids = [uids];
+  }
+  const result = await Guestbook.deleteMany({ _id: { $in: uids } }).exec();
   return {
     result
   };
@@ -255,5 +367,9 @@ export default {
   checkCategoryAlias,
   newCategory,
   editCategory,
-  deleteCategory
+  deleteCategory,
+  getComments,
+  deleteComment,
+  getGuestbook,
+  deleteGuestbook
 };

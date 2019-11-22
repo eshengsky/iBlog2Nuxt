@@ -71,10 +71,10 @@ router.get('/article', async (req, res, next) => {
     res.json(resp);
 });
 
-router.get('/guestbook', async (req, res, next) => {
+router.get('/comments', async (req, res, next) => {
     let resp: IResp;
     try {
-        const data = await proxy.getGuestbook();
+        const data = await proxy.getComments(req.query);
         resp = {
             code: 1,
             data
@@ -107,6 +107,23 @@ router.post('/comment', async (req, res, next) => {
         console.error(err);
         resp = {
             code: -1
+        }
+    }
+    res.json(resp);
+});
+
+router.get('/guestbook', async (req, res, next) => {
+    let resp: IResp;
+    try {
+        const data = await proxy.getGuestbook(req.query);
+        resp = {
+            code: 1,
+            data
+        }
+    } catch (err) {
+        console.error(err);
+        resp = {
+            code: -1,
         }
     }
     res.json(resp);

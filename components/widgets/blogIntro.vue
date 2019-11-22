@@ -6,7 +6,7 @@
         {{ intro }}
       </template>
       <a-empty v-else>
-        <span slot="description" style="color: #888; user-select: none;">暂无内容</span>
+        <span slot="description">暂无内容</span>
       </a-empty>
     </div>
   </div>

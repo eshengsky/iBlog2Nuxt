@@ -12,10 +12,10 @@
         <blockquote v-if="article.summary">{{ article.summary }}</blockquote>
         <div class="article-content" v-html="article.html"></div>
       </main>
-      <comment-list :comments="article.comments" :from="2"></comment-list>
+      <comment-list :from="2" :articleId="article._id"></comment-list>
     </article>
     <aside>
-      <!-- 目录 -->
+      <!-- TODO:目录 -->
     </aside>
   </div>
 </template>
@@ -29,9 +29,7 @@ export default Vue.extend({
   },
   data() {
     return {
-      article: {
-        comments: []
-      }
+      article: {}
     };
   },
   async asyncData({ $axios, params, error }) {

@@ -3,7 +3,7 @@ import { ICategoryModel, ICategory } from "../models/category";
 import { IComment } from "../models/comment";
 import { IPost } from "../models/post";
 import { ISetting } from "../models/setting";
-const { Post, Category, Guestbook, Setting } = DB.Models;
+const { Post, Category, Comment, Guestbook, Setting } = DB.Models;
 
 /**
  * 为首页数据查询构建条件对象
@@ -116,10 +116,12 @@ async function getPopArticles() {
   const articles = await Post.find({}, "-content", {
     sort: "-viewCount",
     limit: 7
-  }).populate("category").exec();
+  })
+    .populate("category")
+    .exec();
   return {
     articles
-  }
+  };
 }
 
 async function getArticle(params) {
@@ -133,73 +135,103 @@ async function getArticle(params) {
   return article;
 }
 
-async function saveComment(params, user) {
-  const articleId = params.articleId;
-  const content = params.content;
-  const entity = await Post.findById(articleId).exec();
-  if (!entity) {
-    throw new Error(`未找到评论数据！`);
-  }
-  const username = user.username;
-  const displayName = user.displayName;
-  const avatar = user._json.avatar_url;
-  const now = new Date();
-  entity.comments.unshift({
-    username,
-    displayName,
-    avatar,
-    content,
-    createTime: now
-  } as IComment);
-  const article = await entity.save();
-  return {
-    article
-  };
-}
-
-async function getGuestbook() {
-  let guestbook;
+async function getComments(params) {
+  let page = 1;
+  let comments: any[] = [];
+  let pageCount = 0;
+  let count = 0;
+  const pageSize = parseInt(params.pageSize);
   try {
-    guestbook = await Guestbook.find()
-      .sort("-createTime")
-      .exec();
+    page = parseInt(params.pageIndex) || 1;
+    page = page > 0 ? page : 1;
+    const options: any = {};
+    options.skip = (page - 1) * pageSize;
+    options.limit = pageSize;
+    options.sort = "-createTime";
+    const query = {
+      post: params.articleId
+    };
+    const data = await Promise.all([
+      Comment.find(query, {}, options).exec(),
+      Comment.countDocuments(query).exec()
+    ]);
+    comments = data[0];
+    count = data[1];
+    pageCount = Math.ceil(count / pageSize);
   } catch (err) {
     console.error(err);
   }
   return {
-    guestbook
+    comments,
+    count,
+    hasNext: pageCount > page
+  };
+}
+
+async function saveComment(params, user) {
+  const entity = new Comment({
+    post: params.articleId,
+    username: user.username,
+    displayName: user.displayName,
+    avatar: user._json.avatar_url,
+    content: params.content,
+    createTime: new Date()
+  });
+  const comment = await entity.save();
+  return {
+    comment
+  };
+}
+
+async function getGuestbook(params) {
+  let page = 1;
+  let comments: any[] = [];
+  let pageCount = 0;
+  let count = 0;
+  const pageSize = parseInt(params.pageSize);
+  try {
+    page = parseInt(params.pageIndex) || 1;
+    page = page > 0 ? page : 1;
+    const options: any = {};
+    options.skip = (page - 1) * pageSize;
+    options.limit = pageSize;
+    options.sort = "-createTime";
+    const data = await Promise.all([
+      Guestbook.find({}, {}, options).exec(),
+      Guestbook.countDocuments({}).exec()
+    ]);
+    comments = data[0];
+    count = data[1];
+    pageCount = Math.ceil(count / pageSize);
+  } catch (err) {
+    console.error(err);
+  }
+  return {
+    comments,
+    count,
+    hasNext: pageCount > page
   };
 }
 
 async function saveGuestbook(params, user) {
-  try {
-    const username = user.username;
-    const displayName = user.displayName;
-    const avatar = user._json.avatar_url;
-    const content = params.content;
-    const now = new Date();
-    const item = {
-      username,
-      displayName,
-      avatar,
-      content,
-      createTime: now
-    } as IComment;
-    const newItem = new Guestbook(item);
-    const guestbookItem = await newItem.save();
-    return {
-        guestbookItem
-    }
-  } catch (err) {
-    console.error(err);
-  }
+  const entity = new Guestbook({
+    username: user.username,
+    displayName: user.displayName,
+    avatar: user._json.avatar_url,
+    content: params.content,
+    createTime: new Date()
+  });
+  const comment = await entity.save();
+  return {
+    comment
+  };
 }
 
 async function getSettings() {
   const settings = await Setting.findOne().exec();
   return {
     settings
-  }
+  };
 }
 
 export default {
@@ -207,6 +239,7 @@ export default {
   getPosts,
   getPopArticles,
   getArticle,
+  getComments,
   saveComment,
   getGuestbook,
   saveGuestbook,

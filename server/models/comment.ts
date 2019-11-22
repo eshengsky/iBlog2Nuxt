@@ -1,7 +1,9 @@
-import { Schema, Document, Types } from "mongoose";
+import { Schema, model, models, Document, Model } from "mongoose";
+import { IPost } from "./post";
 import moment from "moment";
 
 interface IComment extends Document {
+  post: IPost;
   username: string;
   displayName: string;
   avatar: string;
@@ -10,6 +12,8 @@ interface IComment extends Document {
 }
 
 export { IComment };
+
+export interface ICommentModel extends Model<IComment> {}
 
 const schema = new Schema(
   {
@@ -35,8 +39,23 @@ const schema = new Schema(
   }
 );
 
-// 虚拟字段：评论时间字符串
-schema.virtual("commentTimeStr").get(function(this: any) {
-  return moment(this.createTime).format("YYYY-MM-DD hh:mm:ss");
-});
-export default schema;
+export { schema };
+
+export class Comment {
+  private _model: Model<IComment>;
+
+  constructor() {
+    if (models["comment"]) {
+      this._model = models["comment"];
+    } else {
+      schema.add({
+        post: { type: Schema.Types.ObjectId, ref: "post" },
+      });
+      this._model = model<IComment>("comment", schema, "comment");
+    }
+  }
+
+  public get model(): Model<IComment> {
+    return this._model;
+  }
+}

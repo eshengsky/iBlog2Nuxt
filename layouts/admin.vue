@@ -28,6 +28,18 @@
               <span>分类管理</span>
             </a>
           </a-menu-item>
+          <a-menu-item key="comment-manage" title="评论管理">
+            <a href="/admin/comment-manage">
+              <a-icon type="user" />
+              <span>评论管理</span>
+            </a>
+          </a-menu-item>
+          <a-menu-item key="guestbook-manage" title="留言管理">
+            <a href="/admin/guestbook-manage">
+              <a-icon type="user" />
+              <span>留言管理</span>
+            </a>
+          </a-menu-item>
           <a-menu-item key="system-settings" title="系统设置">
             <a href="/admin/system-settings">
               <a-icon type="user" />

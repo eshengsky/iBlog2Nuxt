@@ -214,4 +214,78 @@ router.delete('/category', async (req, res) => {
   res.json(resp);
 });
 
+router.get("/comments", async (req, res) => {
+  let resp: IResp;
+  try {
+    const data = await proxy.getComments(req.query);
+    resp = {
+      code: 1,
+      data
+    };
+  } catch (err) {
+    console.error(err);
+    resp = {
+      code: -1,
+      message: err.message
+    };
+  }
+  res.json(resp);
+});
+
+// 删除评论
+router.delete('/comment', async (req, res) => {
+  let resp: IResp;
+  try {
+    const data = await proxy.deleteComment(req.query.uids);
+    resp = {
+      code: 1,
+      data
+    };
+  } catch (err) {
+    console.error(err);
+    resp = {
+      code: -1,
+      message: err.message
+    };
+  }
+  res.json(resp);
+});
+
+router.get("/guestbook", async (req, res) => {
+  let resp: IResp;
+  try {
+    const data = await proxy.getGuestbook(req.query);
+    resp = {
+      code: 1,
+      data
+    };
+  } catch (err) {
+    console.error(err);
+    resp = {
+      code: -1,
+      message: err.message
+    };
+  }
+  res.json(resp);
+});
+
+// 删除留言
+router.delete('/guestbook', async (req, res) => {
+  let resp: IResp;
+  try {
+    const data = await proxy.deleteGuestbook(req.query.uids);
+    resp = {
+      code: 1,
+      data
+    };
+  } catch (err) {
+    console.error(err);
+    resp = {
+      code: -1,
+      message: err.message
+    };
+  }
+  res.json(resp);
+});
+
 export default router;

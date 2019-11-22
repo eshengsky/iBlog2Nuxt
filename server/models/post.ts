@@ -4,7 +4,6 @@ import moment from "moment";
 import MarkdownIt from "markdown-it";
 import hljs from "highlight.js";
 import { ICategory } from "./category";
-import CommentSchema, { IComment } from "./comment";
 
 interface IPost extends Document {
   _id: string;
@@ -65,11 +64,6 @@ interface IPost extends Document {
   isActive: boolean;
 
   /**
-   * 评论列表
-   */
-  comments: Types.DocumentArray<IComment>;
-
-  /**
    * 创建时间
    */
   createTime: Date;
@@ -122,12 +116,6 @@ export class Post {
 
         // 是否有效
         isActive: { type: Boolean, default: true },
-
-        // 评论列表
-        comments: {
-          type: [CommentSchema],
-          default: []
-        },
 
         // 创建时间
         createTime: { type: Date, default: new Date() },

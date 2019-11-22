@@ -134,8 +134,9 @@ export default Vue.extend({
       defaultRange: [moment().subtract(30, "days"), moment()],
       rangeDate: {
         今天: [moment(), moment()],
+        昨天: [moment().subtract(1, "days"), moment().subtract(1, "days")],
         最近一周: [moment().subtract(7, "days"), moment()],
-        最近一月: [moment().subtract(30, "days"), moment()],
+        最近一个月: [moment().subtract(30, "days"), moment()],
         最近一年: [moment().subtract(365, "days"), moment()]
       }
     };

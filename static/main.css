@@ -165,3 +165,8 @@ table th {
 table tbody tr:nth-child(even) {
   background: #fafafa;
 }
+
+.ant-empty-description {
+  user-select: none;
+  color: #888;
+}

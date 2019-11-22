@@ -24,16 +24,16 @@
               <span v-if="comment.username === authGithub" class="comment-admin"
                 >作者</span
               >
-              <span class="comment-time">{{ comment.commentTimeStr }}</span>
+              <span class="comment-time">{{ commentTime }}</span>
             </div>
             <div class="comment-header-actions">
               <a
                 @click="
-                  $emit('referenceReply', $event, commentId, comment.content)
+                  $emit('referenceReply', comment.content)
                 "
                 v-if="user"
               >
-                <font-awesome-icon :icon="['fas', 'reply']"></font-awesome-icon>
+                <font-awesome-icon :icon="['fas', 'reply']" style="position: relative; top: -1px;"></font-awesome-icon>
                 <span>引用回复</span>
               </a>
             </div>
@@ -50,6 +50,7 @@
 </template>
 <script lang="ts">
 import Vue, { PropOptions } from "vue";
+import moment from "moment";
 import { RootState } from "@/store/index";
 import { IComment } from "@/server/models/comment";
 import config from "@/blog.config";
@@ -58,13 +59,7 @@ export default Vue.extend({
   props: {
     comment: {
       type: Object
-    } as PropOptions<IComment>,
-    commentId: {
-      type: String
-    } as PropOptions<string>,
-    hideReply: {
-      type: Boolean
-    } as PropOptions<boolean>
+    } as PropOptions<IComment>
   },
   data() {
     return {
@@ -74,6 +69,9 @@ export default Vue.extend({
   computed: {
     user(): any {
       return (this.$store.state as RootState).user;
+    },
+    commentTime(): string {
+      return moment(this.comment.createTime).format('YYYY-MM-DD HH:mm:ss');
     }
   }
 });

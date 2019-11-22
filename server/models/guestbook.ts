@@ -1,5 +1,5 @@
-import { model, models, Document, Model } from "mongoose";
-import CommentSchema, { IComment } from "./comment";
+import { model, models, Model } from "mongoose";
+import { schema, IComment } from "./comment";
 
 export interface IGuestbookModel extends Model<IComment> {}
 
@@ -10,7 +10,7 @@ export class Guestbook {
     if (models["guestbook"]) {
       this._model = models["guestbook"];
     } else {
-      this._model = model<IComment>("guestbook", CommentSchema, "guestbook");
+      this._model = model<IComment>("guestbook", schema, "guestbook");
     }
   }
 
