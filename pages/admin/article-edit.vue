@@ -36,7 +36,12 @@
           </a-input>
         </a-form-item>
         <a-form-item label="摘要" :colon="false">
-          <a-textarea v-decorator="['summary', summaryOpts]" placeholder="请输入摘要" :rows="2" :autosize="{ minRows: 2, maxRows: 6 }"/>
+          <a-textarea
+            v-decorator="['summary', summaryOpts]"
+            placeholder="请输入摘要"
+            :rows="2"
+            :autosize="{ minRows: 2, maxRows: 6 }"
+          />
         </a-form-item>
         <a-form-item label="来源" :colon="false">
           <a-radio-group
@@ -60,15 +65,26 @@
         </div>
         <div v-show="isLocal">
           <a-form-item label="正文" :colon="false">
-            <no-ssr>
-              <tui-editor
-                v-model="content"
-                ref="editor"
-                previewStyle="vertical"
-                height="70vh"
-                :options="editorOptions"
-              />
-            </no-ssr>
+            <div class="editor-wrap">
+              <client-only>
+                <tui-editor
+                  v-model="content"
+                  ref="editor"
+                  previewStyle="vertical"
+                  height="70vh"
+                  :options="editorOptions"
+                />
+              </client-only>
+              <div class="editor-footer">
+                <a-tooltip>
+                  <template slot="title">打开Markdown语法速查</template>
+                  <a @click="mcsShow = true">
+                    <font-awesome-icon :icon="['fab', 'markdown']" style="font-size: 14px"></font-awesome-icon>
+                    <span>支持Markdown语法</span>
+                  </a>
+                </a-tooltip>
+              </div>
+            </div>
           </a-form-item>
           <a-form-item label="标签" :colon="false">
             <a-select
@@ -110,11 +126,18 @@
         </div>
       </a-form>
     </div>
+    <a-modal v-model="mcsShow" title="Markdown 语法速查" width="640px">
+      <md-cheat-sheet></md-cheat-sheet>
+      <div slot="footer">
+        <a-button type="primary" @click="mcsShow = false">关闭</a-button>
+      </div>
+    </a-modal>
   </div>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
+import MdCheatSheet from "@/components/MdCheatSheet.vue";
 import { IResp } from "@/server/types";
 import { IPost } from "@/server/models/post";
 import { otherCategoryItem } from "@/server/models/category";
@@ -126,7 +149,8 @@ export default Vue.extend({
     VNodes: {
       functional: true,
       render: (h, ctx) => ctx.props.vnodes
-    }
+    },
+    MdCheatSheet
   },
   async asyncData({ $axios, query, error }: any) {
     const uid = query.uid;
@@ -159,6 +183,7 @@ export default Vue.extend({
       initialData: {} as IPost,
       isLocal: true,
       content: "",
+      mcsShow: false,
       categories: [],
       titleOpts: {
         rules: [
@@ -469,12 +494,75 @@ export default Vue.extend({
   padding: 8px 12px;
 }
 
+.tui-editor-defaultUI {
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
+  overflow: auto;
+}
+
+.tui-editor-defaultUI .te-tab button {
+  height: 32px;
+}
+
 .tui-editor-defaultUI-toolbar {
   padding: 0 20px;
 }
 
 button.tui-scrollsync {
   display: none !important;
+}
+
+.tui-editor-contents pre {
+  border-radius: 4px;
+}
+
+.tui-tooltip {
+  max-width: 250px;
+  min-height: 34px;
+  padding: 8px 12px;
+  color: #fff;
+  text-align: left;
+  text-decoration: none;
+  background-color: rgba(70, 76, 91, 0.9);
+  border-radius: 4px;
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.2);
+  white-space: nowrap;
+  opacity: 1;
+}
+
+.tui-tooltip .arrow {
+  display: none;
+}
+
+.tui-editor-defaultUI-toolbar button:hover,
+.tui-editor-defaultUI-toolbar button:active,
+.tui-editor-defaultUI-toolbar button.active {
+  border-color: #bbb;
+  border-radius: 3px;
+}
+
+.tui-editor-popup {
+  position: fixed;
+  top: 50%;
+  transform: translate(0, -50%);
+  box-shadow: 0px 0px 10px #aaa;
+  border-radius: 5px;
+}
+
+.editor-footer {
+  display: -webkit-flex;
+  display: flex;
+  justify-content: space-between;
+  background: #fff;
+  border-color: #e5e5e5;
+  border-style: solid;
+  border-width: 0 1px 1px;
+  align-items: center;
+  padding: 2px 10px;
+  border-bottom-left-radius: 4px;
+  border-bottom-right-radius: 4px;
+  -webkit-user-select: none;
+  user-select: none;
 }
 
 .title-line {

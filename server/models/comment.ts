@@ -1,30 +1,25 @@
 import { Schema, model, models, Document, Model } from "mongoose";
 import { IPost } from "./post";
-import moment from "moment";
 
-interface IComment extends Document {
+export interface IComment extends Document {
   post: IPost;
   username: string;
-  displayName: string;
-  avatar: string;
+  website?: string;
+  emial?: string;
   content: string;
   createTime: Date;
 }
 
-export { IComment };
-
 export interface ICommentModel extends Model<IComment> {}
 
-const schema = new Schema(
+export const schema = new Schema(
   {
     // 评论者用户名
-    username: { type: String },
+    username: { type: String, required: true },
 
-    // 评论者显示名
-    displayName: { type: String },
+    website: { type: String },
 
-    // 评论者头像地址
-    avatar: { type: String },
+    emial: { type: String },
 
     // 评论内容
     content: { type: String },
@@ -38,8 +33,6 @@ const schema = new Schema(
     toObject: { virtuals: true }
   }
 );
-
-export { schema };
 
 export class Comment {
   private _model: Model<IComment>;

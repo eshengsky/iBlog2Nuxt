@@ -288,4 +288,23 @@ router.delete('/guestbook', async (req, res) => {
   res.json(resp);
 });
 
+// 修改设置
+router.put('/settings', async (req, res) => {
+  let resp: IResp;
+  try {
+    const settings = await proxy.saveSettings(req.body);
+    resp = {
+      code: 1,
+      data: settings
+    };
+  } catch (err) {
+    console.error(err);
+    resp = {
+      code: -1,
+      message: err.message
+    };
+  }
+  res.json(resp);
+});
+
 export default router;

@@ -86,6 +86,7 @@
       <blog-intro v-if="settings.showBlogIntro"></blog-intro>
       <article-calendar @selectCalendar="selectCalendar"></article-calendar>
       <pop-articles></pop-articles>
+      <pop-labels></pop-labels>
     </div>
   </div>
 </template>
@@ -99,6 +100,7 @@ import PostItem from "@/components/PostItem.vue";
 import BlogIntro from "@/components/widgets/blogIntro.vue";
 import ArticleCalendar from "@/components/widgets/articleCalendar.vue";
 import PopArticles from "@/components/widgets/popArticles.vue";
+import PopLabels from "@/components/widgets/popLabels.vue";
 import "highlight.js/styles/tomorrow.css";
 export default Vue.extend({
   scrollToTop: true,
@@ -106,7 +108,8 @@ export default Vue.extend({
     PostItem,
     BlogIntro,
     ArticleCalendar,
-    PopArticles
+    PopArticles,
+    PopLabels
   },
   props: {
     category: {

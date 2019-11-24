@@ -9,30 +9,26 @@
       </h4>
     </template>
     <template v-else>
-      <a
-        class="preview-link"
-        title="点击预览"
-        @click="() => (drawer = true)"
-      ></a>
+      <a class="preview-link" title="点击预览" @click="() => (drawer = true)"></a>
       <h4>
-        <a
-          :title="post.title"
-          :href="`/blog/${post.category.alias}/${post.alias}`"
-          >{{ post.title }}</a
-        >
+        <a :title="post.title" :href="`/blog/${post.category.alias}/${post.alias}`">{{ post.title }}</a>
       </h4>
     </template>
-    <span title="文章分类">
-      <font-awesome-icon :icon="['fas', 'map-signs']"></font-awesome-icon>
-      <nuxt-link :to="`/blog/${post.category.alias}`">{{
-        post.category.cateName
-      }}</nuxt-link>
-    </span>
-    <span title="发布时间" style="margin-left: 20px;">
-      <font-awesome-icon :icon="['far', 'clock']"></font-awesome-icon>
-      {{ post.publishDate }}
-    </span>
-    <p>{{ post.summary }}</p>
+    <div class="item-footer">
+      <span>
+        <font-awesome-icon :icon="['fas', 'map-signs']"></font-awesome-icon>
+        {{ post.category.cateName }}
+      </span>
+      <span>
+        <font-awesome-icon :icon="['far', 'clock']"></font-awesome-icon>
+        {{ post.publishDate }}
+      </span>
+      <span>
+        <font-awesome-icon :icon="['far', 'comments']"></font-awesome-icon>
+        {{ post.comments }}
+      </span>
+    </div>
+
     <div class="hr-line-dashed"></div>
     <a-drawer
       :title="post.title"
@@ -48,8 +44,7 @@
           type="primary"
           :href="`/blog/${post.category.alias}/${post.alias}`"
           target="_blank"
-          >完整模式</a-button
-        >
+        >完整模式</a-button>
       </footer>
     </a-drawer>
   </div>
@@ -93,21 +88,20 @@ export default Vue.extend({
 .blog-item h4 {
   font-size: 18px;
   font-weight: 500;
-  margin-top: 10px;
-  margin-bottom: 10px;
+  margin-bottom: 12px;
 }
 
 .blog-item h4 a {
-  display: inline-block;
   position: relative;
-  z-index: 2;
-  line-height: 1.3;
+  display: -webkit-inline-box;
   overflow: hidden;
   text-overflow: ellipsis;
+  -webkit-box-orient: vertical;
   word-break: break-all;
-  white-space: nowrap;
-  max-width: 100%;
-  color: #444;
+  -webkit-line-clamp: 2;
+  z-index: 2;
+  transition: color 0.5s ease-in-out;
+  line-height: 1.4;
 }
 
 .blog-item h4 a:hover {

@@ -4,8 +4,11 @@
       <div class="navbar">
         <div class="navbar-header">
           <a class="navbar-brand" href="/">
-            <img :src="$store.state.settings.blogLogo" />
-            <span>{{ $store.state.settings.blogName }}</span>
+            <img :src="settings.blogLogo" />
+            <h4>
+              {{ settings.blogName }}
+              <p v-if="settings.blogSlogan">{{ settings.blogSlogan }}</p>
+            </h4>
           </a>
         </div>
         <div class="navbar-collapse">
@@ -32,7 +35,11 @@
         </div>
       </div>
       <nuxt />
-      <div class="layout-footer">iBlog2 ©{{year}} All Rights Reserved | <a href="/admin">后台管理</a></div>
+      <div class="layout-footer">
+        Copyright ©{{year}} Powered by
+        <a href="https://github.com/eshengsky/iBlog2" target="_blank">iBlog2</a> |
+        <a href="/admin">后台管理</a>
+      </div>
     </div>
   </a-locale-provider>
 </template>
@@ -43,6 +50,7 @@ export default Vue.extend({
   data() {
     return {
       year: new Date().getFullYear(),
+      settings: this.$store.state.settings,
       zh_CN
     };
   }
@@ -58,24 +66,40 @@ export default Vue.extend({
   justify-content: space-between;
   height: 70px;
   background: #fff;
-  border-bottom: 1px solid #e7e7e7;
+  border-bottom: 1px solid rgba(234, 234, 234, 0.8);
   z-index: 3;
+  box-shadow: 0 0 3px rgba(234, 234, 234, 0.8);
+}
+
+.navbar .navbar-header {
+  padding: 0 15px;
 }
 
 .navbar .navbar-brand {
-  display: inline-block;
-  height: 70px;
-  line-height: 70px;
+  display: flex;
+  align-items: center;
+  height: 100%;
   color: #2b2b2b;
-  padding: 0 15px;
   font-size: 18px;
+  font-family: -apple-system, BlinkMacSystemFont, "Arial", "Segoe UI",
+    "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue",
+    Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
+    "Segoe UI Symbol";
 }
 
 .navbar .navbar-brand img {
   height: 46px;
-  display: inline-block;
-  margin-top: -4px;
-  margin-right: 6px;
+  margin-right: 5px;
+}
+
+.navbar .navbar-brand h4 {
+  margin: 0;
+}
+
+.navbar .navbar-brand h4 p {
+  margin: 5px 0 0;
+  font-size: 14px;
+  color: #666;
 }
 
 .navbar-collapse ul {
@@ -95,6 +119,7 @@ export default Vue.extend({
   color: #333;
   -ms-opacity: 0.8;
   opacity: 0.8;
+  letter-spacing: 1px;
 }
 
 .navbar-collapse a:hover {

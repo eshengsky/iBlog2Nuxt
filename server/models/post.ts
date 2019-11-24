@@ -5,7 +5,7 @@ import MarkdownIt from "markdown-it";
 import hljs from "highlight.js";
 import { ICategory } from "./category";
 
-interface IPost extends Document {
+export interface IPost extends Document {
   _id: string;
 
   /**
@@ -73,8 +73,6 @@ interface IPost extends Document {
    */
   modifyTime: Date;
 }
-
-export { IPost };
 
 export interface IPostModel extends Model<IPost> {}
 

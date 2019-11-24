@@ -58,6 +58,10 @@ a {
   background-color: transparent;
 }
 
+a:focus {
+  text-decoration: none;
+}
+
 img {
   vertical-align: middle;
   border-style: none;
@@ -156,17 +160,22 @@ pre code {
 }
 
 table th {
-  color: #777 !important;
-  font-weight: bold !important;
-  background: #ddd !important;
-  border: 1px solid #eee !important;
+  color: rgba(0, 0, 0, 0.85) !important;
+  font-weight: 500 !important;
+  background: #fafafa !important;
+  border: 1px solid #e8e8e8 !important;
 }
 
-table tbody tr:nth-child(even) {
-  background: #fafafa;
+.ant-table-thead > tr > th {
+  border-width: 0 0 1px 0 !important;
 }
 
 .ant-empty-description {
   user-select: none;
   color: #888;
+}
+
+.tui-editor-contents li.task-list-item {
+  margin-left: -15px;
+  pointer-events: none;
 }

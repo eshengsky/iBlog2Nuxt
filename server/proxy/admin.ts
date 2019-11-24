@@ -1,6 +1,6 @@
 import DB from "../db";
 import { IPost } from "../models/post";
-const { Category, Post, Comment, Guestbook } = DB.Models;
+const { Category, Post, Comment, Guestbook, Setting } = DB.Models;
 import mongoose from "mongoose";
 import { otherCategoryItem } from "../models/category";
 
@@ -355,6 +355,15 @@ const deleteGuestbook = async (uids: Array<string> | string) => {
   };
 };
 
+const saveSettings = async (params) => {
+  const settings = await Setting.findOneAndUpdate({}, params, {
+    new: true
+  }).exec();
+  return {
+    settings
+  }
+};
+
 export default {
   getCategories,
   getArticle,
@@ -371,5 +380,6 @@ export default {
   getComments,
   deleteComment,
   getGuestbook,
-  deleteGuestbook
+  deleteGuestbook,
+  saveSettings
 };

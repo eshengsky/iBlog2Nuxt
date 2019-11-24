@@ -94,6 +94,16 @@ async function getPosts(params) {
     options.sort =
       params.sortBy === "title" ? "title -createTime" : "-createTime";
     const query = getPostsQuery(params);
+    //   db.post.aggregate([
+    //     {
+    //         $lookup: {
+    //             from: "comment",
+    //             localField: "_id",
+    //             foreignField: "post",
+    //             as: "comments"
+    //         }
+    //     }
+    // ])
     const data = await Promise.all([
       Post.find(query, {}, options)
         .populate("category")
@@ -123,6 +133,24 @@ async function getPopArticles() {
   return {
     articles
   };
+}
+
+async function getPopLabels() {
+  const labels = await Post.aggregate([{
+    $unwind: "$labels"
+  }, {
+    $group: {
+      _id: "$labels",
+      count: { $sum: 1 }
+    }
+  }, {
+    $sort: { count: -1, _id: 1 }
+  }, {
+    $limit: 10
+  }]).exec();
+  return {
+    labels
+  }
 }
 
 async function getArticle(params) {
@@ -169,15 +197,13 @@ async function getComments(params) {
   };
 }
 
-async function saveComment(params, user) {
-  let content = params.content;
-  content = BadWords.filter(content)
+async function saveComment(params) {
   const entity = new Comment({
     post: params.articleId,
-    username: user.username,
-    displayName: user.displayName,
-    avatar: user._json.avatar_url,
-    content,
+    username: BadWords.filter(params.username),
+    website: params.website,
+    email: params.email,
+    content: BadWords.filter(params.content),
     createTime: new Date()
   });
   const comment = await entity.save();
@@ -216,14 +242,12 @@ async function getGuestbook(params) {
   };
 }
 
-async function saveGuestbook(params, user) {
-  let content = params.content;
-  content = BadWords.filter(content)
+async function saveGuestbook(params) {
   const entity = new Guestbook({
-    username: user.username,
-    displayName: user.displayName,
-    avatar: user._json.avatar_url,
-    content,
+    username: BadWords.filter(params.username),
+    website: params.website,
+    email: params.email,
+    content: BadWords.filter(params.content),
     createTime: new Date()
   });
   const comment = await entity.save();
@@ -243,6 +267,7 @@ export default {
   getCategories,
   getPosts,
   getPopArticles,
+  getPopLabels,
   getArticle,
   getComments,
   saveComment,

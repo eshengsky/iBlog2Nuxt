@@ -7,20 +7,12 @@
           <a-row>
             <a-col :xs="24" :sm="24" :md="10">
               <a-form-item label="评论内容" :colon="false">
-                <a-input
-                  placeholder="内容关键字"
-                  v-model="content"
-                  allowClear
-                />
+                <a-input placeholder="内容关键字" v-model="content" allowClear />
               </a-form-item>
             </a-col>
             <a-col :xs="24" :sm="24" :md="{ span: 10, offset: 2 }">
               <a-form-item label="评论用户" :colon="false">
-                <a-input
-                  placeholder="用户名关键字"
-                  v-model="username"
-                  allowClear
-                />
+                <a-input placeholder="用户名关键字" v-model="username" allowClear />
               </a-form-item>
             </a-col>
           </a-row>
@@ -44,11 +36,7 @@
           <a-row type="flex" justify="center">
             <a-col>
               <a-button type="primary" @click="search">
-                <font-awesome-icon
-                  :icon="['fas', 'search']"
-                  style="margin-right: 4px;"
-                ></font-awesome-icon
-                >搜索
+                <font-awesome-icon :icon="['fas', 'search']" style="margin-right: 4px;"></font-awesome-icon>搜索
               </a-button>
             </a-col>
           </a-row>
@@ -84,20 +72,17 @@
               :href="`/blog/${post.category.alias}/${post.alias}`"
               target="_blank"
               :title="post.title"
-              >{{ post.title }}</a
-            >
+            >{{ post.title }}</a>
           </template>
           <template slot="person" slot-scope="text, row">
-            <img class="avatar" :src="row.avatar" />
-            <a-tooltip>
-              <template slot="title">{{ row.displayName }}</template>
-              <a
-                class="comment-username"
-                :href="`https://github.com/${row.username}`"
-                target="_blank"
-                >{{ row.username }}</a
-              >
-            </a-tooltip>
+            <a
+              v-if="row.website"
+              class="comment-username"
+              :href="row.website"
+              :title="row.website"
+              target="_blank"
+            >{{ row.username }}</a>
+            <span v-else>{{ row.username }}</span>
           </template>
           <template slot="createTime" slot-scope="text, row">
             <span>{{ momentTime(row.createTime) }}</span>
@@ -105,9 +90,7 @@
           <template slot="action" slot-scope="text, row">
             <div class="action-td">
               <a-button @click="del(row._id)" title="删除">
-                <font-awesome-icon
-                  :icon="['far', 'trash-alt']"
-                ></font-awesome-icon>
+                <font-awesome-icon :icon="['far', 'trash-alt']"></font-awesome-icon>
               </a-button>
             </div>
           </template>
@@ -156,6 +139,7 @@ export default Vue.extend({
         {
           title: "评论内容",
           key: "content",
+          class: "aaa",
           scopedSlots: { customRender: "content" }
         },
         {
@@ -375,6 +359,7 @@ export default Vue.extend({
   border: 1px solid #ddd;
   border-radius: 3px;
   margin: -6px;
+  background: #fff;
 }
 
 .avatar {

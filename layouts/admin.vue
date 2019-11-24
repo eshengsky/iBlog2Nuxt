@@ -60,7 +60,8 @@
           <nuxt />
         </a-layout-content>
         <a-layout-footer class="layout-footer"
-          >iBlog2 ©{{ year }} All Rights Reserved</a-layout-footer
+          >Copyright ©{{year}} Powered by
+        <a href="https://github.com/eshengsky/iBlog2" target="_blank">iBlog2</a></a-layout-footer
         >
       </a-layout>
     </a-layout>

@@ -54,6 +54,23 @@ router.get('/popArticles', async (req, res, next) => {
     res.json(resp);
 });
 
+router.get('/popLabels', async (req, res, next) => {
+    let resp: IResp;
+    try {
+        const data = await proxy.getPopLabels();
+        resp = {
+            code: 1,
+            data
+        }
+    } catch (err) {
+        console.error(err);
+        resp = {
+            code: -1,
+        }
+    }
+    res.json(resp);
+});
+
 router.get('/article', async (req, res, next) => {
     let resp: IResp;
     try {
@@ -90,15 +107,15 @@ router.get('/comments', async (req, res, next) => {
 
 router.post('/comment', async (req, res, next) => {
     let resp: IResp;
-    const user = req.user;
-    if (!user) {
-        resp = {
-            code: -2
-        }
-        return res.json(resp);
-    }
+    // const user = req.user;
+    // if (!user) {
+    //     resp = {
+    //         code: -2
+    //     }
+    //     return res.json(resp);
+    // }
     try {
-        const article = await proxy.saveComment(req.body, user);
+        const article = await proxy.saveComment(req.body);
         resp = {
             code: 1,
             data: article
@@ -131,15 +148,15 @@ router.get('/guestbook', async (req, res, next) => {
 
 router.post('/guestbook', async (req, res, next) => {
     let resp: IResp;
-    const user = req.user;
-    if (!user) {
-        resp = {
-            code: -2
-        }
-        return res.json(resp);
-    }
+    // const user = req.user;
+    // if (!user) {
+    //     resp = {
+    //         code: -2
+    //     }
+    //     return res.json(resp);
+    // }
     try {
-        const guestbookItem = await proxy.saveGuestbook(req.body, user);
+        const guestbookItem = await proxy.saveGuestbook(req.body);
         resp = {
             code: 1,
             data: guestbookItem

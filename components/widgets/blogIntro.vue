@@ -3,7 +3,7 @@
     <div class="widget-header">博客简介</div>
     <div class="widget-body">
       <template v-if="intro">
-        {{ intro }}
+        <div class="intro-content">{{ intro }}</div>
       </template>
       <a-empty v-else>
         <span slot="description">暂无内容</span>
@@ -24,5 +24,7 @@ export default Vue.extend({
 </script>
 
 <style>
-
+.intro-content {
+  white-space: pre;
+}
 </style>
