@@ -132,13 +132,13 @@
             <a-badge :count="selectedRowKeys.length" class="badge-count" />
             <span v-show="selectedRowKeys.length">项</span>
           </a-button>
-          <a-button href="/admin/article-edit" type="dashed">
+          <nuxt-link class="ant-btn ant-btn-dashed" to="/admin/article-edit">
             <font-awesome-icon
               :icon="['fas', 'plus']"
               style="margin-right: 4px;"
             ></font-awesome-icon
             >新的文章
-          </a-button>
+          </nuxt-link>
         </div>
 
         <a-table
@@ -151,20 +151,20 @@
           :rowSelection="rowSelection"
           @change="onTableChange"
         >
-          <template slot="category" slot-scope="category">
+          <template slot="category" slot-scope="text, row">
             <a
               class="link-category"
-              :href="`/blog/${category.alias}`"
+              :href="`/blog/${row.categories[0].alias}`"
               target="_blank"
-              :title="category.cateName"
-              >{{ category.cateName }}</a
+              :title="row.categories[0].cateName"
+              >{{ row.categories[0].cateName }}</a
             >
           </template>
-          <template slot="title1" slot-scope="title, row">
+          <template slot="title1" slot-scope="text, row">
             <a
               class="link-title"
               :class="{ 'title-deleted': !row.isActive }"
-              :href="`/blog/${row.category.alias}/${row.alias}`"
+              :href="`/blog/${row.categories[0].alias}/${row.alias}`"
               target="_blank"
               :title="row.title"
               >{{ row.title }}</a
@@ -185,17 +185,22 @@
             >
             <a-tag color="purple" v-else title="草稿，仅自己可见">草稿</a-tag>
           </template>
+          <template slot="createTime" slot-scope="text, row">
+            {{ row.createTime | toTime }}
+          </template>
+          <template slot="modifyTime" slot-scope="text, row">
+            {{ row.modifyTime | toTime }}
+          </template>
           <template slot="action" slot-scope="text, row">
             <div class="action-td">
               <template v-if="row.isActive">
-                <a-button
-                  :href="`/admin/article-edit?uid=${row._id}`"
+                <nuxt-link class="ant-btn" :to="`/admin/article-edit?uid=${row._id}`"
                   title="编辑"
                 >
                   <font-awesome-icon
                     :icon="['fas', 'pencil-alt']"
                   ></font-awesome-icon>
-                </a-button>
+                </nuxt-link>
                 <a-button @click="del(row._id)" title="删除">
                   <font-awesome-icon
                     :icon="['fas', 'times']"
@@ -287,22 +292,31 @@ export default Vue.extend({
         },
         {
           title: "创建时间",
-          dataIndex: "createTimeStr",
-          width: 150,
+          dataIndex: "createTime",
+          width: 160,
           align: "center",
-          sorter: true
+          sorter: true,
+          scopedSlots: { customRender: "createTime" }
         },
         {
           title: "修改时间",
-          dataIndex: "modifyTimeStr",
-          width: 150,
+          dataIndex: "modifyTime",
+          width: 160,
+          align: "center",
+          sorter: true,
+          scopedSlots: { customRender: "modifyTime" }
+        },
+        {
+          title: "浏览数",
+          dataIndex: "viewCount",
+          width: 100,
           align: "center",
           sorter: true
         },
         {
-          title: "浏览次数",
-          dataIndex: "viewCount",
-          width: 120,
+          title: "评论数",
+          dataIndex: "commentsCount",
+          width: 100,
           align: "center",
           sorter: true
         },
@@ -413,11 +427,6 @@ export default Vue.extend({
       this.order = "descend";
       if (Object.keys(sorter).length) {
         this.sortBy = sorter.columnKey;
-        if (sorter.columnKey === "createTimeStr") {
-          this.sortBy = "createTime";
-        } else if (sorter.columnKey === "modifyTimeStr") {
-          this.sortBy = "modifyTime";
-        }
         this.order = sorter.order;
       }
       this.getList();
@@ -564,6 +573,11 @@ export default Vue.extend({
           });
         }
       });
+    }
+  },
+  filters: {
+    toTime(date) {
+      return moment(date).format('YYYY-MM-DD HH:mm:ss');
     }
   }
 });

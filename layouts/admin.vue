@@ -11,40 +11,40 @@
         <div class="logo" />
         <a-menu theme="dark" mode="inline" :defaultSelectedKeys="[currentKey]">
           <a-menu-item key="index" title="数据统计">
-            <a href="/admin">
+            <nuxt-link to="/admin">
               <a-icon type="video-camera" />
               <span>数据统计</span>
-            </a>
+            </nuxt-link>
           </a-menu-item>
           <a-menu-item key="article-manage" title="文章管理">
-            <a href="/admin/article-manage">
+            <nuxt-link to="/admin/article-manage">
               <a-icon type="video-camera" />
               <span>文章管理</span>
-            </a>
+            </nuxt-link>
           </a-menu-item>
           <a-menu-item key="category-manage" title="分类管理">
-            <a href="/admin/category-manage">
+            <nuxt-link to="/admin/category-manage">
               <a-icon type="user" />
               <span>分类管理</span>
-            </a>
+            </nuxt-link>
           </a-menu-item>
           <a-menu-item key="comment-manage" title="评论管理">
-            <a href="/admin/comment-manage">
+            <nuxt-link to="/admin/comment-manage">
               <a-icon type="user" />
               <span>评论管理</span>
-            </a>
+            </nuxt-link>
           </a-menu-item>
           <a-menu-item key="guestbook-manage" title="留言管理">
-            <a href="/admin/guestbook-manage">
+            <nuxt-link to="/admin/guestbook-manage">
               <a-icon type="user" />
               <span>留言管理</span>
-            </a>
+            </nuxt-link>
           </a-menu-item>
           <a-menu-item key="system-settings" title="系统设置">
-            <a href="/admin/system-settings">
+            <nuxt-link to="/admin/system-settings">
               <a-icon type="user" />
               <span>系统设置</span>
-            </a>
+            </nuxt-link>
           </a-menu-item>
         </a-menu>
       </a-layout-sider>

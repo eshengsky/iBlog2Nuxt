@@ -70,8 +70,8 @@
             :autosize="{ minRows: 2, maxRows: 6 }"
           />
         </a-form-item>
-        <a-form-item label="首页的每页展示文章条数" :colon="false">
-          <a-input-number v-decorator="['pageSize']" :min="1" :max="999" />
+        <a-form-item label="首页文章的每页条数" :colon="false">
+          <a-input-number v-decorator="['postPageSize']" :min="1" :max="999" />
         </a-form-item>
         <a-form-item :colon="false">
           <span slot="label">
@@ -108,6 +108,9 @@
             </a-tooltip>
           </span>
           <a-input placeholder="请输入版权作者" v-decorator="['authName']" allowClear />
+        </a-form-item>
+        <a-form-item label="文章评论及留言的每页条数" :colon="false">
+          <a-input-number v-decorator="['commentPageSize']" :min="1" :max="999" />
         </a-form-item>
         <a-form-item :colon="false">
           <span slot="label">
@@ -192,11 +195,12 @@ export default Vue.extend({
         blogSlogan: settings.blogSlogan,
         showBlogIntro: settings.showBlogIntro,
         blogIntro: settings.blogIntro,
-        pageSize: settings.pageSize,
+        postPageSize: settings.postPageSize,
         enablePreview: settings.enablePreview,
         expandMenu: settings.expandMenu,
         showLicense: settings.showLicense,
         authName: settings.authName,
+        commentPageSize: settings.commentPageSize,
         showTranslateBtn: settings.showTranslateBtn,
         translateKey: settings.translateKey,
         enableStatistics: settings.enableStatistics,

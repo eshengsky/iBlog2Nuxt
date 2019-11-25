@@ -3,12 +3,12 @@
     <div class="widget-header">热门标签</div>
     <div class="widget-body">
       <a-spin :spinning="spinning" />
-      <a
+      <nuxt-link
         class="pop-label"
-        :href="`/search?tag=${encodeURI(item._id)}`"
+        :to="`/search?tag=${encodeURI(item._id)}`"
         v-for="(item, index) in list"
         :key="index"
-      >{{ item._id }}</a>
+      >{{ item._id }}</nuxt-link>
     </div>
   </div>
 </template>

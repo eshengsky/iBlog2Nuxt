@@ -3,13 +3,13 @@
     <div class="container">
       <div class="navbar">
         <div class="navbar-header">
-          <a class="navbar-brand" href="/">
+          <nuxt-link class="navbar-brand" to="/">
             <img :src="settings.blogLogo" />
             <h4>
               {{ settings.blogName }}
               <p v-if="settings.blogSlogan">{{ settings.blogSlogan }}</p>
             </h4>
-          </a>
+          </nuxt-link>
         </div>
         <div class="navbar-collapse">
           <ul>
@@ -38,7 +38,7 @@
       <div class="layout-footer">
         Copyright ©{{year}} Powered by
         <a href="https://github.com/eshengsky/iBlog2" target="_blank">iBlog2</a> |
-        <a href="/admin">后台管理</a>
+        <nuxt-link to="/admin">后台管理</nuxt-link>
       </div>
     </div>
   </a-locale-provider>

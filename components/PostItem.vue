@@ -1,5 +1,6 @@
 <template>
   <div class="blog-item">
+    <div class="item-header">{{ publishDate }}</div>
     <template v-if="!post.isLocal">
       <h4>
         <a :title="post.title" :href="post.url" target="_blank">
@@ -9,9 +10,13 @@
       </h4>
     </template>
     <template v-else>
-      <a class="preview-link" title="点击预览" @click="() => (drawer = true)"></a>
+      <a
+        class="preview-link"
+        title="点击预览"
+        @click="() => (drawer = true)"
+      ></a>
       <h4>
-        <a :title="post.title" :href="`/blog/${post.category.alias}/${post.alias}`">{{ post.title }}</a>
+        <nuxt-link :to="`/blog/${post.category.alias}/${post.alias}`" :title="post.title">{{ post.title }}</nuxt-link>
       </h4>
     </template>
     <div class="item-footer">
@@ -20,12 +25,12 @@
         {{ post.category.cateName }}
       </span>
       <span>
-        <font-awesome-icon :icon="['far', 'clock']"></font-awesome-icon>
-        {{ post.publishDate }}
+        <font-awesome-icon :icon="['far', 'eye']"></font-awesome-icon>
+        {{ post.viewCount }}
       </span>
       <span>
         <font-awesome-icon :icon="['far', 'comments']"></font-awesome-icon>
-        {{ post.comments }}
+        {{ post.comments.length }}
       </span>
     </div>
 
@@ -44,27 +49,28 @@
           type="primary"
           :href="`/blog/${post.category.alias}/${post.alias}`"
           target="_blank"
-        >完整模式</a-button>
+          >完整模式</a-button
+        >
       </footer>
     </a-drawer>
   </div>
 </template>
 <script lang="ts">
 import Vue, { PropOptions } from "vue";
+import moment from "moment";
 export default Vue.extend({
   props: {
     post: {
       type: Object,
       default() {
-        return {
-          category: {}
-        };
+        return {};
       }
     }
   },
   data() {
     return {
-      drawer: false
+      drawer: false,
+      publishDate: moment(this.post.createTime).format("MM/DD, YYYY")
     };
   }
 });
@@ -92,6 +98,7 @@ export default Vue.extend({
 }
 
 .blog-item h4 a {
+  color: #444;
   position: relative;
   display: -webkit-inline-box;
   overflow: hidden;
@@ -108,14 +115,18 @@ export default Vue.extend({
   color: #2d8cf0;
 }
 
-.blog-item p {
-  margin-top: 20px;
+.blog-item .item-header {
+  color: #777;
+  margin-bottom: 5px;
+  font-family: -apple-system, BlinkMacSystemFont, "Arial", "Segoe UI",
+    "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue",
+    Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
+    "Segoe UI Symbol";
+  font-size: 13px;
 }
 
-.blog-item p,
-.blog-item span,
-.blog-item a {
-  color: #555;
+.blog-item .item-footer {
+  color: #777;
 }
 
 .hr-line-dashed {
@@ -146,5 +157,9 @@ export default Vue.extend({
   padding: 10px 16px;
   text-align: right;
   background: #fff;
+}
+
+.blog-item .item-footer span {
+  margin-right: 8px;
 }
 </style>

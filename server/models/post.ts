@@ -127,20 +127,6 @@ export class Post {
         toObject: { virtuals: true }
       }
     );
-    // 虚拟字段：发布日期
-    schema.virtual("publishDate").get(function(this: any) {
-      return moment(this.createTime).format("YYYY-MM-DD");
-    });
-
-    // 虚拟字段：创建时间字符串
-    schema.virtual("createTimeStr").get(function(this: any) {
-      return moment(this.createTime).format("YYYY-MM-DD hh:mm");
-    });
-
-    // 虚拟字段：修改时间字符串
-    schema.virtual("modifyTimeStr").get(function(this: any) {
-      return moment(this.modifyTime).format("YYYY-MM-DD hh:mm");
-    });
 
     // 虚拟字段：外链主机名
     schema.virtual("host").get(function(this: any) {
@@ -182,6 +168,13 @@ export class Post {
         return md.render(this.content);
       }
       return "";
+    });
+
+    // 虚拟字段：文章评论
+    schema.virtual("comments", {
+      ref: "comment",
+      foreignField: "post",
+      localField: "_id"
     });
 
     if (models["post"]) {

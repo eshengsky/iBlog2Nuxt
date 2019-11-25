@@ -9,7 +9,11 @@
           <span v-show="selectedRowKeys.length">项</span>
         </a-button>
         <a-button type="dashed" @click="addNew">
-          <font-awesome-icon :icon="['fas', 'plus']" style="margin-right: 4px;"></font-awesome-icon>新的分类
+          <font-awesome-icon
+            :icon="['fas', 'plus']"
+            style="margin-right: 4px;"
+          ></font-awesome-icon
+          >新的分类
         </a-button>
       </div>
       <a-table
@@ -24,17 +28,31 @@
         <template slot="img" slot-scope="text, row">
           <img class="tb-img" :src="row.img" />
         </template>
+        <template slot="createTime" slot-scope="text, row">
+          {{ row.createTime | toTime }}
+        </template>
+        <template slot="modifyTime" slot-scope="text, row">
+          {{ row.modifyTime | toTime }}
+        </template>
         <template slot="action" slot-scope="text, row">
           <div class="action-td">
-            <a-button title="编辑" :disabled="!row._id" @click="editCategory(row)">
-              <font-awesome-icon :icon="['fas', 'pencil-alt']"></font-awesome-icon>
+            <a-button
+              title="编辑"
+              :disabled="!row._id"
+              @click="editCategory(row)"
+            >
+              <font-awesome-icon
+                :icon="['fas', 'pencil-alt']"
+              ></font-awesome-icon>
             </a-button>
             <a-button
               @click="del(row._id)"
               title="删除"
               :disabled="['', otherCategoryId].indexOf(row._id) >= 0"
             >
-              <font-awesome-icon :icon="['far', 'trash-alt']"></font-awesome-icon>
+              <font-awesome-icon
+                :icon="['far', 'trash-alt']"
+              ></font-awesome-icon>
             </a-button>
           </div>
         </template>
@@ -54,7 +72,9 @@
               <a-icon type="info-circle" />
               <span>
                 你可以在
-                <a href="https://www.iconfont.cn/" target="_blank">阿里巴巴矢量图标库</a>
+                <a href="https://www.iconfont.cn/" target="_blank"
+                  >阿里巴巴矢量图标库</a
+                >
                 搜索和下载喜欢的图标。
               </span>
             </div>
@@ -75,7 +95,11 @@
             </a-upload>
           </a-form-item>
           <a-form-item label="分类名称" :colon="false">
-            <a-input placeholder="请输入名称" allowClear v-decorator="['cateName', cateNameOpts]" />
+            <a-input
+              placeholder="请输入名称"
+              allowClear
+              v-decorator="['cateName', cateNameOpts]"
+            />
           </a-form-item>
           <a-form-item :colon="false">
             <span slot="label">
@@ -84,7 +108,11 @@
                 <a-icon type="question-circle-o" />
               </a-tooltip>
             </span>
-            <a-input placeholder="请输入Alias" allowClear v-decorator="['alias', aliasOpts]" />
+            <a-input
+              placeholder="请输入Alias"
+              allowClear
+              v-decorator="['alias', aliasOpts]"
+            />
           </a-form-item>
           <a-form-item label="排序" :colon="false">
             <a-input-number
@@ -102,6 +130,7 @@
 
 <script lang="ts">
 import Vue from "vue";
+import moment from "moment";
 import { IResp } from "@/server/types";
 import { allCategoryItem, otherCategoryItem } from "@/server/models/category";
 export default Vue.extend({
@@ -158,15 +187,17 @@ export default Vue.extend({
         },
         {
           title: "创建时间",
-          dataIndex: "createTimeStr",
-          width: 150,
-          align: "center"
+          dataIndex: "createTime",
+          width: 160,
+          align: "center",
+          scopedSlots: { customRender: "createTime" }
         },
         {
           title: "修改时间",
-          dataIndex: "modifyTimeStr",
-          width: 150,
-          align: "center"
+          dataIndex: "modifyTime",
+          width: 160,
+          align: "center",
+          scopedSlots: { customRender: "modifyTime" }
         },
         {
           title: "操作",
@@ -441,6 +472,11 @@ export default Vue.extend({
           }
         }
       });
+    }
+  },
+  filters: {
+    toTime(date) {
+      return moment(date).format("YYYY-MM-DD HH:mm:ss");
     }
   }
 });

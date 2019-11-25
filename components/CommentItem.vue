@@ -14,18 +14,22 @@
                 :title="comment.website"
                 v-if="comment.website"
                 target="_blank"
-              >{{ comment.username }}</a>
-              <span class="comment-username" v-else>{{ comment.username }}</span>
-              <span v-if="comment.username === 'Admin'" class="comment-admin">作者</span>
-              <span class="comment-time">{{ commentTime }}</span>
+                >{{ comment.username }}</a
+              >
+              <span class="comment-username" v-else>{{
+                comment.username
+              }}</span>
+              <span v-if="comment.username === 'Admin'" class="comment-admin"
+                >作者</span
+              >
+              <span class="comment-time" :title="commentTime2">{{ commentTime }}</span>
             </div>
             <div class="comment-header-actions">
-              <a
-                @click="
-                  $emit('referenceReply', comment.content)
-                "
-              >
-                <font-awesome-icon :icon="['fas', 'reply']" style="position: relative; top: -1px;"></font-awesome-icon>
+              <a @click="$emit('referenceReply', comment.content)">
+                <font-awesome-icon
+                  :icon="['fas', 'reply']"
+                  style="position: relative; top: -1px;"
+                ></font-awesome-icon>
                 <span>引用回复</span>
               </a>
             </div>
@@ -66,6 +70,10 @@ export default Vue.extend({
       return (this.$store.state as RootState).user;
     },
     commentTime(): string {
+      return moment(this.comment.createTime).fromNow();
+      // return moment(this.comment.createTime).format("YYYY-MM-DD HH:mm:ss");
+    },
+    commentTime2(): string {
       return moment(this.comment.createTime).format("YYYY-MM-DD HH:mm:ss");
     }
   }
@@ -98,7 +106,8 @@ export default Vue.extend({
   height: 50px;
   border-radius: 4px;
   overflow: hidden;
-  border: 1px solid #eee;
+  border: 1px solid #ddd;
+  padding: 3px;
 }
 
 .comment-item-body {

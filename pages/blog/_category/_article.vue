@@ -4,7 +4,7 @@
       <header class="article-title">
         <span>
           <font-awesome-icon :icon="['far', 'clock']"></font-awesome-icon>
-          {{ article.createTimeStr }}
+          {{ article.createTime }}
         </span>
         <h1>{{ article.title }}</h1>
       </header>

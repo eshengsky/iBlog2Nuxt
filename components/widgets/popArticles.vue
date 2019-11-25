@@ -5,11 +5,11 @@
       <a-spin :spinning="spinning"/>
       <ul>
         <li v-for="(item, index) in list" :key="index">
-          <a
+          <nuxt-link
             class="pop-article-title"
-            :href="articleUrl(item)"
+            :to="articleUrl(item)"
             :title="item.title"
-            >{{ item.title }}</a
+            >{{ item.title }}</nuxt-link
           >
         </li>
       </ul>

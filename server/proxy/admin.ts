@@ -4,29 +4,17 @@ const { Category, Post, Comment, Guestbook, Setting } = DB.Models;
 import mongoose from "mongoose";
 import { otherCategoryItem } from "../models/category";
 
-interface IPostParams {
-  pageIndex: string;
-  pageSize: string;
-  sortBy: string;
-  order: "ascend" | "descend";
-  category: string | undefined;
-  title: string;
-  content: string;
-  label: string;
-  createTime: [string, string];
-  modifyTime: [string, string];
-  isLink: string | undefined;
-  isDraft: string | undefined;
-  hasComments: string | undefined;
-  isDeleted: string | undefined;
+async function getCategories() {
+  const categories = await Category.find(
+    {},
+    {},
+    { sort: "sequence cateName" }
+  ).exec();
+  return categories;
 }
 
-/**
- * 为后台列表数据查询构建条件对象
- * @param params 查询参数对象
- */
-function getPostsQuery(params: IPostParams) {
-  const query: any = {};
+const getPosts = async (params: any) => {
+  const matchObj: any = {};
   const {
     category,
     title,
@@ -40,13 +28,13 @@ function getPostsQuery(params: IPostParams) {
     isDeleted
   } = params;
   if (category) {
-    query.category = category;
+    matchObj.category = mongoose.Types.ObjectId(category);
   }
   if (title) {
-    query.title = { $regex: title, $options: "gi" };
+    matchObj.title = { $regex: title, $options: "gi" };
   }
   if (content) {
-    query.$or = [
+    matchObj.$or = [
       {
         title: {
           $regex: content,
@@ -68,7 +56,7 @@ function getPostsQuery(params: IPostParams) {
     ];
   }
   if (label) {
-    query.labels = { $regex: label, $options: "gi" };
+    matchObj.labels = { $regex: label, $options: "gi" };
   }
   if (
     Array.isArray(createTime) &&
@@ -78,7 +66,7 @@ function getPostsQuery(params: IPostParams) {
   ) {
     const start = new Date(createTime[0]);
     const end = new Date(createTime[1]);
-    query.createTime = { $gt: start, $lt: end };
+    matchObj.createTime = { $gt: start, $lt: end };
   }
   if (
     Array.isArray(modifyTime) &&
@@ -88,51 +76,91 @@ function getPostsQuery(params: IPostParams) {
   ) {
     const start = new Date(modifyTime[0]);
     const end = new Date(modifyTime[1]);
-    query.modifyTime = { $gt: start, $lt: end };
+    matchObj.modifyTime = { $gt: start, $lt: end };
   }
   if (isLink === "1" || isLink === "-1") {
-    query.isLocal = isLink === "-1";
+    matchObj.isLocal = isLink === "-1";
   }
   if (isDraft === "1" || isDraft === "-1") {
-    query.isDraft = isDraft === "1";
+    matchObj.isDraft = isDraft === "1";
   }
   if (isDeleted === "1" || isDeleted === "-1") {
-    query.isActive = isDeleted === "-1";
+    matchObj.isActive = isDeleted === "-1";
   }
   if (hasComments === "1" || hasComments === "-1") {
-    query.comments = {
+    matchObj.comments = {
       [hasComments === "1" ? "$gt" : "$eq"]: []
     };
   }
-  return query;
-}
 
-async function getCategories() {
-  const categories = await Category.find(
-    {},
-    {},
-    { sort: "sequence cateName" }
-  ).exec();
-  return categories;
-}
+  // 排序
+  let sortObj: any = {
+    createTime: -1
+  };
+  if (params.sortBy) {
+    sortObj = {
+      [params.sortBy]: params.order === "descend" ? -1 : 1
+    };
+  }
+  if (params.sortBy !== "createTime") {
+    sortObj.createTime = -1;
+  }
 
-const getPosts = async (params: IPostParams) => {
   const page = parseInt(params.pageIndex);
   const pageSize = parseInt(params.pageSize);
-  const options: any = {};
-  options.skip = (page - 1) * pageSize;
-  options.limit = pageSize;
-  options.sort = `${params.order === "descend" ? "-" : ""}${params.sortBy}`;
-  const query = getPostsQuery(params);
+  const aggregate = [
+    {
+      // 关联分类集合
+      $lookup: {
+        from: "category",
+        localField: "category",
+        foreignField: "_id",
+        as: "categories"
+      }
+    },
+    {
+      // 关联评论集合
+      $lookup: {
+        from: "comment",
+        localField: "_id",
+        foreignField: "post",
+        as: "comments"
+      }
+    },
+    {
+      // 额外添加一个评论数字段
+      $addFields: {
+        commentsCount: { $size: "$comments" }
+      }
+    },
+    {
+      // 关联之后，再去筛选
+      $match: matchObj
+    },
+    {
+      // 筛选之后，再去排序
+      $sort: sortObj
+    },
+    {
+      $project: {
+        content: 0,
+        "categories.img": 0
+      }
+    }
+  ];
+
   const data = await Promise.all([
-    Post.find(query, "-content", options)
-      .populate("category")
+    Post.aggregate(aggregate)
+      .skip((page - 1) * pageSize)
+      .limit(pageSize)
       .exec(),
-    Post.countDocuments(query).exec()
+    Post.aggregate(aggregate)
+      .count("totalCount")
+      .exec()
   ]);
   return {
     postList: data[0],
-    count: data[1]
+    count: data[1].length === 0 ? 0 : data[1][0].totalCount
   };
 };
 
@@ -355,13 +383,13 @@ const deleteGuestbook = async (uids: Array<string> | string) => {
   };
 };
 
-const saveSettings = async (params) => {
+const saveSettings = async params => {
   const settings = await Setting.findOneAndUpdate({}, params, {
     new: true
   }).exec();
   return {
     settings
-  }
+  };
 };
 
 export default {

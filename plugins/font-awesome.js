@@ -8,6 +8,7 @@ import {
     faFileAlt,
     faSave,
     faQuestionCircle,
+    faEye,
     faComments
 } from '@fortawesome/free-regular-svg-icons';
 import {
@@ -50,7 +51,8 @@ library.add(
     faFileAlt,
     faTimes,
     faQuestionCircle,
-    faComments
+    faComments,
+    faEye
 );
 Vue.component('font-awesome-icon', FontAwesomeIcon);
 

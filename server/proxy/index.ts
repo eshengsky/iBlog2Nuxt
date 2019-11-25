@@ -1,74 +1,6 @@
 import DB from "../db";
-import { ICategoryModel, ICategory } from "../models/category";
-import { IComment } from "../models/comment";
-import { IPost } from "../models/post";
-import { ISetting } from "../models/setting";
 import BadWords from "../bad_words/index";
 const { Post, Category, Comment, Guestbook, Setting } = DB.Models;
-
-/**
- * 为首页数据查询构建条件对象
- * @param params 查询参数对象
- */
-function getPostsQuery(params) {
-  const query: any = {};
-  query.isActive = true;
-  query.isDraft = false;
-  if (params.category) {
-    query.category = params.category;
-  }
-  const keyword = params.keyword;
-  if (keyword) {
-    switch (params.filterType) {
-      case "title":
-        query.title = { $regex: keyword, $options: "gi" };
-        break;
-      case "tag":
-        query.labels = { $regex: keyword, $options: "gi" };
-        break;
-      case "date":
-        if (
-          Array.isArray(keyword) &&
-          keyword.length === 2 &&
-          keyword[0] &&
-          keyword[1]
-        ) {
-          const start = new Date(keyword[0]);
-          const end = new Date(keyword[1]);
-          query.createTime = { $gt: start, $lt: end };
-        }
-        break;
-      default:
-        query.$or = [
-          {
-            title: {
-              $regex: keyword,
-              $options: "gi"
-            }
-          },
-          {
-            labels: {
-              $regex: keyword,
-              $options: "gi"
-            }
-          },
-          {
-            summary: {
-              $regex: keyword,
-              $options: "gi"
-            }
-          },
-          {
-            content: {
-              $regex: keyword,
-              $options: "gi"
-            }
-          }
-        ];
-    }
-  }
-  return query;
-}
 
 async function getCategories() {
   const categories = await Category.find(
@@ -88,27 +20,27 @@ async function getPosts(params) {
   try {
     page = parseInt(params.pageIndex) || 1;
     page = page > 0 ? page : 1;
-    const options: any = {};
-    options.skip = (page - 1) * pageSize;
-    options.limit = pageSize;
-    options.sort =
-      params.sortBy === "title" ? "title -createTime" : "-createTime";
-    const query = getPostsQuery(params);
-    //   db.post.aggregate([
-    //     {
-    //         $lookup: {
-    //             from: "comment",
-    //             localField: "_id",
-    //             foreignField: "post",
-    //             as: "comments"
-    //         }
-    //     }
-    // ])
+    const conditions: any = {
+      isDraft: false,
+      isActive: true
+    };
+    if (params.category) {
+      conditions.category = params.category;
+    }
     const data = await Promise.all([
-      Post.find(query, {}, options)
-        .populate("category")
+      Post.find(
+        conditions,
+        {},
+        {
+          skip: (page - 1) * pageSize,
+          limit: pageSize,
+          sort: "-createTime"
+        }
+      )
+        .populate("category", "-img")
+        .populate("comments", "_id")
         .exec(),
-      Post.countDocuments(query).exec()
+      Post.countDocuments(conditions).exec()
     ]);
     postList = data[0];
     count = data[1];
@@ -136,21 +68,26 @@ async function getPopArticles() {
 }
 
 async function getPopLabels() {
-  const labels = await Post.aggregate([{
-    $unwind: "$labels"
-  }, {
-    $group: {
-      _id: "$labels",
-      count: { $sum: 1 }
+  const labels = await Post.aggregate([
+    {
+      $unwind: "$labels"
+    },
+    {
+      $group: {
+        _id: "$labels",
+        count: { $sum: 1 }
+      }
+    },
+    {
+      $sort: { count: -1, _id: 1 }
+    },
+    {
+      $limit: 10
     }
-  }, {
-    $sort: { count: -1, _id: 1 }
-  }, {
-    $limit: 10
-  }]).exec();
+  ]).exec();
   return {
     labels
-  }
+  };
 }
 
 async function getArticle(params) {

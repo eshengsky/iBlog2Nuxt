@@ -132,7 +132,7 @@ export default Vue.extend({
       inputTxt: "",
       inputDateMoment: [] as Array<Moment>,
       page: 1,
-      pageSize: this.$store.state.settings.pageSize,
+      pageSize: this.$store.state.settings.postPageSize,
       alertShow: false,
       defaultRange: [moment().subtract(30, "days"), moment()],
       rangeDate: {

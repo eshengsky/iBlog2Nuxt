@@ -68,16 +68,6 @@ export class Category {
       }
     );
 
-    // 虚拟字段：创建时间字符串
-    schema.virtual("createTimeStr").get(function(this: any) {
-      return moment(this.createTime).format("YYYY-MM-DD hh:mm");
-    });
-
-    // 虚拟字段：修改时间字符串
-    schema.virtual("modifyTimeStr").get(function(this: any) {
-      return moment(this.modifyTime).format("YYYY-MM-DD hh:mm");
-    });
-
     // 初始化未分类
     schema.statics.initData = () => {
       this.model.exists({}).then(exist => {
