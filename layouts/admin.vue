@@ -59,10 +59,7 @@
         <a-layout-content>
           <nuxt />
         </a-layout-content>
-        <a-layout-footer class="layout-footer"
-          >Copyright ©{{year}} Powered by
-        <a href="https://github.com/eshengsky/iBlog2" target="_blank">iBlog2</a></a-layout-footer
-        >
+        <layout-footer></layout-footer>
       </a-layout>
     </a-layout>
   </a-locale-provider>
@@ -70,7 +67,11 @@
 <script lang="ts">
 import Vue from "vue";
 import zh_CN from "ant-design-vue/lib/locale-provider/zh_CN";
+import LayoutFooter from "@/components/LayoutFooter.vue";
 export default Vue.extend({
+  components: {
+    LayoutFooter
+  },
   data() {
     return {
       collapsed: false,
@@ -148,11 +149,5 @@ export default Vue.extend({
   padding: 25px;
   background: rgb(255, 255, 255);
   min-height: 80vh;
-}
-
-.layout-footer {
-  text-align: center;
-  color: #888;
-  user-select: none;
 }
 </style>

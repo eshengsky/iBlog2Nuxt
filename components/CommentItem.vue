@@ -163,7 +163,6 @@ export default Vue.extend({
   border-bottom: 1px solid #ddd;
   border-top-left-radius: 3px;
   border-top-right-radius: 3px;
-  user-select: none;
 }
 
 .comment-username {
@@ -181,11 +180,13 @@ export default Vue.extend({
   background: #fff7e6;
   border: 1px solid #ffd591;
   margin-right: 4px;
+  user-select: none;
 }
 
 .comment-time {
   color: #999;
   font-size: 12px;
+  user-select: none;
 }
 
 .comment-body {

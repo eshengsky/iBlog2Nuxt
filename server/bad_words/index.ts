@@ -29,8 +29,9 @@ export default class BadWords {
 
   static filter(content: string) {
     let result = content;
-    for (let i = 0; i < result.length - 1; i++) {
-      for (let j = i + 1; j < result.length; j++) {
+    console.log(222, result, '===', result.length, '===', BadWords.data.length, BadWords.data[0])
+    for (let i = 0; i < result.length; i++) {
+      for (let j = i + 1; j <= result.length + 1; j++) {
         const str = result.substring(i, j);
         if (str.trim()) {
           if (BadWords.data.some(t => t.toUpperCase() === str.toUpperCase())) {

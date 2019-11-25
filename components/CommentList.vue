@@ -25,25 +25,29 @@
                     v-decorator="['username', usernameOpts]"
                     allowClear
                     class="username-input"
-                  />
+                  >
+                    <template slot="addonBefore">
+                      <font-awesome-icon :icon="['far', 'user']"></font-awesome-icon>
+                    </template>
+                  </a-input>
                 </a-form-item>
               </a-col>
               <a-col :xs="24" :sm="24" :md="{ span: 8, offset: 1 }">
                 <a-form-item>
-                  <a-input
-                    placeholder="昵称链接"
-                    v-decorator="['website', websiteOpts]"
-                    allowClear
-                  />
+                  <a-input placeholder="昵称链接" v-decorator="['website', websiteOpts]" allowClear>
+                    <template slot="addonBefore">
+                      <font-awesome-icon :icon="['fas', 'link']"></font-awesome-icon>
+                    </template>
+                  </a-input>
                 </a-form-item>
               </a-col>
               <a-col :xs="24" :sm="24" :md="{ span: 8, offset: 1 }">
                 <a-form-item>
-                  <a-input
-                    placeholder="E-mail"
-                    v-decorator="['email', emailOpts]"
-                    allowClear
-                  />
+                  <a-input placeholder="E-mail" v-decorator="['email', emailOpts]" allowClear>
+                    <template slot="addonBefore">
+                      <font-awesome-icon :icon="['far', 'envelope']"></font-awesome-icon>
+                    </template>
+                  </a-input>
                 </a-form-item>
               </a-col>
             </a-row>
@@ -64,10 +68,7 @@
           <a-tooltip>
             <template slot="title">打开Markdown语法速查</template>
             <a @click="mcsShow = true">
-              <font-awesome-icon
-                :icon="['fab', 'markdown']"
-                style="font-size: 14px"
-              ></font-awesome-icon>
+              <font-awesome-icon :icon="['fab', 'markdown']" style="font-size: 14px"></font-awesome-icon>
               <span>支持Markdown语法</span>
             </a>
           </a-tooltip>
@@ -92,12 +93,7 @@
       </div>
     </div>
     <a-modal v-model="mcsShow" title="Markdown 语法速查" width="640px">
-      <a-alert
-        type="warning"
-        message="评论及留言的内容不支持1-4级标题。"
-        showIcon
-        style="margin-bottom: 10px;"
-      />
+      <a-alert type="warning" message="评论及留言的内容不支持1-4级标题。" showIcon style="margin-bottom: 10px;" />
       <md-cheat-sheet></md-cheat-sheet>
       <div slot="footer">
         <a-button type="primary" @click="mcsShow = false">关闭</a-button>

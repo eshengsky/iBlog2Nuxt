@@ -1,0 +1,61 @@
+<template>
+  <a-locale-provider :locale="zh_CN">
+    <div class="container">
+      <div class="left-top-header">
+        <nuxt-link to="/">
+          <img :src="settings.blogLogo" />
+          <h4>
+            {{ settings.blogName }}
+            <p v-if="settings.blogSlogan">{{ settings.blogSlogan }}</p>
+          </h4>
+        </nuxt-link>
+      </div>
+      <nuxt />
+    </div>
+  </a-locale-provider>
+</template>
+<script lang="ts">
+import Vue from "vue";
+import zh_CN from "ant-design-vue/lib/locale-provider/zh_CN";
+export default Vue.extend({
+  data() {
+    return {
+      settings: this.$store.state.settings,
+      zh_CN
+    };
+  }
+});
+</script>
+<style>
+.left-top-header {
+  position: fixed;
+  top: 0;
+  left: 15px;
+  display: flex;
+  height: 70px;
+  align-items: center;
+}
+
+.left-top-header a {
+  display: -webkit-box;
+  display: flex;
+  -webkit-box-align: center;
+  align-items: center;
+  height: 100%;
+  color: #2b2b2b;
+  font-size: 18px;
+  font-family: -apple-system, BlinkMacSystemFont, "Arial", "Segoe UI",
+    "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue",
+    Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
+    "Segoe UI Symbol";
+}
+
+.left-top-header a img {
+  height: 46px;
+  margin-right: 5px;
+}
+
+.left-top-header a h4 {
+    margin: 0;
+}
+</style>

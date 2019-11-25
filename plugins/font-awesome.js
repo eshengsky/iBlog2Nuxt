@@ -9,7 +9,9 @@ import {
     faSave,
     faQuestionCircle,
     faEye,
-    faComments
+    faComments,
+    faUser as farUser,
+    faEnvelope
 } from '@fortawesome/free-regular-svg-icons';
 import {
     faMapSigns,
@@ -24,7 +26,8 @@ import {
     faUndo,
     faHistory,
     faTimes,
-    faTrashAlt as fasTrashAlt
+    faTrashAlt as fasTrashAlt,
+    faLink
 } from '@fortawesome/free-solid-svg-icons';
 import {
     faMarkdown
@@ -52,7 +55,10 @@ library.add(
     faTimes,
     faQuestionCircle,
     faComments,
-    faEye
+    faEye,
+    farUser,
+    faEnvelope,
+    faLink
 );
 Vue.component('font-awesome-icon', FontAwesomeIcon);
 

@@ -180,6 +180,7 @@ async function getGuestbook(params) {
 }
 
 async function saveGuestbook(params) {
+  console.log(111, params);
   const entity = new Guestbook({
     username: BadWords.filter(params.username),
     website: params.website,

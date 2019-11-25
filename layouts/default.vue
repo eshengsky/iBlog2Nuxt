@@ -35,18 +35,18 @@
         </div>
       </div>
       <nuxt />
-      <div class="layout-footer">
-        Copyright ©{{year}} Powered by
-        <a href="https://github.com/eshengsky/iBlog2" target="_blank">iBlog2</a> |
-        <nuxt-link to="/admin">后台管理</nuxt-link>
-      </div>
+      <layout-footer :showLogin="true"></layout-footer>
     </div>
   </a-locale-provider>
 </template>
 <script lang="ts">
 import Vue from "vue";
 import zh_CN from "ant-design-vue/lib/locale-provider/zh_CN";
+import LayoutFooter from "@/components/LayoutFooter.vue";
 export default Vue.extend({
+  components: {
+    LayoutFooter
+  },
   data() {
     return {
       year: new Date().getFullYear(),
@@ -199,12 +199,5 @@ export default Vue.extend({
     -webkit-transform: none;
     transform: none;
   }
-}
-
-.layout-footer {
-  text-align: center;
-  color: #888;
-  user-select: none;
-  padding: 24px 0;
 }
 </style>
