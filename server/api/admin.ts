@@ -1,22 +1,30 @@
 import express from "express";
-import proxy  from "../proxy/admin";
+import jwt from "express-jwt";
+import proxy from "../proxy/admin";
 import { IResp } from "../types";
 
 const app = express();
 
+// JWT middleware
+app.use(
+  jwt({
+    secret: 'iBlog2JsonWebTokenSecretKey123'
+  })
+)
+
 app.get('/categories', async (req, res, next) => {
   let resp: IResp;
   try {
-      const categories = await proxy.getCategories();
-      resp = {
-          code: 1,
-          data: categories
-      }
+    const categories = await proxy.getCategories();
+    resp = {
+      code: 1,
+      data: categories
+    }
   } catch (err) {
-      console.error(err);
-      resp = {
-          code: -1,
-      }
+    console.error(err);
+    resp = {
+      code: -1,
+    }
   }
   res.json(resp);
 });
@@ -24,16 +32,16 @@ app.get('/categories', async (req, res, next) => {
 app.get('/article', async (req, res, next) => {
   let resp: IResp;
   try {
-      const article = await proxy.getArticle(req.query.uid);
-      resp = {
-          code: 1,
-          data: article
-      }
+    const article = await proxy.getArticle(req.query.uid);
+    resp = {
+      code: 1,
+      data: article
+    }
   } catch (err) {
-      console.error(err);
-      resp = {
-          code: -1,
-      }
+    console.error(err);
+    resp = {
+      code: -1,
+    }
   }
   res.json(resp);
 });
@@ -306,6 +314,11 @@ app.put('/settings', async (req, res) => {
     };
   }
   res.json(resp);
+});
+
+app.use((err, req, res, next) => {
+  console.error(err);
+  res.sendStatus(500);
 });
 
 export default {

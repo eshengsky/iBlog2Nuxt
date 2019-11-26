@@ -66,9 +66,6 @@ export default Vue.extend({
     };
   },
   computed: {
-    user(): any {
-      return (this.$store.state as RootState).user;
-    },
     commentTime(): string {
       return moment(this.comment.createTime).fromNow();
       // return moment(this.comment.createTime).format("YYYY-MM-DD HH:mm:ss");

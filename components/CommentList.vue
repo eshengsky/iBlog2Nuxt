@@ -184,9 +184,6 @@ export default Vue.extend({
     form(): any {
       return this.$form.createForm(this);
     },
-    user(): any {
-      return (this.$store.state as RootState).user;
-    },
     isGuestbook(): boolean {
       return this.from === 1;
     },

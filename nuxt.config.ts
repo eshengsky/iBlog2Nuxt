@@ -66,12 +66,10 @@ const config: Configuration = {
     strategies: {
       local: {
         endpoints: {
-          login: { url: "/auth/api/login", method: "post" },
+          login: { url: "/auth/api/login", method: "post", propertyName: 'token.accessToken' },
           logout: { url: "/auth/api/logout", method: "post" },
-          user: { url: "/auth/api/user", method: "get" }
-        },
-        tokenRequired: false,
-        tokenType: false
+          user: { url: "/auth/api/user", method: "get", propertyName: 'user' }
+        }
       }
     },
     redirect: {

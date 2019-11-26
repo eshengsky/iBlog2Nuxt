@@ -1,4 +1,5 @@
 import express from "express";
+import jsonwebtoken from "jsonwebtoken";
 import proxy from "../proxy/auth";
 import { IResp } from "../types";
 
@@ -39,19 +40,31 @@ app.put("/account", async (req, res, next) => {
 });
 
 app.get("/user", (req, res, next) => {
-  res.json({
-    code: 1,
-    data: (<any>req).user
-  });
+  res.json({ user: (req as any).user })
 });
 
 app.post("/login", async (req, res, next) => {
   try {
     const data = await proxy.findAccount(req.body);
-    if (data.account) {
-      return res.end();
+    if (!data.account) {
+      return res.sendStatus(401);
     }
-    res.sendStatus(500);
+
+    const accessToken = jsonwebtoken.sign(
+      {
+        username: "Admin",
+        picture: 'https://github.com/nuxt.png',
+        name: 'UserAdmin',
+        scope: ['test', 'user']
+      },
+      'iBlog2JsonWebTokenSecretKey123'
+    )
+
+    res.json({
+      token: {
+        accessToken
+      }
+    })
   } catch (err) {
     console.error(err);
     res.sendStatus(500);
@@ -62,6 +75,11 @@ app.post("/logout", (req, res, next) => {
   res.json({
     code: 1
   });
+});
+
+app.use((err, req, res, next) => {
+  console.error(err);
+  res.sendStatus(500);
 });
 
 export default {

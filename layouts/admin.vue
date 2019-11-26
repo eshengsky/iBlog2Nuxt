@@ -55,6 +55,7 @@
             :type="collapsed ? 'menu-unfold' : 'menu-fold'"
             @click="() => (collapsed = !collapsed)"
           />
+          <a @click="logout">退出登录</a>
         </a-layout-header>
         <a-layout-content>
           <nuxt />
@@ -99,6 +100,11 @@ export default Vue.extend({
         return "article-manage";
       }
       return path;
+    }
+  },
+  methods: {
+    logout(this: any) {
+      this.$auth.logout('local');
     }
   }
 });

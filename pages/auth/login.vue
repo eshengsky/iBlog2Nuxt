@@ -47,7 +47,7 @@ export default Vue.extend({
         data: {
           password: md5(this.pwd)
         }
-      }).catch(() => {
+      }).catch((err) => {
         this.$message.error("密码不正确！");
       });
     }

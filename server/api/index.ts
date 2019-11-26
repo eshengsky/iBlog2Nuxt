@@ -188,6 +188,11 @@ app.get("/settings", async (req, res, next) => {
   res.json(resp);
 });
 
+app.use((err, req, res, next) => {
+  console.error(err);
+  res.sendStatus(500);
+});
+
 export default {
   path: "/api",
   handler: app
