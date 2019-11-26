@@ -1,0 +1,140 @@
+<template>
+  <div>
+    <a-row class="flex-center">
+      <a-col :sm="16" :lg="10">
+        <div class="auth-panel">
+          <h2>首次访问后台</h2>
+          <p>请先设置管理员登录密码</p>
+          <a-form label-position="top" :form="form">
+            <a-form-item label="密码" :colon="false">
+              <a-input-password
+                size="large"
+                placeholder="请输入密码"
+                ref="pwd1"
+                v-decorator="['pwd1', pwd1Opts]"
+              />
+            </a-form-item>
+            <a-form-item label="确认密码" :colon="false">
+              <a-input-password
+                size="large"
+                placeholder="请再次输入密码"
+                v-decorator="['pwd2', pwd2Opts]"
+                @keyup.enter="save"
+              />
+            </a-form-item>
+          </a-form>
+          <div style="text-align: right;">
+            <a-button
+              type="primary"
+              size="large"
+              :loading="btnLoading"
+              @click="save"
+              >完成</a-button
+            >
+          </div>
+        </div>
+      </a-col>
+    </a-row>
+  </div>
+</template>
+
+<script lang="ts">
+import Vue from "vue";
+import md5 from "blueimp-md5";
+import { IResp } from "@/server/types";
+export default Vue.extend({
+  name: "PageInitAccount",
+  layout: "auth",
+  data() {
+    return {
+      btnLoading: false,
+      pwd1Opts: {
+        rules: [
+          {
+            required: true,
+            message: "请输入密码！"
+          },
+          {
+            min: 6,
+            message: "密码不能少于6位！"
+          },
+          {
+            max: 20,
+            message: "密码不能多于20位！"
+          }
+        ]
+      }
+    };
+  },
+  computed: {
+    pwd2Opts() {
+      return {
+        rules: [
+          {
+            required: true,
+            message: "请输入确认密码！"
+          },
+          {
+            validator: (this as any).compareToFirstPassword
+          }
+        ]
+      };
+    }
+  },
+  beforeCreate(this: any) {
+    this.form = this.$form.createForm(this);
+  },
+  mounted() {
+    (this.$refs.pwd1 as any).$children[0].focus();
+  },
+  methods: {
+    compareToFirstPassword(rule, value, callback) {
+      const form = (this as any).form;
+      if (value && value !== form.getFieldValue("pwd1")) {
+        callback("两次输入的密码不一致！");
+      } else {
+        callback();
+      }
+    },
+    save(this: any) {
+      this.form.validateFields(async (error, values) => {
+        if (!error) {
+          this.btnLoading = true;
+          const { code, data, message }: IResp = await this.$axios.$put("/auth/api/account", {
+            password: md5(values.pwd1)
+          });
+          if (code === 1) {
+              this.$message.loading("设置成功！正在跳转登录页...");
+              setTimeout(() => {
+                  location.href = "/auth/login";
+              }, 2000);
+          } else {
+              console.error(message);
+              this.$message.error("操作失败！");
+              this.btnLoading = false;
+          }
+        }
+      });
+    }
+  }
+});
+</script>
+
+<style>
+.flex-center {
+  display: flex;
+  justify-content: center;
+  padding-top: 16vh;
+}
+
+.auth-panel {
+  padding: 40px 30px;
+  background: #fff;
+  border-radius: 5px;
+  box-shadow: 0 20px 25px -12px rgba(0, 0, 0, 0.09);
+}
+
+.auth-panel p {
+  color: #777;
+}
+</style>

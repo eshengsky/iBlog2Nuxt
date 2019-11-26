@@ -4,6 +4,7 @@ import { Category, ICategoryModel } from "./models/category";
 import { Comment, ICommentModel } from "./models/comment";
 import { Guestbook, IGuestbookModel } from "./models/guestbook";
 import { Setting, ISettingModel } from "./models/setting";
+import { Auth, IAuthModel } from "./models/auth";
 import config from "../blog.config";
 
 interface IModels {
@@ -12,7 +13,8 @@ interface IModels {
   Category: ICategoryModel,
   Comment: ICommentModel,
   Guestbook: IGuestbookModel,
-  Setting: ISettingModel
+  Setting: ISettingModel,
+  Auth: IAuthModel
 }
 
 export default class DB {
@@ -46,7 +48,8 @@ export default class DB {
       Category: new Category().model,
       Comment: new Comment().model,
       Guestbook: new Guestbook().model,
-      Setting: new Setting().model
+      Setting: new Setting().model,
+      Auth: new Auth().model
     };
   }
 

@@ -1,6 +1,7 @@
 import DB from "../db";
 import BadWords from "../bad_words/index";
 const { Post, Category, Comment, Guestbook, Setting } = DB.Models;
+const badWords = BadWords.instance;
 
 async function getCategories() {
   const categories = await Category.find(
@@ -137,10 +138,10 @@ async function getComments(params) {
 async function saveComment(params) {
   const entity = new Comment({
     post: params.articleId,
-    username: BadWords.filter(params.username),
+    username: badWords.filter(params.username),
     website: params.website,
     email: params.email,
-    content: BadWords.filter(params.content),
+    content: badWords.filter(params.content),
     createTime: new Date()
   });
   const comment = await entity.save();
@@ -180,12 +181,11 @@ async function getGuestbook(params) {
 }
 
 async function saveGuestbook(params) {
-  console.log(111, params);
   const entity = new Guestbook({
-    username: BadWords.filter(params.username),
+    username: badWords.filter(params.username),
     website: params.website,
     email: params.email,
-    content: BadWords.filter(params.content),
+    content: badWords.filter(params.content),
     createTime: new Date()
   });
   const comment = await entity.save();

@@ -1,5 +1,4 @@
 import { Schema, model, models, Document, Model, Types } from "mongoose";
-import moment from "moment";
 
 export interface ICategory extends Document {
   _id: string;

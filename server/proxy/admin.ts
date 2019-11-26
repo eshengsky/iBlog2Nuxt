@@ -1,5 +1,4 @@
 import DB from "../db";
-import { IPost } from "../models/post";
 const { Category, Post, Comment, Guestbook, Setting } = DB.Models;
 import mongoose from "mongoose";
 import { otherCategoryItem } from "../models/category";

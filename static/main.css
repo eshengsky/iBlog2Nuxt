@@ -13,7 +13,7 @@ html {
 }
 
 body {
-  color: #212529;
+  color: #333;
   text-align: left;
   background: #f3f3f4;
   -webkit-text-size-adjust: 100%;
@@ -22,6 +22,8 @@ body {
 
 .container {
   padding-top: 70px;
+  padding-left: 15px;
+  padding-right: 15px;
 }
 
 [tabindex="-1"]:focus:not(:focus-visible) {

@@ -1,4 +1,6 @@
 import { Configuration } from "@nuxt/types";
+import bodyParser from "body-parser";
+import cookieParser from "cookie-parser";
 
 const config: Configuration = {
   mode: "universal",
@@ -22,7 +24,14 @@ const config: Configuration = {
     port: 8000,
     host: "localhost"
   },
-  serverMiddleware: ["~/server/index"],
+  serverMiddleware: [
+    bodyParser.json(),
+    bodyParser.urlencoded({ extended: false }),
+    cookieParser(),
+    "@/server/api/index",
+    "@/server/api/admin",
+    "@/server/api/auth"
+  ],
   /*
    ** Customize the progress-bar color
    */
@@ -39,6 +48,7 @@ const config: Configuration = {
    ** Plugins to load before mounting the App
    */
   plugins: [
+    "@/plugins/axios",
     "@/plugins/ant-design",
     "@/plugins/font-awesome",
     { src: "@/plugins/tui-editor", mode: "client" }
@@ -48,10 +58,29 @@ const config: Configuration = {
    ** Nuxt.js modules
    */
   modules: [
-    // Doc: https://axios.nuxtjs.org/usage
-    "@nuxtjs/axios"
+    "@nuxtjs/axios",
+    "@nuxtjs/auth"
     // '@nuxtjs/pwa',
   ],
+  auth: {
+    strategies: {
+      local: {
+        endpoints: {
+          login: { url: "/auth/api/login", method: "post" },
+          logout: { url: "/auth/api/logout", method: "post" },
+          user: { url: "/auth/api/user", method: "get" }
+        },
+        tokenRequired: false,
+        tokenType: false
+      }
+    },
+    redirect: {
+      login: '/auth/login',
+      logout: '/',
+      callback: '/auth/login',
+      home: '/'
+    }
+  },
   /*
    ** Axios module configuration
    ** See https://axios.nuxtjs.org/options

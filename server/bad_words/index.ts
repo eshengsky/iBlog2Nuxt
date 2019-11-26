@@ -3,12 +3,11 @@ import path from "path";
 import readline from "readline";
 
 export default class BadWords {
-  private static data: Array<string> = [];
+
+  private static _instance: BadWords;
+  private data: Array<string> = [];
 
   constructor() {
-    if (BadWords.data.length) {
-      return;
-    }
     const files = fs.readdirSync(path.resolve(__dirname, "./libs/"));
     files.forEach(file => {
       if (path.extname(file) === ".txt") {
@@ -20,21 +19,27 @@ export default class BadWords {
             if (line.substring(line.length - 1) === ",") {
               line = line.substring(0, line.length - 1);
             }
-            BadWords.data.push(line);
+            this.data.push(line);
           }
         });
       }
     });
   }
 
-  static filter(content: string) {
+  public static get instance() {
+    if (!BadWords._instance) {
+      BadWords._instance = new BadWords();
+    }
+    return BadWords._instance;
+  }
+
+  filter(content: string) {
     let result = content;
-    console.log(222, result, '===', result.length, '===', BadWords.data.length, BadWords.data[0])
     for (let i = 0; i < result.length; i++) {
       for (let j = i + 1; j <= result.length + 1; j++) {
         const str = result.substring(i, j);
         if (str.trim()) {
-          if (BadWords.data.some(t => t.toUpperCase() === str.toUpperCase())) {
+          if (this.data.some(t => t.toUpperCase() === str.toUpperCase())) {
             const len = str.length;
             const asterisks: Array<"*"> = [];
             for (let i = 0; i < len; i++) {

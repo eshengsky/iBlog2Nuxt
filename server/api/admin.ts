@@ -2,8 +2,9 @@ import express from "express";
 import proxy  from "../proxy/admin";
 import { IResp } from "../types";
 
-const router = express.Router();
-router.get('/categories', async (req, res, next) => {
+const app = express();
+
+app.get('/categories', async (req, res, next) => {
   let resp: IResp;
   try {
       const categories = await proxy.getCategories();
@@ -20,7 +21,7 @@ router.get('/categories', async (req, res, next) => {
   res.json(resp);
 });
 
-router.get('/article', async (req, res, next) => {
+app.get('/article', async (req, res, next) => {
   let resp: IResp;
   try {
       const article = await proxy.getArticle(req.query.uid);
@@ -37,7 +38,7 @@ router.get('/article', async (req, res, next) => {
   res.json(resp);
 });
 
-router.get("/posts", async (req, res) => {
+app.get("/posts", async (req, res) => {
   let resp: IResp;
   try {
     const data = await proxy.getPosts(req.query);
@@ -56,7 +57,7 @@ router.get("/posts", async (req, res) => {
 });
 
 // 新增文章
-router.post('/article', async (req, res) => {
+app.post('/article', async (req, res) => {
   let resp: IResp;
   try {
     const article = await proxy.newArticle(req.body);
@@ -75,7 +76,7 @@ router.post('/article', async (req, res) => {
 });
 
 // 修改文章
-router.put('/article', async (req, res) => {
+app.put('/article', async (req, res) => {
   let resp: IResp;
   try {
     const article = await proxy.editArticle(req.query.uid, req.body);
@@ -94,7 +95,7 @@ router.put('/article', async (req, res) => {
 });
 
 // 删除文章
-router.delete('/article', async (req, res) => {
+app.delete('/article', async (req, res) => {
   let resp: IResp;
   try {
     let data;
@@ -120,7 +121,7 @@ router.delete('/article', async (req, res) => {
 });
 
 // 检查文章alias是否重复
-router.get('/checkArticleAlias', async (req, res) => {
+app.get('/checkArticleAlias', async (req, res) => {
   let resp: IResp;
   try {
     const data = await proxy.checkArticleAlias(req.query);
@@ -139,7 +140,7 @@ router.get('/checkArticleAlias', async (req, res) => {
 });
 
 // 检查分类alias是否重复
-router.get('/checkCategoryAlias', async (req, res) => {
+app.get('/checkCategoryAlias', async (req, res) => {
   let resp: IResp;
   try {
     const data = await proxy.checkCategoryAlias(req.query);
@@ -158,7 +159,7 @@ router.get('/checkCategoryAlias', async (req, res) => {
 });
 
 // 新增分类
-router.post('/category', async (req, res) => {
+app.post('/category', async (req, res) => {
   let resp: IResp;
   try {
     const category = await proxy.newCategory(req.body);
@@ -177,7 +178,7 @@ router.post('/category', async (req, res) => {
 });
 
 // 修改分类
-router.put('/category', async (req, res) => {
+app.put('/category', async (req, res) => {
   let resp: IResp;
   try {
     const category = await proxy.editCategory(req.query.uid, req.body);
@@ -196,7 +197,7 @@ router.put('/category', async (req, res) => {
 });
 
 // 删除文章
-router.delete('/category', async (req, res) => {
+app.delete('/category', async (req, res) => {
   let resp: IResp;
   try {
     const data = await proxy.deleteCategory(req.query.uids);
@@ -214,7 +215,7 @@ router.delete('/category', async (req, res) => {
   res.json(resp);
 });
 
-router.get("/comments", async (req, res) => {
+app.get("/comments", async (req, res) => {
   let resp: IResp;
   try {
     const data = await proxy.getComments(req.query);
@@ -233,7 +234,7 @@ router.get("/comments", async (req, res) => {
 });
 
 // 删除评论
-router.delete('/comment', async (req, res) => {
+app.delete('/comment', async (req, res) => {
   let resp: IResp;
   try {
     const data = await proxy.deleteComment(req.query.uids);
@@ -251,7 +252,7 @@ router.delete('/comment', async (req, res) => {
   res.json(resp);
 });
 
-router.get("/guestbook", async (req, res) => {
+app.get("/guestbook", async (req, res) => {
   let resp: IResp;
   try {
     const data = await proxy.getGuestbook(req.query);
@@ -270,7 +271,7 @@ router.get("/guestbook", async (req, res) => {
 });
 
 // 删除留言
-router.delete('/guestbook', async (req, res) => {
+app.delete('/guestbook', async (req, res) => {
   let resp: IResp;
   try {
     const data = await proxy.deleteGuestbook(req.query.uids);
@@ -289,7 +290,7 @@ router.delete('/guestbook', async (req, res) => {
 });
 
 // 修改设置
-router.put('/settings', async (req, res) => {
+app.put('/settings', async (req, res) => {
   let resp: IResp;
   try {
     const settings = await proxy.saveSettings(req.body);
@@ -307,4 +308,7 @@ router.put('/settings', async (req, res) => {
   res.json(resp);
 });
 
-export default router;
+export default {
+  path: "/admin/api",
+  handler: app
+};
