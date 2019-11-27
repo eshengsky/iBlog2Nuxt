@@ -128,7 +128,7 @@ export default Vue.extend({
     return {
       comments: [] as Array<IComment>,
       page: 1,
-      pageSize: 3,
+      pageSize: this.$store.state.settings.commentPageSize,
       mcsShow: false,
       editorText: "",
       isLoading: false,

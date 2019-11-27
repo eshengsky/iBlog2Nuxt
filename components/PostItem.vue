@@ -13,6 +13,7 @@
       <a
         class="preview-link"
         title="点击预览"
+        v-if="settings.enablePreview"
         @click="() => (drawer = true)"
       ></a>
       <h4>
@@ -69,6 +70,7 @@ export default Vue.extend({
   },
   data() {
     return {
+      settings: this.$store.state.settings,
       drawer: false,
       publishDate: moment(this.post.createTime).format("MM/DD, YYYY")
     };

@@ -10,14 +10,21 @@
           </h4>
         </nuxt-link>
       </div>
-      <nuxt />
+      <div class="auth-wrap">
+        <nuxt />
+      </div>
+      <layout-footer></layout-footer>
     </div>
   </a-locale-provider>
 </template>
 <script lang="ts">
 import Vue from "vue";
 import zh_CN from "ant-design-vue/lib/locale-provider/zh_CN";
+import LayoutFooter from "@/components/LayoutFooter.vue";
 export default Vue.extend({
+  components: {
+    LayoutFooter
+  },
   data() {
     return {
       settings: this.$store.state.settings,
@@ -27,6 +34,10 @@ export default Vue.extend({
 });
 </script>
 <style>
+.auth-wrap {
+  min-height: 70vh;
+}
+
 .left-top-header {
   position: fixed;
   top: 0;

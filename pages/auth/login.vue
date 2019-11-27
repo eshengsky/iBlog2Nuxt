@@ -1,22 +1,21 @@
 <template>
   <div>
-    <a-row class="flex-center">
-      <a-col :sm="16" :lg="10">
-        <div class="auth-panel">
-          <h2>后台登录</h2>
-          <div class="auth-input">
-            <a-input-password
-              size="large"
-              placeholder="请输入密码"
-              ref="input"
-              v-model="pwd"
-              @keyup.enter="login"
-            />
-            <a-button type="primary" size="large" @click="login">登录</a-button>
-          </div>
-        </div>
-      </a-col>
-    </a-row>
+    <div class="auth-panel">
+      <h2 class="auth-title">后台登录</h2>
+      <p class="auth-desc">Admin</p>
+      <div class="auth-input">
+        <a-input-password
+          size="large"
+          placeholder="请输入密码"
+          ref="input"
+          v-model="pwd"
+          @keyup.enter="login"
+        />
+      </div>
+      <a-button type="primary" :block="true" size="large" @click="login"
+        >登录</a-button
+      >
+    </div>
   </div>
 </template>
 
@@ -27,7 +26,7 @@ export default Vue.extend({
   name: "PageLogin",
   layout: "auth",
   async asyncData({ $axios, redirect }) {
-    const { code, data } = await $axios.$get('/auth/api/exists');
+    const { code, data } = await $axios.$get("/auth/api/exists");
     if (code === 1 && !data.exists) {
       // 临时重定向
       redirect(302, "/auth/init-account");
@@ -43,38 +42,44 @@ export default Vue.extend({
   },
   methods: {
     login(this: any) {
-      this.$auth.loginWith('local', {
-        data: {
-          password: md5(this.pwd)
-        }
-      }).catch((err) => {
-        this.$message.error("密码不正确！");
-      });
+      if (!this.pwd) {
+        (this.$refs.input as any).$children[0].focus();
+        return;
+      }
+      this.$auth
+        .loginWith("local", {
+          data: {
+            password: md5(this.pwd)
+          }
+        })
+        .catch(err => {
+          this.$message.error("密码不正确！");
+        });
     }
   }
 });
 </script>
 
 <style>
-.flex-center {
-  display: flex;
-  justify-content: center;
-  padding-top: 30vh;
-}
-
 .auth-panel {
-  padding: 40px 30px;
+  max-width: 370px;
+  margin: 13vh auto 0;
+  padding: 50px 40px;
   background: #fff;
-  border-radius: 5px;
+  border-radius: 6px;
   box-shadow: 0 20px 25px -12px rgba(0, 0, 0, 0.09);
 }
 
-.auth-input {
-  display: flex;
-  margin-top: 30px;
+.auth-title {
+  text-align: center;
 }
 
-.auth-input button {
-  margin-left: 15px;
+.auth-desc {
+  color: #777;
+  text-align: center;
+}
+
+.auth-input {
+  margin: 60px 0 20px;
 }
 </style>

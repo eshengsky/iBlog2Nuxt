@@ -55,7 +55,29 @@
             :type="collapsed ? 'menu-unfold' : 'menu-fold'"
             @click="() => (collapsed = !collapsed)"
           />
-          <a @click="logout">退出登录</a>
+          <div class="auth-actions">
+            <a-dropdown placement="bottomRight">
+              <span>Admin <a-icon type="down"/></span>
+              <a-menu slot="overlay">
+                <a-menu-item>
+                  <a href="/auth/change-password">
+                    <font-awesome-icon
+                      :icon="['fas', 'key']"
+                    ></font-awesome-icon>
+                    修改密码
+                  </a>
+                </a-menu-item>
+                <a-menu-item>
+                  <a @click="logout" title="退出登录">
+                    <font-awesome-icon
+                      :icon="['fas', 'sign-out-alt']"
+                    ></font-awesome-icon>
+                    退出登录
+                  </a>
+                </a-menu-item>
+              </a-menu>
+            </a-dropdown>
+          </div>
         </a-layout-header>
         <a-layout-content>
           <nuxt />
@@ -70,7 +92,7 @@ import Vue from "vue";
 import zh_CN from "ant-design-vue/lib/locale-provider/zh_CN";
 import LayoutFooter from "@/components/LayoutFooter.vue";
 export default Vue.extend({
-  middleware: 'auth',
+  middleware: "auth",
   components: {
     LayoutFooter
   },
@@ -104,7 +126,7 @@ export default Vue.extend({
   },
   methods: {
     logout(this: any) {
-      this.$auth.logout('local');
+      this.$auth.logout("local");
     }
   }
 });
@@ -119,7 +141,6 @@ export default Vue.extend({
 .layout-admin .trigger {
   font-size: 18px;
   line-height: 64px;
-  padding: 0 24px;
   cursor: pointer;
   transition: color 0.3s;
 }
@@ -137,8 +158,10 @@ export default Vue.extend({
 }
 
 .layout-header {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 24px;
   background: #f3f3f4;
-  padding: 0;
   border-bottom: 1px solid #e7eaec;
 }
 
@@ -156,5 +179,19 @@ export default Vue.extend({
   padding: 25px;
   background: rgb(255, 255, 255);
   min-height: 80vh;
+}
+
+.auth-actions {
+  color: #777;
+  font-weight: 500;
+}
+
+.auth-actions span {
+  cursor: pointer;
+  margin-right: 4px;
+}
+
+.auth-actions a {
+  color: #777;
 }
 </style>

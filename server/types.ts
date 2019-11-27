@@ -6,7 +6,7 @@ interface IResp {
   data?: any;
 
   /** 错误消息 */
-  message?: never;
+  message?: string;
 }
 
 export { IResp };

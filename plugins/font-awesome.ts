@@ -27,7 +27,9 @@ import {
     faHistory,
     faTimes,
     faTrashAlt as fasTrashAlt,
-    faLink
+    faLink,
+    faSignOutAlt,
+    faKey
 } from '@fortawesome/free-solid-svg-icons';
 import {
     faMarkdown
@@ -58,7 +60,9 @@ library.add(
     faEye,
     farUser,
     faEnvelope,
-    faLink
+    faLink,
+    faSignOutAlt,
+    faKey
 );
 Vue.component('font-awesome-icon', FontAwesomeIcon);
 

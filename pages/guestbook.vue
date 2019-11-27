@@ -18,7 +18,7 @@ export default Vue.extend({
 <style scoped>
 .guestbook-wrap {
   background: #f3f3f4;
-  min-height: 100vh;
+  min-height: 85vh;
   padding-top: 30px;
 }
 .list-wrap {

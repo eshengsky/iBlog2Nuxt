@@ -14,6 +14,7 @@ app.use(
   })
 );
 
+// 判断账户是否存在（是否已初始化）
 app.get("/exists", async (req, res, next) => {
   let resp: IResp;
   try {
@@ -31,6 +32,7 @@ app.get("/exists", async (req, res, next) => {
   res.json(resp);
 });
 
+// 初始化账户
 app.put("/account", async (req, res, next) => {
   let resp: IResp;
   try {
@@ -48,10 +50,18 @@ app.put("/account", async (req, res, next) => {
   res.json(resp);
 });
 
+// 修改密码
+app.post("/account", async (req, res, next) => {
+  const resp = await proxy.changePassword(req.body);
+  res.json(resp);
+});
+
+// 获取当前用户
 app.get("/user", (req, res, next) => {
   res.json({ user: (req as any).user });
 });
 
+// 提交登录请求
 app.post("/login", async (req, res, next) => {
   try {
     const data = await proxy.findAccount(req.body);
@@ -77,12 +87,14 @@ app.post("/login", async (req, res, next) => {
   }
 });
 
+// 退出登录
 app.post("/logout", (req, res, next) => {
   res.json({
     code: 1
   });
 });
 
+// 异常处理
 app.use((err, req, res, next) => {
   res.sendStatus(err.status || 500);
 });
