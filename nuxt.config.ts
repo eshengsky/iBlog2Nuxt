@@ -25,9 +25,8 @@ const config: Configuration = {
     host: "localhost"
   },
   serverMiddleware: [
-    bodyParser.json(),
-    bodyParser.urlencoded({ extended: false }),
     cookieParser(),
+    bodyParser.json(),
     "@/server/api/index",
     "@/server/api/admin",
     "@/server/api/auth"

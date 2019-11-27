@@ -189,8 +189,7 @@ app.get("/settings", async (req, res, next) => {
 });
 
 app.use((err, req, res, next) => {
-  console.error(err);
-  res.sendStatus(500);
+  res.sendStatus(err.status || 500);
 });
 
 export default {
