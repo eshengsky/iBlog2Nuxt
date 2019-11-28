@@ -68,7 +68,6 @@ export default Vue.extend({
   computed: {
     commentTime(): string {
       return moment(this.comment.createTime).fromNow();
-      // return moment(this.comment.createTime).format("YYYY-MM-DD HH:mm:ss");
     },
     commentTime2(): string {
       return moment(this.comment.createTime).format("YYYY-MM-DD HH:mm:ss");

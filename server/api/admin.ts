@@ -2,6 +2,7 @@ import express from "express";
 import jwt from "express-jwt";
 import proxy from "../proxy/admin";
 import { IResp } from "../types";
+import moment from "moment";
 
 const app = express();
 
@@ -305,6 +306,99 @@ app.put('/settings', async (req, res) => {
     resp = {
       code: 1,
       data: settings
+    };
+  } catch (err) {
+    console.error(err);
+    resp = {
+      code: -1,
+      message: err.message
+    };
+  }
+  res.json(resp);
+});
+
+app.get('/guestbookStats', async (req, res) => {
+  let resp: IResp;
+  try {
+    const stats = await proxy.getGuestBookStats();
+    resp = {
+      code: 1,
+      data: stats
+    };
+  } catch (err) {
+    console.error(err);
+    resp = {
+      code: -1,
+      message: err.message
+    };
+  }
+  res.json(resp);
+});
+
+app.get('/commentsStats', async (req, res) => {
+  let resp: IResp;
+  try {
+    const stats = await proxy.getCommentsStats();
+    resp = {
+      code: 1,
+      data: stats
+    };
+  } catch (err) {
+    console.error(err);
+    resp = {
+      code: -1,
+      message: err.message
+    };
+  }
+  res.json(resp);
+});
+
+app.get('/postsStats', async (req, res) => {
+  let resp: IResp;
+  try {
+    const stats = await proxy.getPostsStats();
+    resp = {
+      code: 1,
+      data: stats
+    };
+  } catch (err) {
+    console.error(err);
+    resp = {
+      code: -1,
+      message: err.message
+    };
+  }
+  res.json(resp);
+});
+
+app.get('/commentsAndGuestbookStats', async (req, res) => {
+  let resp: IResp;
+  try {
+    const stats = await proxy.getComentsAndGuestbookStats();
+    let commentsStats = {};
+    let guestbookStats = {};
+    (stats.comments || []).forEach(item => {
+      commentsStats[item._id] = item.count;
+    });
+    (stats.guestbook || []).forEach(item => {
+      guestbookStats[item._id] = item.count;
+    });
+
+    const baseCommentsStats = {};
+    const baseGuestbookStats = {};
+    for (let i = 0; i <= 30; i++) {
+      const date = moment().subtract(i, "days").format('YYYY-MM-DD');
+      baseCommentsStats[date] = 0;
+      baseGuestbookStats[date] = 0;
+    }
+    commentsStats = { ...baseCommentsStats, ...commentsStats };
+    guestbookStats = { ...baseGuestbookStats, ...guestbookStats };
+    resp = {
+      code: 1,
+      data: {
+        commentsStats,
+        guestbookStats
+      }
     };
   } catch (err) {
     console.error(err);

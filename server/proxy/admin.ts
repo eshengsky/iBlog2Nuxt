@@ -66,7 +66,7 @@ const getPosts = async (params: any) => {
   ) {
     const start = new Date(createTime[0]);
     const end = new Date(createTime[1]);
-    matchObj.createTime = { $gt: start, $lt: end };
+    matchObj.createTime = { $gte: start, $lt: end };
   }
   if (
     Array.isArray(modifyTime) &&
@@ -76,7 +76,7 @@ const getPosts = async (params: any) => {
   ) {
     const start = new Date(modifyTime[0]);
     const end = new Date(modifyTime[1]);
-    matchObj.modifyTime = { $gt: start, $lt: end };
+    matchObj.modifyTime = { $gte: start, $lt: end };
   }
   if (isLink === "1" || isLink === "-1") {
     matchObj.isLocal = isLink === "-1";
@@ -308,7 +308,7 @@ const getComments = async params => {
   ) {
     const start = new Date(params.createTime[0]);
     const end = new Date(params.createTime[1]);
-    query.createTime = { $gt: start, $lt: end };
+    query.createTime = { $gte: start, $lt: end };
   }
   const data = await Promise.all([
     Comment.find(query, {}, options)
@@ -361,7 +361,7 @@ const getGuestbook = async params => {
   ) {
     const start = new Date(params.createTime[0]);
     const end = new Date(params.createTime[1]);
-    query.createTime = { $gt: start, $lt: end };
+    query.createTime = { $gte: start, $lt: end };
   }
   const data = await Promise.all([
     Guestbook.find(query, {}, options).exec(),
@@ -393,17 +393,178 @@ const saveSettings = async params => {
 };
 
 const getGuestBookStats = async () => {
-  Promise.all([
+  const stats = await Promise.all([
+    // 今天
     Guestbook.countDocuments({
       createTime: {
-        $gt: moment().subtract(1, "days").startOf("day").toDate(),
-        $lt: new Date()
+        $gte: moment().startOf("day").toDate(),
+        $lt: moment().toDate()
       }
     }).exec(),
-    Guestbook.countDocuments({}).exec(),
-    Guestbook.countDocuments({}).exec()
+
+    // 昨天
+    Guestbook.countDocuments({
+      createTime: {
+        $gte: moment().subtract(1, "days").startOf("day").toDate(),
+        $lt: moment().subtract(1, "days").endOf("day").toDate()
+      }
+    }).exec(),
+
+    // 最近一周
+    Guestbook.countDocuments({
+      createTime: {
+        $gte: moment().subtract(7, "days").startOf("day").toDate(),
+        $lt: moment().toDate()
+      }
+    }).exec()
   ]);
-  
+  return {
+    stats: {
+      today: stats[0],
+      yesterday: stats[1],
+      oneweek: stats[2]
+    }
+  }
+}
+
+const getCommentsStats = async () => {
+  const stats = await Promise.all([
+    // 今天
+    Comment.countDocuments({
+      createTime: {
+        $gte: moment().startOf("day").toDate(),
+        $lt: moment().toDate()
+      }
+    }).exec(),
+
+    // 昨天
+    Comment.countDocuments({
+      createTime: {
+        $gte: moment().subtract(1, "days").startOf("day").toDate(),
+        $lt: moment().subtract(1, "days").endOf("day").toDate()
+      }
+    }).exec(),
+
+    // 最近一周
+    Comment.countDocuments({
+      createTime: {
+        $gte: moment().subtract(7, "days").startOf("day").toDate(),
+        $lt: moment().toDate()
+      }
+    }).exec()
+  ]);
+  return {
+    stats: {
+      today: stats[0],
+      yesterday: stats[1],
+      oneweek: stats[2]
+    }
+  }
+}
+
+const getPostsStats = async () => {
+  const stats = await Promise.all([
+    // 草稿
+    Post.countDocuments({
+      isDraft: true,
+      isActive: true
+    }).exec(),
+
+    // 本周发布
+    Post.countDocuments({
+      isDraft: false,
+      isActive: true,
+      createTime: {
+        $gte: moment().subtract(7, "days").startOf("day").toDate(),
+        $lt: moment().toDate()
+      }
+    }).exec(),
+
+    // 本月发布
+    Post.countDocuments({
+      isDraft: false,
+      isActive: true,
+      createTime: {
+        $gte: moment().subtract(30, "days").startOf("day").toDate(),
+        $lt: moment().toDate()
+      }
+    }).exec(),
+
+    // 总计发布
+    Post.countDocuments({
+      isDraft: false,
+      isActive: true,
+    }).exec(),
+
+    // 全部分类
+    Category.estimatedDocumentCount().exec()
+  ]);
+  return {
+    stats: {
+      draft: stats[0],
+      oneweek: stats[1],
+      onemonth: stats[2],
+      totalPosts: stats[3],
+      totalCategories: stats[4]
+    }
+  }
+}
+
+const getComentsAndGuestbookStats = async () => {
+  const stats: [any[] | undefined, any[] | undefined] = await Promise.all([
+    Comment.aggregate([
+      {
+        $match: {
+          createTime: {
+            $gte: moment().subtract(30, "days").startOf("day").toDate(),
+            $lt: moment().toDate()
+          }
+        }
+      },
+      {
+        $group: {
+          _id: {
+            $dateToString: {
+              format: "%Y-%m-%d",
+              date: "$createTime"
+            }
+          },
+          count: { $sum: 1 }
+        }
+      },
+      {
+        $sort: { _id: 1 }
+      }
+    ]).exec(),
+    Guestbook.aggregate([
+      {
+        $match: {
+          createTime: {
+            $gte: moment().subtract(30, "days").startOf("day").toDate(),
+            $lt: moment().toDate()
+          }
+        }
+      },
+      {
+        $group: {
+          _id: {
+            $dateToString: {
+              format: "%Y-%m-%d",
+              date: "$createTime"
+            }
+          },
+          count: { $sum: 1 }
+        }
+      },
+      {
+        $sort: { _id: 1 }
+      }
+    ]).exec(),
+  ]);
+  return {
+    comments: stats[0],
+    guestbook: stats[1]
+  }
 }
 
 export default {
@@ -423,5 +584,9 @@ export default {
   deleteComment,
   getGuestbook,
   deleteGuestbook,
-  saveSettings
+  saveSettings,
+  getGuestBookStats,
+  getCommentsStats,
+  getPostsStats,
+  getComentsAndGuestbookStats
 };

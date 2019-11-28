@@ -46,7 +46,7 @@ async function getPosts(params) {
           ) {
             const start = new Date(keyword[0]);
             const end = new Date(keyword[1]);
-            conditions.createTime = { $gt: start, $lt: end };
+            conditions.createTime = { $gte: start, $lt: end };
           }
           break;
         default:
