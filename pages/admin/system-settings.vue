@@ -71,7 +71,7 @@
           />
         </a-form-item>
         <a-form-item label="首页文章的每页条数" :colon="false">
-          <a-input-number v-decorator="['postPageSize']" :min="1" :max="999" />
+          <a-input-number v-decorator="['postPageSize', postPageSizeOpts]" :min="1" :max="999" />
         </a-form-item>
         <a-form-item :colon="false">
           <span slot="label">
@@ -110,7 +110,7 @@
           <a-input placeholder="请输入版权作者" v-decorator="['authName']" allowClear />
         </a-form-item>
         <a-form-item label="文章评论及留言的每页条数" :colon="false">
-          <a-input-number v-decorator="['commentPageSize']" :min="1" :max="999" />
+          <a-input-number v-decorator="['commentPageSize', commentPageSizeOpts]" :min="1" :max="999" />
         </a-form-item>
         <a-form-item :colon="false">
           <span slot="label">
@@ -129,14 +129,18 @@
         <a-form-item :colon="false">
           <span slot="label">
             开启百度统计
-            <a-icon type="question-circle-o" />
+            <a-tooltip title="启用后将在除后台管理外的其它页面注入百度统计代码" placement="topLeft" arrowPointAtCenter>
+              <a-icon type="question-circle-o" />
+            </a-tooltip>
           </span>
           <a-switch v-decorator="['enableStatistics', { valuePropName: 'checked' }]" />
         </a-form-item>
         <a-form-item :colon="false">
           <span slot="label">
-            百度翻译Key
-            <a-icon type="question-circle-o" />
+            百度统计Key
+            <a-tooltip title="请在百度统计官网 - 管理 - 代码获取页面查看所属站点的key" placement="topLeft" arrowPointAtCenter>
+              <a-icon type="question-circle-o" />
+            </a-tooltip>
           </span>
           <a-input placeholder="请输入百度统计Key" v-decorator="['statisticsKey']" allowClear />
         </a-form-item>
@@ -170,6 +174,22 @@ export default Vue.extend({
           {
             required: true,
             message: "博客名称不能为空！"
+          }
+        ]
+      },
+      postPageSizeOpts: {
+        rules: [
+          {
+            required: true,
+            message: "每页条数不能为空！"
+          }
+        ]
+      },
+      commentPageSizeOpts: {
+        rules: [
+          {
+            required: true,
+            message: "每页条数不能为空！"
           }
         ]
       }

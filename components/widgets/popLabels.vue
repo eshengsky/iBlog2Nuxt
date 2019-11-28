@@ -3,12 +3,13 @@
     <div class="widget-header">热门标签</div>
     <div class="widget-body">
       <a-spin :spinning="spinning" />
-      <nuxt-link
+      <span
         class="pop-label"
-        :to="`/search?tag=${encodeURI(item._id)}`"
+        @click="selectLabel(item._id)"
         v-for="(item, index) in list"
         :key="index"
-      >{{ item._id }}</nuxt-link>
+        >{{ item._id }}
+      </span>
     </div>
   </div>
 </template>
@@ -28,6 +29,12 @@ export default Vue.extend({
     const { code, data }: IResp = await this.$axios.$get("/api/popLabels");
     this.list = data.labels;
     this.spinning = false;
+  },
+  methods: {
+    selectLabel(label) {
+      window.scrollTo(0, 0);
+      this.$emit("selectLabel", label);
+    }
   }
 });
 </script>
@@ -45,6 +52,7 @@ export default Vue.extend({
   padding: 3px 14px;
   margin-right: 7px;
   margin-bottom: 10px;
+  cursor: pointer;
 }
 
 .pop-label:hover {

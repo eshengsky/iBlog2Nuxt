@@ -28,6 +28,56 @@ async function getPosts(params) {
     if (params.category) {
       conditions.category = params.category;
     }
+    const keyword = params.keyword;
+    if (keyword) {
+      switch (params.filterType) {
+        case "title":
+          conditions.title = { $regex: keyword, $options: "gi" };
+          break;
+        case "tag":
+          conditions.labels = { $regex: keyword, $options: "gi" };
+          break;
+        case "date":
+          if (
+            Array.isArray(keyword) &&
+            keyword.length === 2 &&
+            keyword[0] &&
+            keyword[1]
+          ) {
+            const start = new Date(keyword[0]);
+            const end = new Date(keyword[1]);
+            conditions.createTime = { $gt: start, $lt: end };
+          }
+          break;
+        default:
+          conditions.$or = [
+            {
+              title: {
+                $regex: keyword,
+                $options: "gi"
+              }
+            },
+            {
+              labels: {
+                $regex: keyword,
+                $options: "gi"
+              }
+            },
+            {
+              summary: {
+                $regex: keyword,
+                $options: "gi"
+              }
+            },
+            {
+              content: {
+                $regex: keyword,
+                $options: "gi"
+              }
+            }
+          ];
+      }
+    }
     const data = await Promise.all([
       Post.find(
         conditions,

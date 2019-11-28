@@ -1,3 +1,4 @@
+import moment from "moment";
 import DB from "../db";
 const { Category, Post, Comment, Guestbook, Setting } = DB.Models;
 import mongoose from "mongoose";
@@ -390,6 +391,20 @@ const saveSettings = async params => {
     settings
   };
 };
+
+const getGuestBookStats = async () => {
+  Promise.all([
+    Guestbook.countDocuments({
+      createTime: {
+        $gt: moment().subtract(1, "days").startOf("day").toDate(),
+        $lt: new Date()
+      }
+    }).exec(),
+    Guestbook.countDocuments({}).exec(),
+    Guestbook.countDocuments({}).exec()
+  ]);
+  
+}
 
 export default {
   getCategories,

@@ -13,21 +13,33 @@
         </div>
         <div class="navbar-collapse">
           <ul>
-            <li :class="{ 'blog-active': $route.path === '/' || $route.path.startsWith('/blog') }">
+            <li
+              :class="{
+                'blog-active':
+                  $route.path === '/' || $route.path.startsWith('/blog')
+              }"
+            >
               <nuxt-link to="/">
-                <font-awesome-icon :icon="['fas', 'pen-nib']"></font-awesome-icon>博客
+                <font-awesome-icon
+                  :icon="['fas', 'pen-nib']"
+                ></font-awesome-icon
+                >博客
               </nuxt-link>
               <div class="nav-line"></div>
             </li>
             <li :class="{ 'guestbook-active': $route.path === '/guestbook' }">
               <nuxt-link to="/guestbook">
-                <font-awesome-icon :icon="['fas', 'comment-dots']"></font-awesome-icon>留言
+                <font-awesome-icon
+                  :icon="['fas', 'comment-dots']"
+                ></font-awesome-icon
+                >留言
               </nuxt-link>
               <div class="nav-line"></div>
             </li>
             <li :class="{ 'profile-active': $route.path === '/profile' }">
               <nuxt-link to="/profile">
-                <font-awesome-icon :icon="['fas', 'user']"></font-awesome-icon>关于
+                <font-awesome-icon :icon="['fas', 'user']"></font-awesome-icon
+                >关于
               </nuxt-link>
               <div class="nav-line"></div>
             </li>
@@ -43,6 +55,7 @@
 import Vue from "vue";
 import zh_CN from "ant-design-vue/lib/locale-provider/zh_CN";
 import LayoutFooter from "@/components/LayoutFooter.vue";
+import { ISetting } from "@/server/models/setting";
 export default Vue.extend({
   components: {
     LayoutFooter
@@ -50,9 +63,19 @@ export default Vue.extend({
   data() {
     return {
       year: new Date().getFullYear(),
-      settings: this.$store.state.settings,
+      settings: this.$store.state.settings as ISetting,
       zh_CN
     };
+  },
+  mounted() {
+    if (this.settings.enableStatistics && this.settings.statisticsKey) {
+      const hm = document.createElement("script");
+      hm.src = `https://hm.baidu.com/hm.js?${this.settings.statisticsKey}`;
+      const script = document.getElementsByTagName("script")[0];
+      if (script && script.parentNode) {
+        script.parentNode.insertBefore(hm, script);
+      }
+    }
   }
 });
 </script>

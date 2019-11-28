@@ -1,7 +1,8 @@
 import { ActionTree, MutationTree } from "vuex";
+import { ISetting } from "@/server/models/setting";
 
 export const state = () => ({
-  settings: {}
+  settings: {} as ISetting
 });
 export type RootState = ReturnType<typeof state>;
 export const mutations: MutationTree<RootState> = {

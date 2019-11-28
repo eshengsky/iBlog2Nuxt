@@ -25,11 +25,11 @@
             <a-input
               v-if="filterType !== 'date'"
               v-model="inputTxt"
-              style="width: 200px"
+              style="width: 250px"
               :placeholder="searchPhd"
               allowClear
               ref="inputComp"
-              @on-enter="search"
+              @keyup.enter="search"
             />
             <a-range-picker
               v-if="filterType === 'date'"
@@ -37,7 +37,7 @@
               :disabledDate="disabledDate"
               :ranges="rangeDate"
               :defaultPickerValue="defaultRange"
-              style="width: 200px"
+              style="width: 250px"
               ref="dateComp"
             ></a-range-picker>
             <a-button @click="search">搜索</a-button>
@@ -86,7 +86,7 @@
       <blog-intro v-if="settings.showBlogIntro"></blog-intro>
       <article-calendar @selectCalendar="selectCalendar"></article-calendar>
       <pop-articles></pop-articles>
-      <pop-labels></pop-labels>
+      <pop-labels @selectLabel="selectLabel"></pop-labels>
     </div>
   </div>
 </template>
@@ -128,7 +128,7 @@ export default Vue.extend({
       count: 0,
       sortBy: "date",
       keyword: "" as Array<string> | string,
-      filterType: "text",
+      filterType: "text" as ("text" | "title" | "tag" | "date"),
       inputTxt: "",
       inputDateMoment: [] as Array<Moment>,
       page: 1,
@@ -255,6 +255,11 @@ export default Vue.extend({
     selectCalendar(inputDateMoment: [Moment, Moment]) {
       this.filterType = "date";
       this.inputDateMoment = inputDateMoment;
+      this.search();
+    },
+    selectLabel(tag) {
+      this.filterType = "tag";
+      this.inputTxt = tag;
       this.search();
     }
   }

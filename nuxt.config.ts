@@ -50,6 +50,7 @@ const config: Configuration = {
     "@/plugins/axios",
     "@/plugins/ant-design",
     "@/plugins/font-awesome",
+    { src: "@/plugins/baidu-stats", mode: "client" },
     { src: "@/plugins/tui-editor", mode: "client" }
   ],
   buildModules: ["@nuxt/typescript-build"],
