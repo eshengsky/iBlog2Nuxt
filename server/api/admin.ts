@@ -371,6 +371,24 @@ app.get('/postsStats', async (req, res) => {
   res.json(resp);
 });
 
+app.get('/categoriesStats', async (req, res) => {
+  let resp: IResp;
+  try {
+    const stats = await proxy.getCategoriesStats();
+    resp = {
+      code: 1,
+      data: stats
+    };
+  } catch (err) {
+    console.error(err);
+    resp = {
+      code: -1,
+      message: err.message
+    };
+  }
+  res.json(resp);
+});
+
 app.get('/commentsAndGuestbookStats', async (req, res) => {
   let resp: IResp;
   try {
@@ -384,9 +402,10 @@ app.get('/commentsAndGuestbookStats', async (req, res) => {
       guestbookStats[item._id] = item.count;
     });
 
+    const days = 7;
     const baseCommentsStats = {};
     const baseGuestbookStats = {};
-    for (let i = 0; i <= 30; i++) {
+    for (let i = days; i >= 0; i--) {
       const date = moment().subtract(i, "days").format('YYYY-MM-DD');
       baseCommentsStats[date] = 0;
       baseGuestbookStats[date] = 0;

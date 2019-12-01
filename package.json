@@ -33,6 +33,7 @@
     "body-parser": "^1.19.0",
     "cookie-parser": "^1.4.4",
     "cross-env": "^5.2.1",
+    "echarts": "^4.5.0",
     "express": "^4.16.4",
     "express-jwt": "^5.3.1",
     "express-session": "^1.17.0",
@@ -45,7 +46,8 @@
     "mongoose": "^5.7.11",
     "nuxt": "^2.10.2",
     "passport": "^0.4.0",
-    "passport-github2": "^0.1.11"
+    "passport-github2": "^0.1.11",
+    "v-charts": "^1.19.0"
   },
   "devDependencies": {
     "@nuxt/typescript-build": "^0.3.4",

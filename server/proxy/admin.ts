@@ -392,6 +392,10 @@ const saveSettings = async params => {
   };
 };
 
+const subtractDate = days => {
+  return moment().subtract(days, "days").startOf("day").toDate();
+}
+
 const getGuestBookStats = async () => {
   const stats = await Promise.all([
     // 今天
@@ -405,25 +409,36 @@ const getGuestBookStats = async () => {
     // 昨天
     Guestbook.countDocuments({
       createTime: {
-        $gte: moment().subtract(1, "days").startOf("day").toDate(),
+        $gte: subtractDate(1),
         $lt: moment().subtract(1, "days").endOf("day").toDate()
       }
     }).exec(),
 
-    // 最近一周
+    // 最近7天
     Guestbook.countDocuments({
       createTime: {
-        $gte: moment().subtract(7, "days").startOf("day").toDate(),
+        $gte: subtractDate(7),
         $lt: moment().toDate()
       }
-    }).exec()
+    }).exec(),
+
+    // 最近30天
+    Guestbook.countDocuments({
+      createTime: {
+        $gte: subtractDate(30),
+        $lt: moment().toDate()
+      }
+    }).exec(),
+
+    // 全部
+    Guestbook.estimatedDocumentCount().exec()
   ]);
   return {
-    stats: {
-      today: stats[0],
-      yesterday: stats[1],
-      oneweek: stats[2]
-    }
+    today: stats[0],
+    yesterday: stats[1],
+    oneweek: stats[2],
+    onemonth: stats[3],
+    total: stats[4]
   }
 }
 
@@ -440,25 +455,36 @@ const getCommentsStats = async () => {
     // 昨天
     Comment.countDocuments({
       createTime: {
-        $gte: moment().subtract(1, "days").startOf("day").toDate(),
+        $gte: subtractDate(1),
         $lt: moment().subtract(1, "days").endOf("day").toDate()
       }
     }).exec(),
 
-    // 最近一周
+    // 最近7天
     Comment.countDocuments({
       createTime: {
-        $gte: moment().subtract(7, "days").startOf("day").toDate(),
+        $gte: subtractDate(7),
         $lt: moment().toDate()
       }
-    }).exec()
+    }).exec(),
+
+    // 最近30天
+    Comment.countDocuments({
+      createTime: {
+        $gte: subtractDate(30),
+        $lt: moment().toDate()
+      }
+    }).exec(),
+
+    // 全部
+    Comment.estimatedDocumentCount().exec()
   ]);
   return {
-    stats: {
-      today: stats[0],
-      yesterday: stats[1],
-      oneweek: stats[2]
-    }
+    today: stats[0],
+    yesterday: stats[1],
+    oneweek: stats[2],
+    onemonth: stats[3],
+    total: stats[4]
   }
 }
 
@@ -470,22 +496,22 @@ const getPostsStats = async () => {
       isActive: true
     }).exec(),
 
-    // 本周发布
+    // 7天内发布
     Post.countDocuments({
       isDraft: false,
       isActive: true,
       createTime: {
-        $gte: moment().subtract(7, "days").startOf("day").toDate(),
+        $gte: subtractDate(7),
         $lt: moment().toDate()
       }
     }).exec(),
 
-    // 本月发布
+    // 30天内发布
     Post.countDocuments({
       isDraft: false,
       isActive: true,
       createTime: {
-        $gte: moment().subtract(30, "days").startOf("day").toDate(),
+        $gte: subtractDate(30),
         $lt: moment().toDate()
       }
     }).exec(),
@@ -500,23 +526,47 @@ const getPostsStats = async () => {
     Category.estimatedDocumentCount().exec()
   ]);
   return {
-    stats: {
-      draft: stats[0],
-      oneweek: stats[1],
-      onemonth: stats[2],
-      totalPosts: stats[3],
-      totalCategories: stats[4]
-    }
+    draft: stats[0],
+    oneweek: stats[1],
+    onemonth: stats[2],
+    totalPosts: stats[3],
+    totalCategories: stats[4]
   }
 }
 
+const getCategoriesStats = async () => {
+  const stats = await Category.aggregate([
+    {
+      $lookup: {
+        from: "post",
+        localField: "_id",
+        foreignField: "category",
+        as: "posts"
+      }
+    },
+    {
+      $project: {
+        cateName: 1,
+        postsCount: {
+          $size: "$posts"
+        }
+      }
+    },
+    {
+      $sort: { postsCount: -1, cateName: 1 }
+    }
+  ]);
+  return stats;
+}
+
 const getComentsAndGuestbookStats = async () => {
+  const days = 7;
   const stats: [any[] | undefined, any[] | undefined] = await Promise.all([
     Comment.aggregate([
       {
         $match: {
           createTime: {
-            $gte: moment().subtract(30, "days").startOf("day").toDate(),
+            $gte: subtractDate(days),
             $lt: moment().toDate()
           }
         }
@@ -540,7 +590,7 @@ const getComentsAndGuestbookStats = async () => {
       {
         $match: {
           createTime: {
-            $gte: moment().subtract(30, "days").startOf("day").toDate(),
+            $gte: subtractDate(days),
             $lt: moment().toDate()
           }
         }
@@ -588,5 +638,6 @@ export default {
   getGuestBookStats,
   getCommentsStats,
   getPostsStats,
-  getComentsAndGuestbookStats
+  getComentsAndGuestbookStats,
+  getCategoriesStats
 };

@@ -3,11 +3,11 @@
     <div class="page-header">文章管理</div>
     <div class="page-body">
       <div class="filter-wrap">
-        <a-form v-model="filters">
+        <a-form :form="form">
           <a-row>
             <a-col :xs="24" :sm="24" :md="10">
               <a-form-item label="分类" :colon="false">
-                <a-select v-model="filters.category" allowClear>
+                <a-select v-decorator="['category']" allowClear>
                   <a-select-option
                     v-for="(item, index) in categories"
                     :value="item._id"
@@ -235,6 +235,7 @@ export default Vue.extend({
   layout: "admin",
   data() {
     return {
+      form: this.$form.createForm(this),
       filters: {
         category: "",
         title: "",
@@ -583,11 +584,6 @@ export default Vue.extend({
 });
 </script>
 <style>
-.filter-wrap {
-  max-width: 800px;
-  margin: 10px auto 20px;
-}
-
 .page-wrap {
   display: flex;
   justify-content: flex-end;

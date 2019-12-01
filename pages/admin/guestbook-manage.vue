@@ -298,11 +298,6 @@ export default Vue.extend({
 </script>
 
 <style>
-.filter-wrap {
-  max-width: 800px;
-  margin: 10px auto 20px;
-}
-
 .action-td .ant-btn {
   width: 32px;
   padding: 0;

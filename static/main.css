@@ -181,3 +181,7 @@ table th {
   margin-left: -15px;
   pointer-events: none;
 }
+
+.ant-calendar-picker {
+  width: 100%;
+}

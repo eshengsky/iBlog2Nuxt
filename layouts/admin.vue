@@ -9,7 +9,7 @@
         class="layout-sider"
       >
         <div class="logo" />
-        <a-menu theme="dark" mode="inline" :defaultSelectedKeys="[currentKey]">
+        <a-menu theme="dark" mode="inline" :selectedKeys="[currentKey]">
           <a-menu-item key="index" title="数据统计">
             <nuxt-link to="/admin">
               <a-icon type="video-camera" />
@@ -53,26 +53,23 @@
           <a-icon
             class="trigger"
             :type="collapsed ? 'menu-unfold' : 'menu-fold'"
-            @click="() => (collapsed = !collapsed)"
+            @click="toggleCollapsed"
           />
           <div class="auth-actions">
             <a-dropdown placement="bottomRight">
-              <span>Admin <a-icon type="down"/></span>
+              <span>
+                Admin
+                <a-icon type="down" />
+              </span>
               <a-menu slot="overlay">
                 <a-menu-item>
                   <a href="/auth/change-password">
-                    <font-awesome-icon
-                      :icon="['fas', 'key']"
-                    ></font-awesome-icon>
-                    修改密码
+                    <font-awesome-icon :icon="['fas', 'key']"></font-awesome-icon>修改密码
                   </a>
                 </a-menu-item>
                 <a-menu-item>
                   <a @click="logout" title="退出登录">
-                    <font-awesome-icon
-                      :icon="['fas', 'sign-out-alt']"
-                    ></font-awesome-icon>
-                    退出登录
+                    <font-awesome-icon :icon="['fas', 'sign-out-alt']"></font-awesome-icon>退出登录
                   </a>
                 </a-menu-item>
               </a-menu>
@@ -91,6 +88,7 @@
 import Vue from "vue";
 import zh_CN from "ant-design-vue/lib/locale-provider/zh_CN";
 import LayoutFooter from "@/components/LayoutFooter.vue";
+import { CombinedVueInstance, VueConstructor } from "vue/types/vue";
 export default Vue.extend({
   middleware: "auth",
   components: {
@@ -100,15 +98,31 @@ export default Vue.extend({
     return {
       collapsed: false,
       year: new Date().getFullYear(),
-      zh_CN
+      zh_CN,
+      currentKey: ""
     };
   },
   computed: {
     marginLeft(): string {
       return this.collapsed ? "80px" : "200px";
+    }
+  },
+  created() {
+    this.currentKey = this.getCurrentKey(this.$route.path);
+    this.$router.afterEach((to, from) => {
+      this.currentKey = this.getCurrentKey(to.path);
+    });
+  },
+  methods: {
+    toggleCollapsed() {
+      this.collapsed = !this.collapsed;
+      (this as any).$bus.$emit("changeLayout");
     },
-    currentKey(): string {
-      let path = this.$route.path.replace("/admin", "");
+    logout(this: any) {
+      this.$auth.logout("local");
+    },
+    getCurrentKey(originalPath) {
+      let path = originalPath.replace("/admin", "");
       if (path.substring(0, 1) === "/") {
         path = path.substring(1);
       }
@@ -122,11 +136,6 @@ export default Vue.extend({
         return "article-manage";
       }
       return path;
-    }
-  },
-  methods: {
-    logout(this: any) {
-      this.$auth.logout("local");
     }
   }
 });
@@ -179,6 +188,7 @@ export default Vue.extend({
   padding: 25px;
   background: rgb(255, 255, 255);
   min-height: 80vh;
+  border-radius: 5px;
 }
 
 .auth-actions {
@@ -193,5 +203,9 @@ export default Vue.extend({
 
 .auth-actions a {
   color: #777;
+}
+
+.filter-wrap {
+  margin: 10px 0 20px;
 }
 </style>

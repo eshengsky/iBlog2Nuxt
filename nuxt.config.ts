@@ -50,6 +50,7 @@ const config: Configuration = {
     "@/plugins/axios",
     "@/plugins/ant-design",
     "@/plugins/font-awesome",
+    "@/plugins/event-bus",
     { src: "@/plugins/baidu-stats", mode: "client" },
     { src: "@/plugins/tui-editor", mode: "client" }
   ],

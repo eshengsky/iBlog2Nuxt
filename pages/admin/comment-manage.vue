@@ -3,33 +3,31 @@
     <div class="page-header">评论管理</div>
     <div class="page-body">
       <div class="filter-wrap">
-        <a-form>
+        <a-form :form="form">
           <a-row>
-            <a-col :xs="24" :sm="24" :md="10">
+            <a-col :sm="24" :md="11" :xxl="5">
               <a-form-item label="评论内容" :colon="false">
-                <a-input placeholder="内容关键字" v-model="content" allowClear />
+                <a-input placeholder="内容关键字" v-decorator="['content']" allowClear />
               </a-form-item>
             </a-col>
-            <a-col :xs="24" :sm="24" :md="{ span: 10, offset: 2 }">
+            <a-col :sm="24" :md="{ span: 11, offset: 2 }" :xxl="{ span: 5, offset: 1 }">
               <a-form-item label="评论用户" :colon="false">
-                <a-input placeholder="用户名关键字" v-model="username" allowClear />
+                <a-input placeholder="用户名关键字" v-decorator="['username']" allowClear />
               </a-form-item>
             </a-col>
-          </a-row>
-          <a-row>
-            <a-col :xs="24" :sm="24" :md="10">
+            <a-col :sm="24" :md="11" :xxl="{ span: 6, offset: 1 }">
               <a-form-item label="评论时间" :colon="false">
                 <a-range-picker
-                  v-model="createTimeMoment"
+                  v-decorator="['createTime']"
                   :disabledDate="disabledDate"
                   :ranges="rangeDate"
                   :defaultPickerValue="defaultRange"
                 ></a-range-picker>
               </a-form-item>
             </a-col>
-            <a-col :xs="24" :sm="24" :md="{ span: 10, offset: 2 }">
+            <a-col :sm="24" :md="{ span: 11, offset: 2 }" :xxl="{ span: 5, offset: 1 }">
               <a-form-item label="所在文章" :colon="false">
-                <a-input placeholder="标题关键字" v-model="title" allowClear />
+                <a-input placeholder="标题关键字" v-decorator="['title']" allowClear />
               </a-form-item>
             </a-col>
           </a-row>
@@ -109,10 +107,7 @@ export default Vue.extend({
   layout: "admin",
   data() {
     return {
-      title: "",
-      content: "",
-      username: "",
-      createTimeMoment: [],
+      form: this.$form.createForm(this),
       pagination: {
         current: 1,
         pageSize: 10,
@@ -174,11 +169,29 @@ export default Vue.extend({
     };
   },
 
-  created() {
+  mounted() {
+    const createTimeArr = this.$route.query.createTime as [string, string];
+    let initialValue: Array<Moment> = [];
+    if (createTimeArr) {
+      initialValue = [moment(createTimeArr[0]), moment(createTimeArr[1])];
+    }
+    this.form.setFieldsValue({
+      createTime: initialValue
+    });
     this.getComments();
   },
 
   computed: {
+    // createTimeOpts(): object {
+    //   const createTimeArr = this.$route.query.createTime as [string, string];
+    //   let initialValue: Array<Moment> = [];
+    //   if (createTimeArr) {
+    //     initialValue = [moment(createTimeArr[0]), moment(createTimeArr[1])];
+    //   }
+    //   return {
+    //     initialValue
+    //   };
+    // },
     rowSelection(): object {
       return {
         selectedRowKeys: this.selectedRowKeys,
@@ -220,6 +233,7 @@ export default Vue.extend({
     },
 
     async getComments() {
+      console.log(111, this.form.getFieldsValue());
       this.selectedRowKeys = [];
       this.isLoading = true;
       const { code, data }: IResp = await this.$axios.$get(
@@ -229,11 +243,7 @@ export default Vue.extend({
             pageIndex: this.pagination.current,
             pageSize: this.pagination.pageSize,
             sortBy: this.sortBy,
-            order: this.order,
-            title: this.title,
-            content: this.content,
-            username: this.username,
-            createTime: this.createTime
+            order: this.order
           }
         }
       );
@@ -321,11 +331,6 @@ export default Vue.extend({
 </script>
 
 <style>
-.filter-wrap {
-  max-width: 800px;
-  margin: 10px auto 20px;
-}
-
 .action-td .ant-btn {
   width: 32px;
   padding: 0;
