@@ -14,15 +14,8 @@
                     <span>篇</span>
                   </div>
                   <div class="btn-new">
-                    <nuxt-link
-                      class="ant-btn ant-btn-dashed"
-                      to="/admin/article-edit"
-                    >
-                      <font-awesome-icon
-                        :icon="['fas', 'plus']"
-                        style="margin-right: 4px;"
-                      ></font-awesome-icon
-                      >新的文章
+                    <nuxt-link class="ant-btn ant-btn-dashed" to="/admin/article-edit">
+                      <font-awesome-icon :icon="['fas', 'plus']" style="margin-right: 4px;"></font-awesome-icon>新的文章
                     </nuxt-link>
                   </div>
                 </div>
@@ -31,30 +24,38 @@
                 <div class="right-stats">
                   <div>
                     7天内发布
-                    <a @click="clickStats('posts7')">{{
+                    <a @click="clickStats('posts7')">
+                      {{
                       postsStats.oneweek
-                    }}</a>
+                      }}
+                    </a>
                     <span>篇</span>
                   </div>
                   <div>
                     30天内发布
-                    <a @click="clickStats('posts30')">{{
+                    <a @click="clickStats('posts30')">
+                      {{
                       postsStats.onemonth
-                    }}</a>
+                      }}
+                    </a>
                     <span>篇</span>
                   </div>
                   <div>
                     总计发布
-                    <a @click="clickStats('postsAll')">{{
+                    <a @click="clickStats('postsAll')">
+                      {{
                       postsStats.totalPosts
-                    }}</a>
+                      }}
+                    </a>
                     <span>篇</span>
                   </div>
                   <div>
                     全部分类
-                    <nuxt-link to="/admin/category-manage">{{
+                    <nuxt-link to="/admin/category-manage">
+                      {{
                       postsStats.totalCategories
-                    }}</nuxt-link>
+                      }}
+                    </nuxt-link>
                     <span>个</span>
                   </div>
                 </div>
@@ -69,9 +70,11 @@
                 <div class="left-stats">
                   <h3>今日评论</h3>
                   <div class="primary-div">
-                    <a @click="clickStats('commentsToday')">{{
+                    <a @click="clickStats('commentsToday')">
+                      {{
                       commentsStats.today
-                    }}</a>
+                      }}
+                    </a>
                     <span>条</span>
                   </div>
                 </div>
@@ -80,30 +83,38 @@
                 <div class="right-stats">
                   <div>
                     昨日评论
-                    <a @click="clickStats('commentsYesterday')">{{
+                    <a @click="clickStats('commentsYesterday')">
+                      {{
                       commentsStats.yesterday
-                    }}</a>
+                      }}
+                    </a>
                     <span>条</span>
                   </div>
                   <div>
                     7天内评论
-                    <a @click="clickStats('comments7')">{{
+                    <a @click="clickStats('comments7')">
+                      {{
                       commentsStats.oneweek
-                    }}</a>
+                      }}
+                    </a>
                     <span>条</span>
                   </div>
                   <div>
                     30天内评论
-                    <a @click="clickStats('comments30')">{{
+                    <a @click="clickStats('comments30')">
+                      {{
                       commentsStats.onemonth
-                    }}</a>
+                      }}
+                    </a>
                     <span>条</span>
                   </div>
                   <div>
                     全部评论
-                    <nuxt-link to="/admin/comment-manage">{{
+                    <nuxt-link to="/admin/comment-manage">
+                      {{
                       commentsStats.total
-                    }}</nuxt-link>
+                      }}
+                    </nuxt-link>
                     <span>条</span>
                   </div>
                 </div>
@@ -118,9 +129,11 @@
                 <div class="left-stats">
                   <h3>今日留言</h3>
                   <div class="primary-div">
-                    <a @click="clickStats('guestbookToday')">{{
+                    <a @click="clickStats('guestbookToday')">
+                      {{
                       guestbookStats.today
-                    }}</a>
+                      }}
+                    </a>
                     <span>条</span>
                   </div>
                 </div>
@@ -129,30 +142,38 @@
                 <div class="right-stats">
                   <div>
                     昨日留言
-                    <a @click="clickStats('guestbookYesterday')">{{
+                    <a @click="clickStats('guestbookYesterday')">
+                      {{
                       guestbookStats.yesterday
-                    }}</a>
+                      }}
+                    </a>
                     <span>条</span>
                   </div>
                   <div>
                     7天内留言
-                    <a @click="clickStats('guestbook7')">{{
+                    <a @click="clickStats('guestbook7')">
+                      {{
                       guestbookStats.oneweek
-                    }}</a>
+                      }}
+                    </a>
                     <span>条</span>
                   </div>
                   <div>
                     30天内留言
-                    <a @click="clickStats('guestbook30')">{{
+                    <a @click="clickStats('guestbook30')">
+                      {{
                       guestbookStats.onemonth
-                    }}</a>
+                      }}
+                    </a>
                     <span>条</span>
                   </div>
                   <div>
                     全部留言
-                    <nuxt-link to="/admin/guestbook-manage">{{
+                    <nuxt-link to="/admin/guestbook-manage">
+                      {{
                       guestbookStats.total
-                    }}</nuxt-link>
+                      }}
+                    </nuxt-link>
                     <span>条</span>
                   </div>
                 </div>
@@ -164,11 +185,7 @@
       <a-row>
         <a-col :md="24" :lg="12" :xl="8">
           <div class="stats-panel">
-            <ve-pie
-              :data="categoryChartData"
-              :events="{ click: clickCategory }"
-              ref="chart1"
-            ></ve-pie>
+            <ve-pie :data="categoryChartData" :events="{ click: clickCategory }" ref="chart1"></ve-pie>
             <div class="stats-name">文章分类数据统计</div>
           </div>
         </a-col>
@@ -191,11 +208,7 @@
           href="https://tongji.baidu.com/web/homepage/index"
           target="_blank"
         >
-          <font-awesome-icon
-            :icon="['fas', 'external-link-alt']"
-            style="margin-right: 4px;"
-          ></font-awesome-icon
-          >前往百度统计官网查看访问数据
+          <font-awesome-icon :icon="['fas', 'external-link-alt']" style="margin-right: 4px;"></font-awesome-icon>前往百度统计官网查看访问数据
         </a-button>
       </div>
     </div>
@@ -460,5 +473,10 @@ export default Vue.extend({
 
 .baidu-stats {
   text-align: center;
+  margin-top: 15px;
+}
+
+.baidu-stats a {
+  font-size: 15px;
 }
 </style>

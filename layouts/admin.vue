@@ -12,37 +12,37 @@
         <a-menu theme="dark" mode="inline" :selectedKeys="[currentKey]">
           <a-menu-item key="index" title="数据统计">
             <nuxt-link to="/admin">
-              <a-icon type="video-camera" />
+              <font-awesome-icon :icon="['fas', 'chart-line']" fixed-width></font-awesome-icon>
               <span>数据统计</span>
             </nuxt-link>
           </a-menu-item>
           <a-menu-item key="article-manage" title="文章管理">
             <nuxt-link to="/admin/article-manage">
-              <a-icon type="video-camera" />
+              <font-awesome-icon :icon="['fas', 'pen-nib']" fixed-width></font-awesome-icon>
               <span>文章管理</span>
             </nuxt-link>
           </a-menu-item>
           <a-menu-item key="category-manage" title="分类管理">
             <nuxt-link to="/admin/category-manage">
-              <a-icon type="user" />
+              <font-awesome-icon :icon="['fas', 'map-signs']" fixed-width></font-awesome-icon>
               <span>分类管理</span>
             </nuxt-link>
           </a-menu-item>
           <a-menu-item key="comment-manage" title="评论管理">
             <nuxt-link to="/admin/comment-manage">
-              <a-icon type="user" />
+              <font-awesome-icon :icon="['fas', 'comments']" fixed-width></font-awesome-icon>
               <span>评论管理</span>
             </nuxt-link>
           </a-menu-item>
           <a-menu-item key="guestbook-manage" title="留言管理">
             <nuxt-link to="/admin/guestbook-manage">
-              <a-icon type="user" />
+              <font-awesome-icon :icon="['fas', 'comment-dots']" fixed-width></font-awesome-icon>
               <span>留言管理</span>
             </nuxt-link>
           </a-menu-item>
           <a-menu-item key="system-settings" title="系统设置">
             <nuxt-link to="/admin/system-settings">
-              <a-icon type="user" />
+              <font-awesome-icon :icon="['fas', 'cogs']" fixed-width></font-awesome-icon>
               <span>系统设置</span>
             </nuxt-link>
           </a-menu-item>
@@ -64,18 +64,12 @@
               <a-menu slot="overlay">
                 <a-menu-item>
                   <a href="/auth/change-password">
-                    <font-awesome-icon
-                      :icon="['fas', 'key']"
-                    ></font-awesome-icon
-                    >修改密码
+                    <font-awesome-icon :icon="['fas', 'key']" style="margin-right: 5px;"></font-awesome-icon>修改密码
                   </a>
                 </a-menu-item>
                 <a-menu-item>
                   <a @click="logout" title="退出登录">
-                    <font-awesome-icon
-                      :icon="['fas', 'sign-out-alt']"
-                    ></font-awesome-icon
-                    >退出登录
+                    <font-awesome-icon :icon="['fas', 'sign-out-alt']" style="margin-right: 5px;"></font-awesome-icon>退出登录
                   </a>
                 </a-menu-item>
               </a-menu>
@@ -219,5 +213,9 @@ export default Vue.extend({
   border: 1px solid #eee;
   border-radius: 5px;
   padding: 20px;
+}
+
+.ant-menu-item svg {
+  margin-right: 8px;
 }
 </style>

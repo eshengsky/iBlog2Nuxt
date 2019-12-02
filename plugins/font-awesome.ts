@@ -9,7 +9,6 @@ import {
     faSave,
     faQuestionCircle,
     faEye,
-    faComments,
     faUser as farUser,
     faEnvelope
 } from '@fortawesome/free-regular-svg-icons';
@@ -19,6 +18,7 @@ import {
     faReply,
     faPenNib,
     faCommentDots,
+    faComments,
     faUser,
     faPencilAlt,
     faPlus,
@@ -29,7 +29,9 @@ import {
     faTrashAlt as fasTrashAlt,
     faLink,
     faSignOutAlt,
-    faKey
+    faKey,
+    faChartLine,
+    faCogs
 } from '@fortawesome/free-solid-svg-icons';
 import {
     faMarkdown
@@ -62,7 +64,9 @@ library.add(
     faEnvelope,
     faLink,
     faSignOutAlt,
-    faKey
+    faKey,
+    faChartLine,
+    faCogs
 );
 Vue.component('font-awesome-icon', FontAwesomeIcon);
 

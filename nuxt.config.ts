@@ -39,8 +39,8 @@ const config: Configuration = {
    ** Global CSS
    */
   css: [
+    "ant-design-vue/dist/antd.less",
     "@fortawesome/fontawesome-svg-core/styles.css",
-    "ant-design-vue/dist/antd.css",
     "~/static/main.css"
   ],
   /*
@@ -92,7 +92,16 @@ const config: Configuration = {
     /*
      ** You can extend webpack config here
      */
-    extend(config, ctx) {}
+    extend(config, ctx) {},
+    loaders: {
+      less: {
+        modifyVars: {
+          'primary-color': '#56c0d8',
+          'link-color': 'blue'
+        },
+        javascriptEnabled: true
+      }
+    }
   },
   watch: ["~/server"]
 };
