@@ -3,39 +3,64 @@
     <div class="page-header">评论管理</div>
     <div class="page-body">
       <div class="filter-wrap">
-        <a-form :form="form">
+        <a-form :form="form" :selfUpdate="true">
           <a-row>
             <a-col :sm="24" :md="11" :xxl="5">
               <a-form-item label="评论内容" :colon="false">
-                <a-input placeholder="内容关键字" v-decorator="['content']" allowClear />
+                <a-input
+                  placeholder="内容关键字"
+                  v-decorator="['content']"
+                  allowClear
+                />
               </a-form-item>
             </a-col>
-            <a-col :sm="24" :md="{ span: 11, offset: 2 }" :xxl="{ span: 5, offset: 1 }">
+            <a-col
+              :sm="24"
+              :md="{ span: 11, offset: 2 }"
+              :xxl="{ span: 5, offset: 1 }"
+            >
               <a-form-item label="评论用户" :colon="false">
-                <a-input placeholder="用户名关键字" v-decorator="['username']" allowClear />
+                <a-input
+                  placeholder="用户名关键字"
+                  v-decorator="['username']"
+                  allowClear
+                />
               </a-form-item>
             </a-col>
             <a-col :sm="24" :md="11" :xxl="{ span: 6, offset: 1 }">
               <a-form-item label="评论时间" :colon="false">
                 <a-range-picker
-                  v-decorator="['createTime']"
+                  v-decorator="['createTime', createTimeOpts]"
                   :disabledDate="disabledDate"
                   :ranges="rangeDate"
                   :defaultPickerValue="defaultRange"
                 ></a-range-picker>
               </a-form-item>
             </a-col>
-            <a-col :sm="24" :md="{ span: 11, offset: 2 }" :xxl="{ span: 5, offset: 1 }">
+            <a-col
+              :sm="24"
+              :md="{ span: 11, offset: 2 }"
+              :xxl="{ span: 5, offset: 1 }"
+            >
               <a-form-item label="所在文章" :colon="false">
-                <a-input placeholder="标题关键字" v-decorator="['title']" allowClear />
+                <a-input
+                  placeholder="标题关键字"
+                  v-decorator="['title']"
+                  allowClear
+                />
               </a-form-item>
             </a-col>
           </a-row>
           <a-row type="flex" justify="center">
             <a-col>
               <a-button type="primary" @click="search">
-                <font-awesome-icon :icon="['fas', 'search']" style="margin-right: 4px;"></font-awesome-icon>搜索
+                <font-awesome-icon
+                  :icon="['fas', 'search']"
+                  style="margin-right: 4px;"
+                ></font-awesome-icon
+                >搜索
               </a-button>
+              <a-button @click="reset">重置</a-button>
             </a-col>
           </a-row>
         </a-form>
@@ -70,7 +95,8 @@
               :href="`/blog/${post.category.alias}/${post.alias}`"
               target="_blank"
               :title="post.title"
-            >{{ post.title }}</a>
+              >{{ post.title }}</a
+            >
           </template>
           <template slot="person" slot-scope="text, row">
             <a
@@ -79,16 +105,19 @@
               :href="row.website"
               :title="row.website"
               target="_blank"
-            >{{ row.username }}</a>
+              >{{ row.username }}</a
+            >
             <span v-else>{{ row.username }}</span>
           </template>
           <template slot="createTime" slot-scope="text, row">
-            <span>{{ momentTime(row.createTime) }}</span>
+            <span>{{ row.createTime | toDate }}</span>
           </template>
           <template slot="action" slot-scope="text, row">
             <div class="action-td">
               <a-button @click="del(row._id)" title="删除">
-                <font-awesome-icon :icon="['far', 'trash-alt']"></font-awesome-icon>
+                <font-awesome-icon
+                  :icon="['far', 'trash-alt']"
+                ></font-awesome-icon>
               </a-button>
             </div>
           </template>
@@ -102,6 +131,7 @@
 import Vue from "vue";
 import moment, { Moment } from "moment";
 import { IResp } from "@/server/types";
+import { FieldDecoratorOptions } from "ant-design-vue/types/form/form";
 export default Vue.extend({
   name: "PageCommentManage",
   layout: "admin",
@@ -169,29 +199,24 @@ export default Vue.extend({
     };
   },
 
-  mounted() {
-    const createTimeArr = this.$route.query.createTime as [string, string];
-    let initialValue: Array<Moment> = [];
-    if (createTimeArr) {
-      initialValue = [moment(createTimeArr[0]), moment(createTimeArr[1])];
-    }
-    this.form.setFieldsValue({
-      createTime: initialValue
+  created() {
+    this.isLoading = true;
+    this.$nextTick(() => {
+      this.getComments();
     });
-    this.getComments();
   },
 
   computed: {
-    // createTimeOpts(): object {
-    //   const createTimeArr = this.$route.query.createTime as [string, string];
-    //   let initialValue: Array<Moment> = [];
-    //   if (createTimeArr) {
-    //     initialValue = [moment(createTimeArr[0]), moment(createTimeArr[1])];
-    //   }
-    //   return {
-    //     initialValue
-    //   };
-    // },
+    createTimeOpts(): FieldDecoratorOptions {
+      let initialValue: Array<Moment> = [];
+      const createTimeParam = this.$route.query.createTime as [string, string];
+      if (createTimeParam) {
+        initialValue = [moment(createTimeParam[0]), moment(createTimeParam[1])];
+      }
+      return {
+        initialValue
+      };
+    },
     rowSelection(): object {
       return {
         selectedRowKeys: this.selectedRowKeys,
@@ -207,16 +232,6 @@ export default Vue.extend({
     },
     delDisabled(): boolean {
       return this.selectedRowKeys.length === 0;
-    },
-    createTime(): Array<string> {
-      const range: Array<Moment> = this.createTimeMoment;
-      if (!range.length) {
-        return [];
-      }
-      return [
-        range[0].startOf("day").toString(),
-        range[1].endOf("day").toString()
-      ];
     }
   },
 
@@ -224,16 +239,21 @@ export default Vue.extend({
     disabledDate(date) {
       return date && date > moment().endOf("day");
     },
-    momentTime(str) {
-      return moment(str).format("YYYY-MM-DD HH:mm:ss");
-    },
     search() {
       this.pagination.current = 1;
       this.getComments();
     },
 
     async getComments() {
-      console.log(111, this.form.getFieldsValue());
+      const values = this.form.getFieldsValue();
+      const createTimeMomentArr = values.createTime;
+      let createTime: string[] | undefined = undefined;
+      if (createTimeMomentArr && createTimeMomentArr.length === 2) {
+        createTime = [
+          createTimeMomentArr[0].startOf("day").toString(),
+          createTimeMomentArr[1].endOf("day").toString()
+        ];
+      }
       this.selectedRowKeys = [];
       this.isLoading = true;
       const { code, data }: IResp = await this.$axios.$get(
@@ -243,7 +263,9 @@ export default Vue.extend({
             pageIndex: this.pagination.current,
             pageSize: this.pagination.pageSize,
             sortBy: this.sortBy,
-            order: this.order
+            order: this.order,
+            ...values,
+            createTime
           }
         }
       );
@@ -254,6 +276,16 @@ export default Vue.extend({
         this.$message.error("请求失败！");
       }
       this.isLoading = false;
+    },
+
+    reset() {
+      this.form.setFieldsValue({
+        content: "",
+        username: "",
+        createTime: [],
+        title: ""
+      });
+      this.search();
     },
 
     onTableChange(pagination, filters, sorter) {
@@ -365,12 +397,5 @@ export default Vue.extend({
   border-radius: 3px;
   margin: -6px;
   background: #fff;
-}
-
-.avatar {
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  margin-right: 4px;
 }
 </style>

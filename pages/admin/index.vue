@@ -10,12 +10,19 @@
                 <div class="left-stats">
                   <h3>创作中文章</h3>
                   <div class="primary-div">
-                    <nuxt-link to="/">{{ postsStats.draft }}</nuxt-link>
+                    <a @click="clickStats('draft')">{{ postsStats.draft }}</a>
                     <span>篇</span>
                   </div>
                   <div class="btn-new">
-                    <nuxt-link class="ant-btn ant-btn-dashed" to="/admin/article-edit">
-                      <font-awesome-icon :icon="['fas', 'plus']" style="margin-right: 4px;"></font-awesome-icon>新的文章
+                    <nuxt-link
+                      class="ant-btn ant-btn-dashed"
+                      to="/admin/article-edit"
+                    >
+                      <font-awesome-icon
+                        :icon="['fas', 'plus']"
+                        style="margin-right: 4px;"
+                      ></font-awesome-icon
+                      >新的文章
                     </nuxt-link>
                   </div>
                 </div>
@@ -24,22 +31,30 @@
                 <div class="right-stats">
                   <div>
                     7天内发布
-                    <nuxt-link to="/">{{ postsStats.oneweek }}</nuxt-link>
+                    <a @click="clickStats('posts7')">{{
+                      postsStats.oneweek
+                    }}</a>
                     <span>篇</span>
                   </div>
                   <div>
                     30天内发布
-                    <nuxt-link to="/">{{ postsStats.onemonth }}</nuxt-link>
+                    <a @click="clickStats('posts30')">{{
+                      postsStats.onemonth
+                    }}</a>
                     <span>篇</span>
                   </div>
                   <div>
                     总计发布
-                    <nuxt-link to="/">{{ postsStats.totalPosts }}</nuxt-link>
+                    <a @click="clickStats('postsAll')">{{
+                      postsStats.totalPosts
+                    }}</a>
                     <span>篇</span>
                   </div>
                   <div>
                     全部分类
-                    <nuxt-link to="/">{{ postsStats.totalCategories }}</nuxt-link>
+                    <nuxt-link to="/admin/category-manage">{{
+                      postsStats.totalCategories
+                    }}</nuxt-link>
                     <span>个</span>
                   </div>
                 </div>
@@ -54,7 +69,9 @@
                 <div class="left-stats">
                   <h3>今日评论</h3>
                   <div class="primary-div">
-                    <a @click="clickStats(1)">{{ commentsStats.today }}</a>
+                    <a @click="clickStats('commentsToday')">{{
+                      commentsStats.today
+                    }}</a>
                     <span>条</span>
                   </div>
                 </div>
@@ -63,22 +80,30 @@
                 <div class="right-stats">
                   <div>
                     昨日评论
-                    <nuxt-link to="/">{{ commentsStats.yesterday }}</nuxt-link>
+                    <a @click="clickStats('commentsYesterday')">{{
+                      commentsStats.yesterday
+                    }}</a>
                     <span>条</span>
                   </div>
                   <div>
                     7天内评论
-                    <nuxt-link to="/">{{ commentsStats.oneweek }}</nuxt-link>
+                    <a @click="clickStats('comments7')">{{
+                      commentsStats.oneweek
+                    }}</a>
                     <span>条</span>
                   </div>
                   <div>
                     30天内评论
-                    <nuxt-link to="/">{{ commentsStats.onemonth }}</nuxt-link>
+                    <a @click="clickStats('comments30')">{{
+                      commentsStats.onemonth
+                    }}</a>
                     <span>条</span>
                   </div>
                   <div>
                     全部评论
-                    <nuxt-link to="/">{{ commentsStats.total }}</nuxt-link>
+                    <nuxt-link to="/admin/comment-manage">{{
+                      commentsStats.total
+                    }}</nuxt-link>
                     <span>条</span>
                   </div>
                 </div>
@@ -93,7 +118,9 @@
                 <div class="left-stats">
                   <h3>今日留言</h3>
                   <div class="primary-div">
-                    <nuxt-link to="/">{{ guestbookStats.today }}</nuxt-link>
+                    <a @click="clickStats('guestbookToday')">{{
+                      guestbookStats.today
+                    }}</a>
                     <span>条</span>
                   </div>
                 </div>
@@ -102,22 +129,30 @@
                 <div class="right-stats">
                   <div>
                     昨日留言
-                    <nuxt-link to="/">{{ guestbookStats.yesterday }}</nuxt-link>
+                    <a @click="clickStats('guestbookYesterday')">{{
+                      guestbookStats.yesterday
+                    }}</a>
                     <span>条</span>
                   </div>
                   <div>
                     7天内留言
-                    <nuxt-link to="/">{{ guestbookStats.oneweek }}</nuxt-link>
+                    <a @click="clickStats('guestbook7')">{{
+                      guestbookStats.oneweek
+                    }}</a>
                     <span>条</span>
                   </div>
                   <div>
                     30天内留言
-                    <nuxt-link to="/">{{ guestbookStats.onemonth }}</nuxt-link>
+                    <a @click="clickStats('guestbook30')">{{
+                      guestbookStats.onemonth
+                    }}</a>
                     <span>条</span>
                   </div>
                   <div>
                     全部留言
-                    <nuxt-link to="/">{{ guestbookStats.total }}</nuxt-link>
+                    <nuxt-link to="/admin/guestbook-manage">{{
+                      guestbookStats.total
+                    }}</nuxt-link>
                     <span>条</span>
                   </div>
                 </div>
@@ -129,17 +164,40 @@
       <a-row>
         <a-col :md="24" :lg="12" :xl="8">
           <div class="stats-panel">
-            <ve-pie :data="categoryChartData" :settings="categoryChartSettings" ref="chart1"></ve-pie>
+            <ve-pie
+              :data="categoryChartData"
+              :events="{ click: clickCategory }"
+              ref="chart1"
+            ></ve-pie>
             <div class="stats-name">文章分类数据统计</div>
           </div>
         </a-col>
         <a-col :md="24" :lg="12" :xl="16">
           <div class="stats-panel">
-            <ve-bar :data="commentsAndGuestbookChartData" :extend="extend" ref="chart2"></ve-bar>
+            <ve-bar
+              :data="commentsAndGuestbookChartData"
+              :extend="extend"
+              :events="{ click: clickCommentsGuest }"
+              ref="chart2"
+            ></ve-bar>
             <div class="stats-name">近一周评论与留言数量</div>
           </div>
         </a-col>
       </a-row>
+      <div class="baidu-stats">
+        <a-button
+          type="primary"
+          shape="round"
+          href="https://tongji.baidu.com/web/homepage/index"
+          target="_blank"
+        >
+          <font-awesome-icon
+            :icon="['fas', 'external-link-alt']"
+            style="margin-right: 4px;"
+          ></font-awesome-icon
+          >前往百度统计官网查看访问数据
+        </a-button>
+      </div>
     </div>
   </div>
 </template>
@@ -148,6 +206,7 @@
 import Vue from "vue";
 import VePie from "v-charts/lib/pie";
 import VeBar from "v-charts/lib/histogram";
+import moment from "moment";
 export default Vue.extend({
   name: "PageAdminIndex",
   layout: "admin",
@@ -182,9 +241,6 @@ export default Vue.extend({
       commentsAndGuestbookStats: {
         commentsStats: {},
         guestbookStats: {}
-      },
-      categoryChartSettings: {
-        limitShowNum: 2
       },
       extend: {
         series: {
@@ -253,7 +309,7 @@ export default Vue.extend({
     }
   },
   mounted() {
-    (this as any).$bus.$on("changeLayout", () => {
+    this.$bus.$on("changeLayout", () => {
       this.$nextTick(() => {
         (this.$refs.chart1 as any).echarts.resize();
         (this.$refs.chart2 as any).echarts.resize();
@@ -262,10 +318,82 @@ export default Vue.extend({
   },
   methods: {
     clickStats(type) {
+      let url = "/admin";
       switch (type) {
-        case 1:
-          this.$router.push('/admin/comment-manage?createTime=20191125&createTime=20191126');
+        case "draft":
+          url = "/admin/article-manage?isDraft=1&isDeleted=-1";
+          break;
+        case "posts7":
+          url = `/admin/article-manage?isDraft=-1&isDeleted=-1&createTime=${moment()
+            .subtract(7, "days")
+            .format("YYYY-MM-DD")}&createTime=${moment().format("YYYY-MM-DD")}`;
+          break;
+        case "posts30":
+          url = `/admin/article-manage?isDraft=-1&isDeleted=-1&createTime=${moment()
+            .subtract(30, "days")
+            .format("YYYY-MM-DD")}&createTime=${moment().format("YYYY-MM-DD")}`;
+          break;
+        case "postsAll":
+          url = "/admin/article-manage?isDraft=-1&isDeleted=-1";
+          break;
+        case "commentsToday":
+          url = `/admin/comment-manage?createTime=${moment().format(
+            "YYYY-MM-DD"
+          )}&createTime=${moment().format("YYYY-MM-DD")}`;
+          break;
+        case "commentsYesterday":
+          url = `/admin/comment-manage?createTime=${moment()
+            .subtract(1, "days")
+            .format("YYYY-MM-DD")}&createTime=${moment()
+            .subtract(1, "days")
+            .format("YYYY-MM-DD")}`;
+          break;
+        case "comments7":
+          url = `/admin/comment-manage?createTime=${moment()
+            .subtract(7, "days")
+            .format("YYYY-MM-DD")}&createTime=${moment().format("YYYY-MM-DD")}`;
+          break;
+        case "comments30":
+          url = `/admin/comment-manage?createTime=${moment()
+            .subtract(30, "days")
+            .format("YYYY-MM-DD")}&createTime=${moment().format("YYYY-MM-DD")}`;
+          break;
+        case "guestbookToday":
+          url = `/admin/guestbook-manage?createTime=${moment().format(
+            "YYYY-MM-DD"
+          )}&createTime=${moment().format("YYYY-MM-DD")}`;
+          break;
+        case "guestbookYesterday":
+          url = `/admin/guestbook-manage?createTime=${moment()
+            .subtract(1, "days")
+            .format("YYYY-MM-DD")}&createTime=${moment()
+            .subtract(1, "days")
+            .format("YYYY-MM-DD")}`;
+          break;
+        case "guestbook7":
+          url = `/admin/guestbook-manage?createTime=${moment()
+            .subtract(7, "days")
+            .format("YYYY-MM-DD")}&createTime=${moment().format("YYYY-MM-DD")}`;
+          break;
+        case "guestbook30":
+          url = `/admin/guestbook-manage?createTime=${moment()
+            .subtract(30, "days")
+            .format("YYYY-MM-DD")}&createTime=${moment().format("YYYY-MM-DD")}`;
+          break;
       }
+      this.$router.push(url);
+    },
+
+    clickCategory(e) {
+      this.$router.push(`/admin/article-manage?cateName=${e.data.name}`);
+    },
+
+    clickCommentsGuest(e) {
+      this.$router.push(
+        `/admin/${
+          e.seriesName === "留言数" ? "guestbook" : "comment"
+        }-manage?createTime=${e.name}&createTime=${e.name}`
+      );
     }
   }
 });
@@ -328,5 +456,9 @@ export default Vue.extend({
 .stats-name {
   text-align: center;
   margin-bottom: 20px;
+}
+
+.baidu-stats {
+  text-align: center;
 }
 </style>

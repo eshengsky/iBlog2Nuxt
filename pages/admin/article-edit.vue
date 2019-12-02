@@ -2,7 +2,7 @@
   <div class="article-edit">
     <div class="page-header">{{pageHeader}}</div>
     <div class="page-body">
-      <a-form label-position="top" :form="form">
+      <a-form :form="form" :selfUpdate="true">
         <div class="title-line">
           <a-form-item label="标题" :colon="false">
             <a-input placeholder="请输入标题" allowClear v-decorator="['title', titleOpts]" />

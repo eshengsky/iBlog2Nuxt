@@ -64,12 +64,18 @@
               <a-menu slot="overlay">
                 <a-menu-item>
                   <a href="/auth/change-password">
-                    <font-awesome-icon :icon="['fas', 'key']"></font-awesome-icon>修改密码
+                    <font-awesome-icon
+                      :icon="['fas', 'key']"
+                    ></font-awesome-icon
+                    >修改密码
                   </a>
                 </a-menu-item>
                 <a-menu-item>
                   <a @click="logout" title="退出登录">
-                    <font-awesome-icon :icon="['fas', 'sign-out-alt']"></font-awesome-icon>退出登录
+                    <font-awesome-icon
+                      :icon="['fas', 'sign-out-alt']"
+                    ></font-awesome-icon
+                    >退出登录
                   </a>
                 </a-menu-item>
               </a-menu>
@@ -86,9 +92,13 @@
 </template>
 <script lang="ts">
 import Vue from "vue";
+import moment from "moment";
 import zh_CN from "ant-design-vue/lib/locale-provider/zh_CN";
 import LayoutFooter from "@/components/LayoutFooter.vue";
 import { CombinedVueInstance, VueConstructor } from "vue/types/vue";
+Vue.filter("toDate", (date: string) => {
+  return moment(date).format("YYYY-MM-DD HH:mm:ss");
+});
 export default Vue.extend({
   middleware: "auth",
   components: {
@@ -116,7 +126,7 @@ export default Vue.extend({
   methods: {
     toggleCollapsed() {
       this.collapsed = !this.collapsed;
-      (this as any).$bus.$emit("changeLayout");
+      this.$bus.$emit("changeLayout");
     },
     logout(this: any) {
       this.$auth.logout("local");
@@ -206,6 +216,8 @@ export default Vue.extend({
 }
 
 .filter-wrap {
-  margin: 10px 0 20px;
+  border: 1px solid #eee;
+  border-radius: 5px;
+  padding: 20px;
 }
 </style>

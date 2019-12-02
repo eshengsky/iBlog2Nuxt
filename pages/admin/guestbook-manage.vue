@@ -3,24 +3,34 @@
     <div class="page-header">留言管理</div>
     <div class="page-body">
       <div class="filter-wrap">
-        <a-form>
+        <a-form :form="form" :selfUpdate="true">
           <a-row>
-            <a-col :xs="24" :sm="24" :md="10">
+            <a-col :sm="24" :md="11" :xxl="7">
               <a-form-item label="留言内容" :colon="false">
-                <a-input placeholder="内容关键字" v-model="content" allowClear />
+                <a-input
+                  placeholder="内容关键字"
+                  v-decorator="['content']"
+                  allowClear
+                />
               </a-form-item>
             </a-col>
-            <a-col :xs="24" :sm="24" :md="{ span: 10, offset: 2 }">
+            <a-col
+              :sm="24"
+              :md="{ span: 11, offset: 2 }"
+              :xxl="{ span: 7, offset: 1 }"
+            >
               <a-form-item label="留言用户" :colon="false">
-                <a-input placeholder="用户名关键字" v-model="username" allowClear />
+                <a-input
+                  placeholder="用户名关键字"
+                  v-decorator="['username']"
+                  allowClear
+                />
               </a-form-item>
             </a-col>
-          </a-row>
-          <a-row>
-            <a-col :xs="24" :sm="24" :md="10">
+            <a-col :sm="24" :md="11" :xxl="{ span: 8, offset: 1 }">
               <a-form-item label="留言时间" :colon="false">
                 <a-range-picker
-                  v-model="createTimeMoment"
+                  v-decorator="['createTime', createTimeOpts]"
                   :disabledDate="disabledDate"
                   :ranges="rangeDate"
                   :defaultPickerValue="defaultRange"
@@ -31,8 +41,13 @@
           <a-row type="flex" justify="center">
             <a-col>
               <a-button type="primary" @click="search">
-                <font-awesome-icon :icon="['fas', 'search']" style="margin-right: 4px;"></font-awesome-icon>搜索
+                <font-awesome-icon
+                  :icon="['fas', 'search']"
+                  style="margin-right: 4px;"
+                ></font-awesome-icon
+                >搜索
               </a-button>
+              <a-button @click="reset">重置</a-button>
             </a-col>
           </a-row>
         </a-form>
@@ -67,16 +82,19 @@
               :href="row.website"
               :title="row.website"
               target="_blank"
-            >{{ row.username }}</a>
+              >{{ row.username }}</a
+            >
             <span v-else>{{ row.username }}</span>
           </template>
           <template slot="createTime" slot-scope="text, row">
-            <span>{{ momentTime(row.createTime) }}</span>
+            <span>{{ row.createTime | toDate }}</span>
           </template>
           <template slot="action" slot-scope="text, row">
             <div class="action-td">
               <a-button @click="del(row._id)" title="删除">
-                <font-awesome-icon :icon="['far', 'trash-alt']"></font-awesome-icon>
+                <font-awesome-icon
+                  :icon="['far', 'trash-alt']"
+                ></font-awesome-icon>
               </a-button>
             </div>
           </template>
@@ -90,14 +108,13 @@
 import Vue from "vue";
 import moment, { Moment } from "moment";
 import { IResp } from "@/server/types";
+import { FieldDecoratorOptions } from "ant-design-vue/types/form/form";
 export default Vue.extend({
   name: "PageGuestbookManage",
   layout: "admin",
   data() {
     return {
-      content: "",
-      username: "",
-      createTimeMoment: [],
+      form: this.$form.createForm(this),
       pagination: {
         current: 1,
         pageSize: 10,
@@ -153,10 +170,23 @@ export default Vue.extend({
   },
 
   created() {
-    this.getGuestbook();
+    this.isLoading = true;
+    this.$nextTick(() => {
+      this.getGuestbook();
+    });
   },
 
   computed: {
+    createTimeOpts(): FieldDecoratorOptions {
+      let initialValue: Array<Moment> = [];
+      const createTimeParam = this.$route.query.createTime as [string, string];
+      if (createTimeParam) {
+        initialValue = [moment(createTimeParam[0]), moment(createTimeParam[1])];
+      }
+      return {
+        initialValue
+      };
+    },
     rowSelection(): object {
       return {
         selectedRowKeys: this.selectedRowKeys,
@@ -172,16 +202,6 @@ export default Vue.extend({
     },
     delDisabled(): boolean {
       return this.selectedRowKeys.length === 0;
-    },
-    createTime(): Array<string> {
-      const range: Array<Moment> = this.createTimeMoment;
-      if (!range.length) {
-        return [];
-      }
-      return [
-        range[0].startOf("day").toString(),
-        range[1].endOf("day").toString()
-      ];
     }
   },
 
@@ -189,15 +209,21 @@ export default Vue.extend({
     disabledDate(date) {
       return date && date > moment().endOf("day");
     },
-    momentTime(str) {
-      return moment(str).format("YYYY-MM-DD HH:mm:ss");
-    },
     search() {
       this.pagination.current = 1;
       this.getGuestbook();
     },
 
     async getGuestbook() {
+      const values = this.form.getFieldsValue();
+      const createTimeMomentArr = values.createTime;
+      let createTime: string[] | undefined = undefined;
+      if (createTimeMomentArr && createTimeMomentArr.length === 2) {
+        createTime = [
+          createTimeMomentArr[0].startOf("day").toString(),
+          createTimeMomentArr[1].endOf("day").toString()
+        ];
+      }
       this.selectedRowKeys = [];
       this.isLoading = true;
       const { code, data }: IResp = await this.$axios.$get(
@@ -208,9 +234,8 @@ export default Vue.extend({
             pageSize: this.pagination.pageSize,
             sortBy: this.sortBy,
             order: this.order,
-            content: this.content,
-            username: this.username,
-            createTime: this.createTime
+            ...values,
+            createTime
           }
         }
       );
@@ -221,6 +246,15 @@ export default Vue.extend({
         this.$message.error("请求失败！");
       }
       this.isLoading = false;
+    },
+
+    reset() {
+      this.form.setFieldsValue({
+        content: "",
+        username: "",
+        createTime: []
+      });
+      this.search();
     },
 
     onTableChange(pagination, filters, sorter) {

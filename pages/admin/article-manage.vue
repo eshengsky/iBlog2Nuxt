@@ -3,11 +3,11 @@
     <div class="page-header">文章管理</div>
     <div class="page-body">
       <div class="filter-wrap">
-        <a-form :form="form">
+        <a-form :form="form" :selfUpdate="true">
           <a-row>
             <a-col :xs="24" :sm="24" :md="10">
               <a-form-item label="分类" :colon="false">
-                <a-select v-decorator="['category']" allowClear>
+                <a-select v-decorator="['category', categoryOpts]" allowClear>
                   <a-select-option
                     v-for="(item, index) in categories"
                     :value="item._id"
@@ -21,18 +21,16 @@
               <a-form-item label="标题" :colon="false">
                 <a-input
                   placeholder="标题关键字"
-                  v-model="filters.title"
+                  v-decorator="['title']"
                   allowClear
                 />
               </a-form-item>
             </a-col>
-          </a-row>
-          <a-row>
             <a-col :xs="24" :sm="24" :md="10">
               <a-form-item label="全文" :colon="false">
                 <a-input
                   placeholder="全文关键字"
-                  v-model="filters.content"
+                  v-decorator="['content']"
                   allowClear
                 />
               </a-form-item>
@@ -41,17 +39,15 @@
               <a-form-item label="标签" :colon="false">
                 <a-input
                   placeholder="标签关键字"
-                  v-model="filters.label"
+                  v-decorator="['label']"
                   allowClear
                 />
               </a-form-item>
             </a-col>
-          </a-row>
-          <a-row>
             <a-col :xs="24" :sm="24" :md="10">
               <a-form-item label="创建日期" :colon="false">
                 <a-range-picker
-                  v-model="filters.createTimeMoment"
+                  v-decorator="['createTime', createTimeOpts]"
                   :disabledDate="disabledDate"
                   :ranges="rangeDate"
                   :defaultPickerValue="defaultRange"
@@ -61,18 +57,16 @@
             <a-col :xs="24" :sm="24" :md="{ span: 10, offset: 2 }">
               <a-form-item label="修改日期" :colon="false">
                 <a-range-picker
-                  v-model="filters.modifyTimeMoment"
+                  v-decorator="['modifyTime', modifyTimeOpts]"
                   :disabledDate="disabledDate"
                   :ranges="rangeDate"
                   :defaultPickerValue="defaultRange"
                 ></a-range-picker>
               </a-form-item>
             </a-col>
-          </a-row>
-          <a-row>
             <a-col :xs="24" :sm="11" :md="4">
               <a-form-item label="是否外链" :colon="false">
-                <a-select v-model="filters.isLink" allowClear>
+                <a-select v-decorator="['isLink']" allowClear>
                   <a-select-option value="1">是</a-select-option>
                   <a-select-option value="-1">否</a-select-option>
                 </a-select>
@@ -84,7 +78,7 @@
               :md="{ span: 4, offset: 2 }"
             >
               <a-form-item label="是否草稿" :colon="false">
-                <a-select v-model="filters.isDraft" allowClear>
+                <a-select v-decorator="['isDraft', isDraftOpts]" allowClear>
                   <a-select-option value="1">是</a-select-option>
                   <a-select-option value="-1">否</a-select-option>
                 </a-select>
@@ -92,7 +86,7 @@
             </a-col>
             <a-col :xs="24" :sm="11" :md="{ span: 4, offset: 2 }">
               <a-form-item label="是否有评论" :colon="false">
-                <a-select v-model="filters.hasComments" allowClear>
+                <a-select v-decorator="['hasComments']" allowClear>
                   <a-select-option value="1">是</a-select-option>
                   <a-select-option value="-1">否</a-select-option>
                 </a-select>
@@ -104,7 +98,7 @@
               :md="{ span: 4, offset: 2 }"
             >
               <a-form-item label="是否已删除" :colon="false">
-                <a-select v-model="filters.isDeleted" allowClear>
+                <a-select v-decorator="['isDeleted', isDeletedOpts]" allowClear>
                   <a-select-option value="1">是</a-select-option>
                   <a-select-option value="-1">否</a-select-option>
                 </a-select>
@@ -186,15 +180,17 @@
             <a-tag color="purple" v-else title="草稿，仅自己可见">草稿</a-tag>
           </template>
           <template slot="createTime" slot-scope="text, row">
-            {{ row.createTime | toTime }}
+            {{ row.createTime | toDate }}
           </template>
           <template slot="modifyTime" slot-scope="text, row">
-            {{ row.modifyTime | toTime }}
+            {{ row.modifyTime | toDate }}
           </template>
           <template slot="action" slot-scope="text, row">
             <div class="action-td">
               <template v-if="row.isActive">
-                <nuxt-link class="ant-btn" :to="`/admin/article-edit?uid=${row._id}`"
+                <nuxt-link
+                  class="ant-btn"
+                  :to="`/admin/article-edit?uid=${row._id}`"
                   title="编辑"
                 >
                   <font-awesome-icon
@@ -228,35 +224,17 @@
 </template>
 <script lang="ts">
 import Vue from "vue";
-import { IResp } from "@/server/types";
 import moment, { Moment } from "moment";
+import { IResp } from "@/server/types";
+import { ICategory } from "@/server/models/category";
+import { FieldDecoratorOptions } from "ant-design-vue/types/form/form";
 export default Vue.extend({
   name: "PageArticleManage",
   layout: "admin",
   data() {
     return {
+      categories: [] as Array<ICategory>,
       form: this.$form.createForm(this),
-      filters: {
-        category: "",
-        title: "",
-        content: "",
-        label: "",
-        createTimeMoment: [],
-        modifyTimeMoment: [],
-        isLink: "",
-        isDraft: "",
-        hasComments: "",
-        isDeleted: ""
-      },
-      categories: [],
-      rangeDate: {
-        今天: [moment(), moment()],
-        昨天: [moment().subtract(1, "days"), moment().subtract(1, "days")],
-        最近一周: [moment().subtract(7, "days"), moment()],
-        最近一个月: [moment().subtract(30, "days"), moment()],
-        最近一年: [moment().subtract(365, "days"), moment()]
-      },
-      defaultRange: [moment().subtract(30, "days"), moment()],
       pagination: {
         current: 1,
         pageSize: 10,
@@ -271,6 +249,14 @@ export default Vue.extend({
       postList: [],
       isLoading: false,
       selectedRowKeys: [],
+      rangeDate: {
+        今天: [moment(), moment()],
+        昨天: [moment().subtract(1, "days"), moment().subtract(1, "days")],
+        最近一周: [moment().subtract(7, "days"), moment()],
+        最近一个月: [moment().subtract(30, "days"), moment()],
+        最近一年: [moment().subtract(365, "days"), moment()]
+      },
+      defaultRange: [moment().subtract(30, "days"), moment()],
       tableColumns: [
         {
           title: "状态",
@@ -333,12 +319,66 @@ export default Vue.extend({
     };
   },
 
+  async asyncData({ $axios }) {
+    const { code, data }: IResp = await $axios.$get("/admin/api/categories");
+    if (code === 1) {
+      return {
+        categories: data
+      };
+    }
+  },
+
   created() {
-    this.getCategories();
-    this.getList();
+    this.isLoading = true;
+    this.$nextTick(() => {
+      this.getList();
+    });
   },
 
   computed: {
+    categoryOpts(): FieldDecoratorOptions {
+      const cateName = this.$route.query.cateName;
+      let initialValue = "";
+      if (cateName) {
+        const category =  this.categories.find(t => t.cateName === cateName);
+        if (category) {
+          initialValue = category._id;
+        }
+      }
+      return {
+        initialValue
+      };
+    },
+    createTimeOpts(): FieldDecoratorOptions {
+      let initialValue: Array<Moment> = [];
+      const createTimeParam = this.$route.query.createTime as [string, string];
+      if (createTimeParam) {
+        initialValue = [moment(createTimeParam[0]), moment(createTimeParam[1])];
+      }
+      return {
+        initialValue
+      };
+    },
+    modifyTimeOpts(): FieldDecoratorOptions {
+      let initialValue: Array<Moment> = [];
+      const modifyTimeParam = this.$route.query.modifyTime as [string, string];
+      if (modifyTimeParam) {
+        initialValue = [moment(modifyTimeParam[0]), moment(modifyTimeParam[1])];
+      }
+      return {
+        initialValue
+      };
+    },
+    isDraftOpts(): FieldDecoratorOptions {
+      return {
+        initialValue: this.$route.query.isDraft || ""
+      };
+    },
+    isDeletedOpts(): FieldDecoratorOptions {
+      return {
+        initialValue: this.$route.query.isDeleted || ""
+      };
+    },
     rowSelection(): object {
       return {
         selectedRowKeys: this.selectedRowKeys,
@@ -353,33 +393,8 @@ export default Vue.extend({
         })
       };
     },
-    startDate() {
-      const start = new Date();
-      start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
-      return start;
-    },
     delDisabled(): boolean {
       return this.selectedRowKeys.length === 0;
-    },
-    createTime(): Array<string> {
-      const range: Array<Moment> = this.filters.createTimeMoment;
-      if (!range.length) {
-        return [];
-      }
-      return [
-        range[0].startOf("day").toString(),
-        range[1].endOf("day").toString()
-      ];
-    },
-    modifyTime(): Array<string> {
-      const range: Array<Moment> = this.filters.modifyTimeMoment;
-      if (!range.length) {
-        return [];
-      }
-      return [
-        range[0].startOf("day").toString(),
-        range[1].endOf("day").toString()
-      ];
     }
   },
 
@@ -387,19 +402,28 @@ export default Vue.extend({
     disabledDate(date) {
       return date && date > moment().endOf("day");
     },
-    async getCategories() {
-      const { code, data }: IResp = await this.$axios.$get(
-        "/admin/api/categories"
-      );
-      if (code === 1) {
-        this.categories = data;
-      }
-    },
     search() {
       this.pagination.current = 1;
       this.getList();
     },
     async getList() {
+      const values = this.form.getFieldsValue();
+      const createTimeMomentArr = values.createTime;
+      let createTime: string[] | undefined = undefined;
+      if (createTimeMomentArr && createTimeMomentArr.length === 2) {
+        createTime = [
+          createTimeMomentArr[0].startOf("day").toString(),
+          createTimeMomentArr[1].endOf("day").toString()
+        ];
+      }
+      const modifyTimeMomentArr = values.modifyTime;
+      let modifyTime: string[] | undefined = undefined;
+      if (modifyTimeMomentArr && modifyTimeMomentArr.length === 2) {
+        createTime = [
+          modifyTimeMomentArr[0].startOf("day").toString(),
+          modifyTimeMomentArr[1].endOf("day").toString()
+        ];
+      }
       this.selectedRowKeys = [];
       this.isLoading = true;
       const { code, data }: IResp = await this.$axios.$get("/admin/api/posts", {
@@ -408,9 +432,9 @@ export default Vue.extend({
           pageSize: this.pagination.pageSize,
           sortBy: this.sortBy,
           order: this.order,
-          createTime: this.createTime,
-          modifyTime: this.modifyTime,
-          ...this.filters
+          ...values,
+          createTime,
+          modifyTime
         }
       });
       if (code === 1) {
@@ -422,6 +446,22 @@ export default Vue.extend({
       this.isLoading = false;
     },
 
+    reset() {
+      this.form.setFieldsValue({
+        category: "",
+        title: "",
+        content: "",
+        label: "",
+        createTime: [],
+        modifyTime: [],
+        isLink: "",
+        isDraft: "",
+        hasComments: "",
+        isDeleted: ""
+      });
+      this.search();
+    },
+
     onTableChange(pagination, filters, sorter) {
       this.pagination = pagination;
       this.sortBy = "modifyTime";
@@ -431,19 +471,6 @@ export default Vue.extend({
         this.order = sorter.order;
       }
       this.getList();
-    },
-
-    reset() {
-      this.filters.category = "";
-      this.filters.title = "";
-      this.filters.content = "";
-      this.filters.label = "";
-      this.filters.createTimeMoment = [];
-      this.filters.modifyTimeMoment = [];
-      this.filters.isLink = "";
-      this.filters.isDraft = "";
-      this.filters.hasComments = "";
-      this.filters.isDeleted = "";
     },
 
     del(uid) {
@@ -574,11 +601,6 @@ export default Vue.extend({
           });
         }
       });
-    }
-  },
-  filters: {
-    toTime(date) {
-      return moment(date).format('YYYY-MM-DD HH:mm:ss');
     }
   }
 });

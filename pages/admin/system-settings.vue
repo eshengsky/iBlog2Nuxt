@@ -2,7 +2,7 @@
   <div class="system-settings">
     <div class="page-header">系统设置</div>
     <div class="page-body">
-      <a-form label-position="top" :form="form">
+      <a-form :form="form" :selfUpdate="true">
         <a-form-item :colon="false">
           <span slot="label">
             博客名称
@@ -166,6 +166,7 @@ export default Vue.extend({
   layout: "admin",
   data() {
     return {
+      form: this.$form.createForm(this),
       defaultSetting: defaultSetting,
       blogLogo: "",
       imgLoading: false,
@@ -194,11 +195,6 @@ export default Vue.extend({
         ]
       }
     };
-  },
-  computed: {
-    form(): any {
-      return this.$form.createForm(this);
-    }
   },
   async mounted() {
     const { code, data }: IResp = await this.$axios.$get("/api/settings");

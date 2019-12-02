@@ -29,10 +29,10 @@
           <img class="tb-img" :src="row.img" />
         </template>
         <template slot="createTime" slot-scope="text, row">
-          {{ row.createTime | toTime }}
+          {{ row.createTime | toDate }}
         </template>
         <template slot="modifyTime" slot-scope="text, row">
-          {{ row.modifyTime | toTime }}
+          {{ row.modifyTime | toDate }}
         </template>
         <template slot="action" slot-scope="text, row">
           <div class="action-td">
@@ -472,11 +472,6 @@ export default Vue.extend({
           }
         }
       });
-    }
-  },
-  filters: {
-    toTime(date) {
-      return moment(date).format("YYYY-MM-DD HH:mm:ss");
     }
   }
 });
