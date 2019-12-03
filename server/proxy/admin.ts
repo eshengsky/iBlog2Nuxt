@@ -34,26 +34,7 @@ const getPosts = async (params: any) => {
     matchObj.title = { $regex: title, $options: "gi" };
   }
   if (content) {
-    matchObj.$or = [
-      {
-        title: {
-          $regex: content,
-          $options: "gi"
-        }
-      },
-      {
-        summary: {
-          $regex: content,
-          $options: "gi"
-        }
-      },
-      {
-        content: {
-          $regex: content,
-          $options: "gi"
-        }
-      }
-    ];
+    matchObj.content = { $regex: content, $options: "gi" };
   }
   if (label) {
     matchObj.labels = { $regex: label, $options: "gi" };

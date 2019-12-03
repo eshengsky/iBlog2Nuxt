@@ -59,14 +59,6 @@
             allowClear
           />
         </a-form-item>
-        <a-form-item label="摘要" :colon="false">
-          <a-textarea
-            v-decorator="['summary', summaryOpts]"
-            placeholder="请输入摘要"
-            :rows="2"
-            :autosize="{ minRows: 2, maxRows: 6 }"
-          />
-        </a-form-item>
         <a-form-item label="来源" :colon="false">
           <a-radio-group
             name="radioGroup"
@@ -248,9 +240,6 @@ export default Vue.extend({
       categoryOpts: {
         initialValue: otherCategoryItem._id.toHexString()
       },
-      summaryOpts: {
-        initialValue: ""
-      },
       isLocalOpts: {
         initialValue: true
       },
@@ -297,7 +286,6 @@ export default Vue.extend({
         title: this.initialData.title,
         alias: this.initialData.alias,
         category: this.initialData.category,
-        summary: this.initialData.summary,
         isLocal: this.initialData.isLocal,
         url: this.initialData.url || "",
         labels: this.initialData.labels

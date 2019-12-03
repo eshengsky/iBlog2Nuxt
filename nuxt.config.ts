@@ -92,11 +92,12 @@ const config: Configuration = {
     /*
      ** You can extend webpack config here
      */
-    extend(config, ctx) {},
+    extend(config, ctx) { },
     loaders: {
       less: {
         modifyVars: {
-          'outline-width': 0
+          // "primary-color": "#5d77d7",
+          "outline-width": 0
         },
         javascriptEnabled: true
       }

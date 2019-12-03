@@ -64,12 +64,6 @@ async function getPosts(params) {
               }
             },
             {
-              summary: {
-                $regex: keyword,
-                $options: "gi"
-              }
-            },
-            {
               content: {
                 $regex: keyword,
                 $options: "gi"
