@@ -8,41 +8,64 @@
         v-model="collapsed"
         class="layout-sider"
       >
-        <div class="logo" />
+        <div class="sider-header">
+          <nuxt-link to="/" title="iBlog2">
+            <img src="/images/iBlog2-logo.png" />
+          </nuxt-link>
+          <h4>后台管理</h4>
+        </div>
         <a-menu theme="dark" mode="inline" :selectedKeys="[currentKey]">
           <a-menu-item key="index" title="数据统计">
             <nuxt-link to="/admin">
-              <font-awesome-icon :icon="['fas', 'chart-line']" fixed-width></font-awesome-icon>
+              <font-awesome-icon
+                :icon="['fas', 'chart-line']"
+                fixed-width
+              ></font-awesome-icon>
               <span>数据统计</span>
             </nuxt-link>
           </a-menu-item>
           <a-menu-item key="article-manage" title="文章管理">
             <nuxt-link to="/admin/article-manage">
-              <font-awesome-icon :icon="['fas', 'pen-nib']" fixed-width></font-awesome-icon>
+              <font-awesome-icon
+                :icon="['fas', 'pen-nib']"
+                fixed-width
+              ></font-awesome-icon>
               <span>文章管理</span>
             </nuxt-link>
           </a-menu-item>
           <a-menu-item key="category-manage" title="分类管理">
             <nuxt-link to="/admin/category-manage">
-              <font-awesome-icon :icon="['fas', 'map-signs']" fixed-width></font-awesome-icon>
+              <font-awesome-icon
+                :icon="['fas', 'map-signs']"
+                fixed-width
+              ></font-awesome-icon>
               <span>分类管理</span>
             </nuxt-link>
           </a-menu-item>
           <a-menu-item key="comment-manage" title="评论管理">
             <nuxt-link to="/admin/comment-manage">
-              <font-awesome-icon :icon="['fas', 'comments']" fixed-width></font-awesome-icon>
+              <font-awesome-icon
+                :icon="['fas', 'comments']"
+                fixed-width
+              ></font-awesome-icon>
               <span>评论管理</span>
             </nuxt-link>
           </a-menu-item>
           <a-menu-item key="guestbook-manage" title="留言管理">
             <nuxt-link to="/admin/guestbook-manage">
-              <font-awesome-icon :icon="['fas', 'comment-dots']" fixed-width></font-awesome-icon>
+              <font-awesome-icon
+                :icon="['fas', 'comment-dots']"
+                fixed-width
+              ></font-awesome-icon>
               <span>留言管理</span>
             </nuxt-link>
           </a-menu-item>
           <a-menu-item key="system-settings" title="系统设置">
             <nuxt-link to="/admin/system-settings">
-              <font-awesome-icon :icon="['fas', 'cogs']" fixed-width></font-awesome-icon>
+              <font-awesome-icon
+                :icon="['fas', 'cogs']"
+                fixed-width
+              ></font-awesome-icon>
               <span>系统设置</span>
             </nuxt-link>
           </a-menu-item>
@@ -64,12 +87,20 @@
               <a-menu slot="overlay">
                 <a-menu-item>
                   <a href="/auth/change-password">
-                    <font-awesome-icon :icon="['fas', 'key']" style="margin-right: 5px;"></font-awesome-icon>修改密码
+                    <font-awesome-icon
+                      :icon="['fas', 'key']"
+                      style="margin-right: 5px;"
+                    ></font-awesome-icon
+                    >修改密码
                   </a>
                 </a-menu-item>
                 <a-menu-item>
                   <a @click="logout" title="退出登录">
-                    <font-awesome-icon :icon="['fas', 'sign-out-alt']" style="margin-right: 5px;"></font-awesome-icon>退出登录
+                    <font-awesome-icon
+                      :icon="['fas', 'sign-out-alt']"
+                      style="margin-right: 5px;"
+                    ></font-awesome-icon
+                    >退出登录
                   </a>
                 </a-menu-item>
               </a-menu>
@@ -145,10 +176,21 @@ export default Vue.extend({
 });
 </script>
 <style>
-.layout-admin .logo {
-  height: 32px;
-  background: rgba(255, 255, 255, 0.2);
-  margin: 16px;
+.sider-header {
+  padding: 25px;
+  transition: all 0.2s;
+  background: url("/images/header-sider.png") no-repeat;
+}
+
+.sider-header img {
+  width: 60px;
+  height: 60px;
+  margin-bottom: 10px;
+  transition: all 0.2s;
+}
+
+.sider-header h4 {
+  color: #dfe4ed;
 }
 
 .layout-admin .trigger {
@@ -217,5 +259,45 @@ export default Vue.extend({
 
 .ant-menu-item svg {
   margin-right: 8px;
+}
+
+.ant-menu-inline-collapsed > .ant-menu-item {
+  padding: 0 24px !important;
+}
+
+.ant-layout-sider-collapsed .sider-header {
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
+.ant-layout-sider-collapsed .sider-header img {
+  width: 45px;
+  height: 45px;
+}
+
+.ant-layout-sider-collapsed .sider-header h4 {
+  display: none;
+}
+
+.ant-layout-sider-collapsed .ant-menu-item svg {
+  font-size: 16px;
+}
+
+.ant-layout-sider-collapsed .ant-menu-item span {
+  opacity: 0;
+}
+
+.ant-layout-sider,
+.ant-menu-dark {
+  background-color: #2f4050;
+}
+
+.ant-menu.ant-menu-dark .ant-menu-item {
+  border-left: 4px solid transparent;
+}
+
+.ant-menu.ant-menu-dark .ant-menu-item-selected {
+  border-left: 4px solid #19aa8d;
+  background: #293846;
 }
 </style>

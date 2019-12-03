@@ -173,7 +173,7 @@ export default Vue.extend({
 <br>\`\`\``,
       hr: `---`,
       link: `[链接地址](https://skysun.name)`,
-      image: `![logo](/images/iBlog2_logo.png)`,
+      image: `![logo](/images/iBlog2-logo.png)`,
       table: `| 框架 | 类型 |
 <br>| ----------- | ----------- |
 <br>| Vue.js | 前端 |

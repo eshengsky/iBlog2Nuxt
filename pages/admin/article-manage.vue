@@ -5,9 +5,13 @@
       <div class="filter-wrap">
         <a-form :form="form" :selfUpdate="true">
           <a-row>
-            <a-col :xs="24" :sm="24" :md="10">
+            <a-col :sm="24" :md="11" :xxl="5">
               <a-form-item label="分类" :colon="false">
-                <a-select v-decorator="['category', categoryOpts]" allowClear>
+                <a-select
+                  v-decorator="['category', categoryOpts]"
+                  placeholder="不限"
+                  allowClear
+                >
                   <a-select-option
                     v-for="(item, index) in categories"
                     :value="item._id"
@@ -17,7 +21,11 @@
                 </a-select>
               </a-form-item>
             </a-col>
-            <a-col :xs="24" :sm="24" :md="{ span: 10, offset: 2 }">
+            <a-col
+              :sm="24"
+              :md="{ span: 11, offset: 2 }"
+              :xxl="{ span: 5, offset: 1 }"
+            >
               <a-form-item label="标题" :colon="false">
                 <a-input
                   placeholder="标题关键字"
@@ -26,7 +34,7 @@
                 />
               </a-form-item>
             </a-col>
-            <a-col :xs="24" :sm="24" :md="10">
+            <a-col :sm="24" :md="11" :xxl="{ span: 6, offset: 1 }">
               <a-form-item label="全文" :colon="false">
                 <a-input
                   placeholder="全文关键字"
@@ -35,7 +43,11 @@
                 />
               </a-form-item>
             </a-col>
-            <a-col :xs="24" :sm="24" :md="{ span: 10, offset: 2 }">
+            <a-col
+              :sm="24"
+              :md="{ span: 11, offset: 2 }"
+              :xxl="{ span: 5, offset: 1 }"
+            >
               <a-form-item label="标签" :colon="false">
                 <a-input
                   placeholder="标签关键字"
@@ -44,7 +56,7 @@
                 />
               </a-form-item>
             </a-col>
-            <a-col :xs="24" :sm="24" :md="10">
+            <a-col :sm="24" :md="11" :xxl="5">
               <a-form-item label="创建日期" :colon="false">
                 <a-range-picker
                   v-decorator="['createTime', createTimeOpts]"
@@ -54,7 +66,11 @@
                 ></a-range-picker>
               </a-form-item>
             </a-col>
-            <a-col :xs="24" :sm="24" :md="{ span: 10, offset: 2 }">
+            <a-col
+              :sm="24"
+              :md="{ span: 11, offset: 2 }"
+              :xxl="{ span: 5, offset: 1 }"
+            >
               <a-form-item label="修改日期" :colon="false">
                 <a-range-picker
                   v-decorator="['modifyTime', modifyTimeOpts]"
@@ -64,9 +80,13 @@
                 ></a-range-picker>
               </a-form-item>
             </a-col>
-            <a-col :xs="24" :sm="11" :md="4">
+            <a-col :xs="24" :sm="11" :md="5" :xxl="{ span: 3, offset: 1 }">
               <a-form-item label="是否外链" :colon="false">
-                <a-select v-decorator="['isLink']" allowClear>
+                <a-select
+                  v-decorator="['isLink']"
+                  placeholder="不限"
+                  allowClear
+                >
                   <a-select-option value="1">是</a-select-option>
                   <a-select-option value="-1">否</a-select-option>
                 </a-select>
@@ -75,18 +95,32 @@
             <a-col
               :xs="24"
               :sm="{ span: 11, offset: 2 }"
-              :md="{ span: 4, offset: 2 }"
+              :md="{ span: 5, offset: 1 }"
+              :xxl="{ span: 2, offset: 1 }"
             >
               <a-form-item label="是否草稿" :colon="false">
-                <a-select v-decorator="['isDraft', isDraftOpts]" allowClear>
+                <a-select
+                  v-decorator="['isDraft', isDraftOpts]"
+                  placeholder="不限"
+                  allowClear
+                >
                   <a-select-option value="1">是</a-select-option>
                   <a-select-option value="-1">否</a-select-option>
                 </a-select>
               </a-form-item>
             </a-col>
-            <a-col :xs="24" :sm="11" :md="{ span: 4, offset: 2 }">
+            <a-col
+              :xs="24"
+              :sm="11"
+              :md="{ span: 5, offset: 2 }"
+              :xxl="{ span: 2, offset: 1 }"
+            >
               <a-form-item label="是否有评论" :colon="false">
-                <a-select v-decorator="['hasComments']" allowClear>
+                <a-select
+                  v-decorator="['hasComments']"
+                  placeholder="不限"
+                  allowClear
+                >
                   <a-select-option value="1">是</a-select-option>
                   <a-select-option value="-1">否</a-select-option>
                 </a-select>
@@ -95,10 +129,15 @@
             <a-col
               :xs="24"
               :sm="{ span: 11, offset: 2 }"
-              :md="{ span: 4, offset: 2 }"
+              :md="{ span: 5, offset: 1 }"
+              :xxl="{ span: 2, offset: 1 }"
             >
               <a-form-item label="是否已删除" :colon="false">
-                <a-select v-decorator="['isDeleted', isDeletedOpts]" allowClear>
+                <a-select
+                  v-decorator="['isDeleted', isDeletedOpts]"
+                  placeholder="不限"
+                  allowClear
+                >
                   <a-select-option value="1">是</a-select-option>
                   <a-select-option value="-1">否</a-select-option>
                 </a-select>
@@ -184,6 +223,15 @@
           </template>
           <template slot="modifyTime" slot-scope="text, row">
             {{ row.modifyTime | toDate }}
+          </template>
+          <template slot="commentsCount" slot-scope="text, row">
+            <nuxt-link
+              :to="`/admin/comment-manage?alias=${row.alias}`"
+              v-if="row.commentsCount > 0"
+              style="font-weight: 500;"
+              >{{ row.commentsCount }}</nuxt-link
+            >
+            <span v-else>0</span>
           </template>
           <template slot="action" slot-scope="text, row">
             <div class="action-td">
@@ -305,7 +353,8 @@ export default Vue.extend({
           dataIndex: "commentsCount",
           width: 100,
           align: "center",
-          sorter: true
+          sorter: true,
+          scopedSlots: { customRender: "commentsCount" }
         },
         {
           title: "操作",
@@ -338,9 +387,9 @@ export default Vue.extend({
   computed: {
     categoryOpts(): FieldDecoratorOptions {
       const cateName = this.$route.query.cateName;
-      let initialValue = "";
+      let initialValue: string | undefined = undefined;
       if (cateName) {
-        const category =  this.categories.find(t => t.cateName === cateName);
+        const category = this.categories.find(t => t.cateName === cateName);
         if (category) {
           initialValue = category._id;
         }
@@ -371,12 +420,12 @@ export default Vue.extend({
     },
     isDraftOpts(): FieldDecoratorOptions {
       return {
-        initialValue: this.$route.query.isDraft || ""
+        initialValue: this.$route.query.isDraft || undefined
       };
     },
     isDeletedOpts(): FieldDecoratorOptions {
       return {
-        initialValue: this.$route.query.isDeleted || ""
+        initialValue: this.$route.query.isDeleted || undefined
       };
     },
     rowSelection(): object {

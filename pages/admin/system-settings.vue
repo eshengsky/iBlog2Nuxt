@@ -114,20 +114,6 @@
         </a-form-item>
         <a-form-item :colon="false">
           <span slot="label">
-            显示翻译按钮
-            <a-icon type="question-circle-o" />
-          </span>
-          <a-switch v-decorator="['showTranslateBtn', { valuePropName: 'checked' }]" />
-        </a-form-item>
-        <a-form-item :colon="false">
-          <span slot="label">
-            百度翻译Key
-            <a-icon type="question-circle-o" />
-          </span>
-          <a-input placeholder="请输入百度翻译Key" v-decorator="['translateKey']" allowClear />
-        </a-form-item>
-        <a-form-item :colon="false">
-          <span slot="label">
             开启百度统计
             <a-tooltip title="启用后将在除后台管理外的其它页面注入百度统计代码" placement="topLeft" arrowPointAtCenter>
               <a-icon type="question-circle-o" />
@@ -217,8 +203,6 @@ export default Vue.extend({
         showLicense: settings.showLicense,
         authName: settings.authName,
         commentPageSize: settings.commentPageSize,
-        showTranslateBtn: settings.showTranslateBtn,
-        translateKey: settings.translateKey,
         enableStatistics: settings.enableStatistics,
         statisticsKey: settings.statisticsKey
       });

@@ -284,48 +284,88 @@ const deleteCategory = async (uids: Array<string> | string) => {
 };
 
 const getComments = async params => {
-  const page = parseInt(params.pageIndex || "1");
-  const pageSize = parseInt(params.pageSize || "10");
-  const options: any = {};
-  options.skip = (page - 1) * pageSize;
-  options.limit = pageSize;
-  options.sort = `${params.order === "descend" ? "-" : ""}${params.sortBy}`;
-  const query: any = {};
-  if (params.title) {
-    query["post.title"] = { $regex: params.title, $options: "gi" };
+  const matchObj: any = {};
+  const { username, content, createTime, alias } = params;
+  if (username) {
+    matchObj.username = { $regex: username, $options: "gi" };
   }
-  if (params.username) {
-    query.username = { $regex: params.username, $options: "gi" };
-  }
-  if (params.content) {
-    query.content = { $regex: params.content, $options: "gi" };
+  if (content) {
+    matchObj.content = { $regex: content, $options: "gi" };
   }
   if (
-    Array.isArray(params.createTime) &&
-    params.createTime.length === 2 &&
-    params.createTime[0] &&
-    params.createTime[1]
+    Array.isArray(createTime) &&
+    createTime.length === 2 &&
+    createTime[0] &&
+    createTime[1]
   ) {
-    const start = new Date(params.createTime[0]);
-    const end = new Date(params.createTime[1]);
-    query.createTime = { $gte: start, $lt: end };
+    const start = new Date(createTime[0]);
+    const end = new Date(createTime[1]);
+    matchObj.createTime = { $gte: start, $lt: end };
   }
+  if (alias) {
+    matchObj["posts.alias"] = alias;
+  }
+
+  // 排序
+  let sortObj: any = {
+    createTime: -1
+  };
+  if (params.sortBy) {
+    sortObj = {
+      [params.sortBy]: params.order === "descend" ? -1 : 1
+    };
+  }
+
+  const page = parseInt(params.pageIndex);
+  const pageSize = parseInt(params.pageSize);
+  const aggregate = [
+    {
+      // 关联文章集合
+      $lookup: {
+        from: "post",
+        localField: "post",
+        foreignField: "_id",
+        as: "posts"
+      }
+    },
+    {
+      // 关联分类集合
+      $lookup: {
+        from: "category",
+        localField: "posts.category",
+        foreignField: "_id",
+        as: "categories"
+      }
+    },
+    {
+      // 关联之后，再去筛选
+      $match: matchObj
+    },
+    {
+      // 筛选之后，再去排序
+      $sort: sortObj
+    },
+    {
+      $project: {
+        "posts.content": 0,
+        "categories.img": 0
+      }
+    }
+  ];
+
   const data = await Promise.all([
-    Comment.find(query, {}, options)
-      .populate({
-        path: "post",
-        select: "-content",
-        populate: {
-          path: "category",
-          select: "-img"
-        }
-      })
+    Comment.aggregate(aggregate)
+      .skip((page - 1) * pageSize)
+      .limit(pageSize)
       .exec(),
-    Comment.countDocuments(query).exec()
+      Comment.aggregate(aggregate)
+      .count("totalCount")
+      .exec()
   ]);
+
   return {
     comments: data[0],
-    count: data[1]
+    count: data[1].length === 0 ? 0 : data[1][0].totalCount
   };
 };
 
@@ -393,15 +433,20 @@ const saveSettings = async params => {
 };
 
 const subtractDate = days => {
-  return moment().subtract(days, "days").startOf("day").toDate();
-}
+  return moment()
+    .subtract(days, "days")
+    .startOf("day")
+    .toDate();
+};
 
 const getGuestBookStats = async () => {
   const stats = await Promise.all([
     // 今天
     Guestbook.countDocuments({
       createTime: {
-        $gte: moment().startOf("day").toDate(),
+        $gte: moment()
+          .startOf("day")
+          .toDate(),
         $lt: moment().toDate()
       }
     }).exec(),
@@ -410,7 +455,10 @@ const getGuestBookStats = async () => {
     Guestbook.countDocuments({
       createTime: {
         $gte: subtractDate(1),
-        $lt: moment().subtract(1, "days").endOf("day").toDate()
+        $lt: moment()
+          .subtract(1, "days")
+          .endOf("day")
+          .toDate()
       }
     }).exec(),
 
@@ -439,15 +487,17 @@ const getGuestBookStats = async () => {
     oneweek: stats[2],
     onemonth: stats[3],
     total: stats[4]
-  }
-}
+  };
+};
 
 const getCommentsStats = async () => {
   const stats = await Promise.all([
     // 今天
     Comment.countDocuments({
       createTime: {
-        $gte: moment().startOf("day").toDate(),
+        $gte: moment()
+          .startOf("day")
+          .toDate(),
         $lt: moment().toDate()
       }
     }).exec(),
@@ -456,7 +506,10 @@ const getCommentsStats = async () => {
     Comment.countDocuments({
       createTime: {
         $gte: subtractDate(1),
-        $lt: moment().subtract(1, "days").endOf("day").toDate()
+        $lt: moment()
+          .subtract(1, "days")
+          .endOf("day")
+          .toDate()
       }
     }).exec(),
 
@@ -485,8 +538,8 @@ const getCommentsStats = async () => {
     oneweek: stats[2],
     onemonth: stats[3],
     total: stats[4]
-  }
-}
+  };
+};
 
 const getPostsStats = async () => {
   const stats = await Promise.all([
@@ -519,7 +572,7 @@ const getPostsStats = async () => {
     // 总计发布
     Post.countDocuments({
       isDraft: false,
-      isActive: true,
+      isActive: true
     }).exec(),
 
     // 全部分类
@@ -531,8 +584,8 @@ const getPostsStats = async () => {
     onemonth: stats[2],
     totalPosts: stats[3],
     totalCategories: stats[4]
-  }
-}
+  };
+};
 
 const getCategoriesStats = async () => {
   const stats = await Category.aggregate([
@@ -557,7 +610,7 @@ const getCategoriesStats = async () => {
     }
   ]);
   return stats;
-}
+};
 
 const getComentsAndGuestbookStats = async () => {
   const days = 7;
@@ -609,13 +662,13 @@ const getComentsAndGuestbookStats = async () => {
       {
         $sort: { _id: 1 }
       }
-    ]).exec(),
+    ]).exec()
   ]);
   return {
     comments: stats[0],
     guestbook: stats[1]
-  }
-}
+  };
+};
 
 export default {
   getCategories,

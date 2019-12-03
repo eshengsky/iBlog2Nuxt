@@ -59,16 +59,6 @@ export interface ISetting extends Document {
   commentPageSize: 20,
 
   /**
-   * 是否显示文章编辑页面Alias输入框的翻译按钮
-   */
-  showTranslateBtn: boolean,
-
-  /**
-   * 百度翻译Key
-   */
-  translateKey: string,
-
-  /**
    * 是否开启百度统计功能
    */
   enableStatistics: boolean,
@@ -93,8 +83,6 @@ export const defaultSetting = {
   showLicense: true,
   authName: "作者",
   commentPageSize: 20,
-  showTranslateBtn: true,
-  translateKey: "",
   enableStatistics: false,
   statisticsKey: ""
 } as ISetting;
@@ -114,8 +102,6 @@ export class Setting {
         expandMenu: { type: Boolean },
         showLicense: { type: Boolean },
         authName: { type: String },
-        showTranslateBtn: { type: Boolean },
-        translateKey: { type: String },
         enableStatistics: { type: Boolean },
         statisticsKey: { type: String }
     });

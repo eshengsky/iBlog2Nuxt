@@ -44,8 +44,8 @@
             >
               <a-form-item label="所在文章" :colon="false">
                 <a-input
-                  placeholder="标题关键字"
-                  v-decorator="['title']"
+                  placeholder="文章Alias"
+                  v-decorator="['alias', aliasOpts]"
                   allowClear
                 />
               </a-form-item>
@@ -88,14 +88,14 @@
               <tui-editor-viewer :value="row.content" />
             </div>
           </template>
-          <template slot="post" slot-scope="post">
+          <template slot="post" slot-scope="text, row">
             <a
               class="link-title"
-              :class="{ 'title-deleted': !post.isActive }"
-              :href="`/blog/${post.category.alias}/${post.alias}`"
+              :class="{ 'title-deleted': !row.posts[0].isActive }"
+              :href="`/blog/${row.categories[0].alias}/${row.posts[0].alias}`"
               target="_blank"
-              :title="post.title"
-              >{{ post.title }}</a
+              :title="row.posts[0].title"
+              >{{ row.posts[0].title }}</a
             >
           </template>
           <template slot="person" slot-scope="text, row">
@@ -215,6 +215,11 @@ export default Vue.extend({
       }
       return {
         initialValue
+      };
+    },
+    aliasOpts(): FieldDecoratorOptions {
+      return {
+        initialValue: this.$route.query.alias || ""
       };
     },
     rowSelection(): object {

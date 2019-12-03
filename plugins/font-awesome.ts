@@ -31,7 +31,9 @@ import {
     faSignOutAlt,
     faKey,
     faChartLine,
-    faCogs
+    faCogs,
+    faMagic,
+    faSyncAlt
 } from '@fortawesome/free-solid-svg-icons';
 import {
     faMarkdown
@@ -66,7 +68,9 @@ library.add(
     faSignOutAlt,
     faKey,
     faChartLine,
-    faCogs
+    faCogs,
+    faMagic,
+    faSyncAlt
 );
 Vue.component('font-awesome-icon', FontAwesomeIcon);
 

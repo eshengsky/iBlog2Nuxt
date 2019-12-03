@@ -1,24 +1,43 @@
 <template>
   <div class="article-edit">
-    <div class="page-header">{{pageHeader}}</div>
+    <div class="page-header">{{ pageHeader }}</div>
     <div class="page-body">
       <a-form :form="form" :selfUpdate="true">
         <div class="title-line">
           <a-form-item label="标题" :colon="false">
-            <a-input placeholder="请输入标题" allowClear v-decorator="['title', titleOpts]" />
+            <a-input
+              placeholder="请输入标题"
+              allowClear
+              v-decorator="['title', titleOpts]"
+            />
           </a-form-item>
-          <a-form-item label="分类" :colon="false">
+          <a-form-item :colon="false">
+            <span slot="label">
+              分类
+              <a class="link-dark" @click="refreshCategories">
+                <font-awesome-icon :icon="['fas', 'sync-alt']" :spin="categoryLoading"></font-awesome-icon>
+              </a>
+            </span>
             <a-select v-decorator="['category', categoryOpts]">
               <a-select-option
                 v-for="(item, index) in categories"
                 :value="item._id"
                 :key="index"
-              >{{ item.cateName }}</a-select-option>
+                >{{ item.cateName }}</a-select-option
+              >
               <div slot="dropdownRender" slot-scope="menu">
                 <v-nodes :vnodes="menu" />
                 <a-divider style="margin: 4px 0;" />
-                <a href="/admin/category-manage" target="_blank" class="link-category">
-                  <font-awesome-icon :icon="['fas', 'plus']" style="margin-right: 4px;"></font-awesome-icon>新的分类
+                <a
+                  href="/admin/category-manage"
+                  target="_blank"
+                  class="link-category-btn"
+                >
+                  <font-awesome-icon
+                    :icon="['fas', 'plus']"
+                    style="margin-right: 4px;"
+                  ></font-awesome-icon
+                  >新的分类
                 </a>
               </div>
             </a-select>
@@ -27,13 +46,17 @@
         <a-form-item :colon="false">
           <span slot="label">
             Alias
-            <a-tooltip title="文章别名，如：this-is-my-fist-post，将作为URL的一部分">
+            <a-tooltip
+              title="文章别名，如：this-is-my-fist-post，将作为URL的一部分"
+            >
               <a-icon type="question-circle-o" />
             </a-tooltip>
           </span>
-          <a-input placeholder="请输入Alias" v-decorator="['alias', aliasOpts]" allowClear>
-            <a-icon slot="suffix" type="info-circle" />
-          </a-input>
+          <a-input
+            placeholder="请输入Alias"
+            v-decorator="['alias', aliasOpts]"
+            allowClear
+          />
         </a-form-item>
         <a-form-item label="摘要" :colon="false">
           <a-textarea
@@ -79,7 +102,10 @@
                 <a-tooltip>
                   <template slot="title">打开Markdown语法速查</template>
                   <a @click="mcsShow = true">
-                    <font-awesome-icon :icon="['fab', 'markdown']" style="font-size: 14px"></font-awesome-icon>
+                    <font-awesome-icon
+                      :icon="['fab', 'markdown']"
+                      style="font-size: 14px"
+                    ></font-awesome-icon>
                     <span>支持Markdown语法</span>
                   </a>
                 </a-tooltip>
@@ -98,27 +124,51 @@
         <div>
           <template v-if="!initialData._id">
             <a-button type="primary" @click="publish">
-              <font-awesome-icon :icon="['far', 'paper-plane']" style="margin-right: 4px;"></font-awesome-icon>发布文章
+              <font-awesome-icon
+                :icon="['far', 'paper-plane']"
+                style="margin-right: 4px;"
+              ></font-awesome-icon
+              >发布文章
             </a-button>
             <a-button @click="saveDraft">
-              <font-awesome-icon :icon="['far', 'file-alt']" style="margin-right: 4px;"></font-awesome-icon>存为草稿
+              <font-awesome-icon
+                :icon="['far', 'file-alt']"
+                style="margin-right: 4px;"
+              ></font-awesome-icon
+              >存为草稿
             </a-button>
           </template>
           <template v-else>
             <template v-if="initialData.isDraft">
               <a-button type="primary" @click="publish2">
-                <font-awesome-icon :icon="['far', 'paper-plane']" style="margin-right: 4px;"></font-awesome-icon>发布文章
+                <font-awesome-icon
+                  :icon="['far', 'paper-plane']"
+                  style="margin-right: 4px;"
+                ></font-awesome-icon
+                >发布文章
               </a-button>
               <a-button @click="save">
-                <font-awesome-icon :icon="['far', 'save']" style="margin-right: 4px;"></font-awesome-icon>保存更改
+                <font-awesome-icon
+                  :icon="['far', 'save']"
+                  style="margin-right: 4px;"
+                ></font-awesome-icon
+                >保存更改
               </a-button>
             </template>
             <template v-else>
               <a-button type="primary" @click="save">
-                <font-awesome-icon :icon="['far', 'save']" style="margin-right: 4px;"></font-awesome-icon>保存更改
+                <font-awesome-icon
+                  :icon="['far', 'save']"
+                  style="margin-right: 4px;"
+                ></font-awesome-icon
+                >保存更改
               </a-button>
               <a-button @click="unpublish">
-                <font-awesome-icon :icon="['fas', 'history']" style="margin-right: 4px;"></font-awesome-icon>取消发布
+                <font-awesome-icon
+                  :icon="['fas', 'history']"
+                  style="margin-right: 4px;"
+                ></font-awesome-icon
+                >取消发布
               </a-button>
             </template>
           </template>
@@ -180,6 +230,7 @@ export default Vue.extend({
   },
   data() {
     return {
+      settings: this.$store.state.settings,
       initialData: {} as IPost,
       isLocal: true,
       content: "",
@@ -231,7 +282,8 @@ export default Vue.extend({
           "codeblock"
         ],
         exts: ["scrollSync"]
-      }
+      },
+      categoryLoading: false
     };
   },
   created() {
@@ -291,6 +343,11 @@ export default Vue.extend({
       if (code === 1) {
         this.categories = data;
       }
+    },
+    async refreshCategories() {
+      this.categoryLoading = true;
+      await this.getCategories();
+      this.categoryLoading = false;
     },
     checkAlias(rule, value, callback) {
       if (value) {
@@ -489,7 +546,7 @@ export default Vue.extend({
 </script>
 
 <style>
-.link-category {
+.link-category-btn {
   display: block;
   padding: 8px 12px;
 }

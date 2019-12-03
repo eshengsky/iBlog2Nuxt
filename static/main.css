@@ -185,3 +185,11 @@ table th {
 .ant-calendar-picker {
   width: 100%;
 }
+
+.link-dark {
+  color: #555;
+}
+
+.link-dark:hover {
+  color: #777;
+}
