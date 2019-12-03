@@ -297,7 +297,7 @@ export default Vue.extend({
 }
 
 .ant-menu.ant-menu-dark .ant-menu-item-selected {
-  border-left: 4px solid #19aa8d;
+  border-left: 4px solid #1890ff;
   background: #293846;
 }
 </style>

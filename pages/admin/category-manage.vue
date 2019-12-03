@@ -62,7 +62,6 @@
         v-model="isModalShow"
         @ok="saveCategory"
         :confirmLoading="confirmLoading"
-        :maskClosable="false"
         :closable="false"
         :destroyOnClose="true"
       >

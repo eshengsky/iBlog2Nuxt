@@ -9,6 +9,7 @@
               placeholder="请输入标题"
               allowClear
               v-decorator="['title', titleOpts]"
+              ref="titleInput"
             />
           </a-form-item>
           <a-form-item :colon="false">
@@ -303,6 +304,7 @@ export default Vue.extend({
       });
       this.content = this.initialData.content;
     }
+    this.$refs.titleInput.focus();
   },
   computed: {
     pageHeader(): string {
