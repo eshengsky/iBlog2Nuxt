@@ -42,12 +42,13 @@
     "jsonwebtoken": "^8.5.1",
     "lazysizes": "^5.2.0-beta1",
     "markdown-it": "^9.1.0",
-    "markdown-it-anchor": "^5.2.5",
+    "markdown-it-github-headings": "^1.1.2",
     "moment": "^2.24.0",
     "mongoose": "^5.7.11",
     "nuxt": "^2.10.2",
     "passport": "^0.4.0",
     "passport-github2": "^0.1.11",
+    "uslug": "^1.0.4",
     "v-charts": "^1.19.0"
   },
   "devDependencies": {
