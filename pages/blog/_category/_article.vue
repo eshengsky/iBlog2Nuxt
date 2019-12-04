@@ -14,7 +14,7 @@
       <comment-list :from="2" :articleId="article._id"></comment-list>
     </article>
     <aside class="menu-wrap">
-      <a-anchor :offsetTop="100">
+      <a-anchor :affix="false" :offsetTop="70" :bounds="30">
         <a-anchor-link
           v-for="(item1, index1) in menus"
           :href="item1.href"
@@ -72,28 +72,10 @@ export default Vue.extend({
     }
   },
   mounted() {
+    this.scrollByHash();
     this.generateMenu();
     window.addEventListener("hashchange", () => {
-      const prefix = "user-content-";
-      let hash = decodeURIComponent(location.hash);
-      if (hash && hash.length > 0) {
-        hash = hash.substring(1);
-      }
-      if (hash.indexOf(prefix) === 0) {
-        history.replaceState(
-          null,
-          "",
-          location.href.replace(/#.*/, "") + "#" + hash.replace(prefix, "")
-        );
-      } else {
-        const anchor = document.querySelector(`#${prefix}${hash}`);
-        if (anchor) {
-          window.scrollTo(
-            window.scrollX,
-            anchor.getBoundingClientRect().top + window.scrollY
-          );
-        }
-      }
+      this.scrollByHash();
     });
   },
   methods: {
@@ -126,6 +108,28 @@ export default Vue.extend({
         }
       });
       this.menus = result;
+    },
+    scrollByHash() {
+      const prefix = "user-content-";
+      let hash = decodeURIComponent(location.hash);
+      if (hash && hash.length > 0) {
+        hash = hash.substring(1);
+      }
+      if (hash.indexOf(prefix) === 0) {
+        history.replaceState(
+          null,
+          "",
+          location.href.replace(/#.*/, "") + "#" + hash.replace(prefix, "")
+        );
+      } else {
+        const anchor = document.querySelector(`#${prefix}${hash}`);
+        if (anchor) {
+          window.scrollTo(
+            window.scrollX,
+            anchor.getBoundingClientRect().top + window.scrollY - 75
+          );
+        }
+      }
     }
   }
 });
@@ -139,7 +143,7 @@ export default Vue.extend({
 }
 
 .content-wrap {
-  padding: 40px 30px;
+  padding: 40px;
   background: #fff;
   border-color: #e7eaec;
   border-style: solid solid none;
@@ -173,6 +177,35 @@ export default Vue.extend({
   width: 230px;
   margin-left: 20px;
   flex: none;
-  max-height: 100vh
+  max-height: 100vh;
+}
+
+.ant-affix {
+  top: 100px !important;
+}
+
+.article-content h1,
+.article-content h2,
+.article-content h3,
+.article-content h4,
+.article-content h5 {
+  position: relative;
+}
+
+.anchor {
+  float: left;
+  padding-right: 4px;
+  margin-left: -20px;
+  line-height: 1;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.article-content h1:hover .anchor,
+.article-content h2:hover .anchor,
+.article-content h3:hover .anchor,
+.article-content h4:hover .anchor,
+.article-content h5:hover .anchor {
+  opacity: 1;
 }
 </style>
