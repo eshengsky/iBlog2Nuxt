@@ -466,22 +466,6 @@ export default Vue.extend({
   flex: auto;
 }
 
-.editor-wrap::before {
-  border-color: transparent;
-  border-style: solid solid outset;
-  content: " ";
-  display: block;
-  height: 0;
-  left: -16px;
-  pointer-events: none;
-  position: absolute;
-  right: 100%;
-  top: 11px;
-  width: 0;
-  border-right-color: #d1d5da;
-  border-width: 8px;
-}
-
 .te-md-container .te-preview {
   padding: 0 10px;
 }

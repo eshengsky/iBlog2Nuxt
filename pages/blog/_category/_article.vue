@@ -1,36 +1,47 @@
 <template>
-  <div class="article-page-wrap">
-    <article class="content-wrap">
-      <header class="article-title">
-        <span>
-          <font-awesome-icon :icon="['far', 'clock']"></font-awesome-icon>
-          {{ article.createTime }}
-        </span>
-        <h1>{{ article.title }}</h1>
-      </header>
-      <main class="article-main">
-        <div class="article-content" v-html="article.html"></div>
-      </main>
-      <comment-list :from="2" :articleId="article._id"></comment-list>
-    </article>
-    <aside class="menu-wrap">
-      <a-anchor :affix="false" :offsetTop="70" :bounds="30">
-        <a-anchor-link
-          v-for="(item1, index1) in menus"
-          :href="item1.href"
-          :title="item1.title"
-          :key="index1"
+  <article class="content-wrap">
+    <header class="article-title">
+      <span>
+        <font-awesome-icon :icon="['far', 'clock']"></font-awesome-icon>
+        {{ article.createTime }}
+      </span>
+      <h1>{{ article.title }}</h1>
+    </header>
+    <main class="article-main">
+      <div class="article-content" v-html="article.html"></div>
+    </main>
+    <div v-if="settings.showLicense" class="license-wrap">
+      <span>【END】</span>
+      <p>版权声明：本博客所有文章除声明转载外，均采用<a href="https://creativecommons.org/licenses/by-nc-sa/3.0/deed.zh" target="_blank">CC BY-NC-SA 3.0</a>许可协议。转载请注明来自<a>{{}}</a>。</p>
+    </div>
+    <div v-else class="end-wrap">【END】</div>
+    <comment-list :from="2" :articleId="article._id"></comment-list>
+    <aside class="menu-wrap" v-show="menuShow">
+      <div class="menu-container">
+        <div class="menu-title">文章目录</div>
+        <a-anchor
+          :affix="false"
+          :showInkInFixed="true"
+          :offsetTop="75"
+          :bounds="10"
         >
           <a-anchor-link
-            v-for="(item2, index2) in item1.subs"
-            :href="item2.href"
-            :title="item2.title"
-            :key="index2"
-          />
-        </a-anchor-link>
-      </a-anchor>
+            v-for="(item1, index1) in menus"
+            :href="item1.href"
+            :title="item1.title"
+            :key="index1"
+          >
+            <a-anchor-link
+              v-for="(item2, index2) in item1.subs"
+              :href="item2.href"
+              :title="item2.title"
+              :key="index2"
+            />
+          </a-anchor-link>
+        </a-anchor>
+      </div>
     </aside>
-  </div>
+  </article>
 </template>
 <script lang="ts">
 import Vue from "vue";
@@ -49,8 +60,10 @@ export default Vue.extend({
   },
   data() {
     return {
+      settings: this.$store.state.settings,
       article: {},
-      menus: [] as Array<IHeading2>
+      menus: [] as Array<IHeading2>,
+      menuShow: false
     };
   },
   async asyncData({ $axios, params, error }) {
@@ -73,10 +86,10 @@ export default Vue.extend({
   },
   mounted() {
     this.scrollByHash();
-    this.generateMenu();
     window.addEventListener("hashchange", () => {
       this.scrollByHash();
     });
+    this.generateMenu();
   },
   methods: {
     generateMenu() {
@@ -107,7 +120,10 @@ export default Vue.extend({
           result.push(h2Item);
         }
       });
-      this.menus = result;
+      if (result.length) {
+        this.menus = result;
+        this.menuShow = true;
+      }
     },
     scrollByHash() {
       const prefix = "user-content-";
@@ -135,23 +151,27 @@ export default Vue.extend({
 });
 </script>
 <style>
-.article-page-wrap {
-  background: #f3f3f4;
-  padding-top: 30px;
-  display: flex;
-  justify-content: center;
+.content-wrap {
+  position: relative;
+  padding: 40px;
+  margin-top: 30px;
+  margin-left: auto;
+  margin-right: auto;
+  border-radius: 4px;
+  background: #fff;
+  transition: width 0.3s;
+  max-width: 1012px;
+  width: calc(100% - 560px);
+  min-height: 70vh;
 }
 
-.content-wrap {
-  padding: 40px;
-  background: #fff;
-  border-color: #e7eaec;
-  border-style: solid solid none;
-  border-width: 1px 0;
-  transition: width 0.3s;
-  min-height: 400px;
-  max-width: 1024px;
-  min-height: 100vh;
+@media (max-width: 1150px) {
+  .content-wrap {
+    width: 100%;
+  }
+  .menu-wrap {
+    display: none;
+  }
 }
 
 .article-title {
@@ -175,9 +195,31 @@ export default Vue.extend({
 
 .menu-wrap {
   width: 230px;
-  margin-left: 20px;
-  flex: none;
-  max-height: 100vh;
+  position: absolute;
+  right: -250px;
+  top: 0;
+}
+
+.menu-container {
+  position: fixed;
+  width: 230px;
+  background: #fff;
+  padding: 25px 20px;
+  user-select: none;
+  border-radius: 4px;
+  opacity: 1;
+  transition: opacity 3s;
+}
+
+.btn-menu {
+  position: fixed;
+  background: #fff;
+  outline: none;
+  width: 40px;
+  height: 40px;
+  border: 1px solid #ddd;
+  border-radius: 3px;
+  cursor: pointer;
 }
 
 .ant-affix {
@@ -207,5 +249,15 @@ export default Vue.extend({
 .article-content h4:hover .anchor,
 .article-content h5:hover .anchor {
   opacity: 1;
+}
+
+.menu-title {
+  font-size: 16px;
+  margin-bottom: 8px;
+}
+
+.ant-anchor-ink::before {
+  width: 3px;
+  background-color: #eee;
 }
 </style>

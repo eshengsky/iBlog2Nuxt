@@ -84,15 +84,6 @@
         </a-form-item>
         <a-form-item :colon="false">
           <span slot="label">
-            默认展开文章目录
-            <a-tooltip title="进入文章页面后，是否自动展开目录" placement="topLeft" arrowPointAtCenter>
-              <a-icon type="question-circle-o" />
-            </a-tooltip>
-          </span>
-          <a-switch v-decorator="['expandMenu', { valuePropName: 'checked' }]" />
-        </a-form-item>
-        <a-form-item :colon="false">
-          <span slot="label">
             显示文章版权信息
             <a-tooltip title="是否显示文章底部的版权信息" placement="topLeft" arrowPointAtCenter>
               <a-icon type="question-circle-o" />
@@ -199,7 +190,6 @@ export default Vue.extend({
         blogIntro: settings.blogIntro,
         postPageSize: settings.postPageSize,
         enablePreview: settings.enablePreview,
-        expandMenu: settings.expandMenu,
         showLicense: settings.showLicense,
         authName: settings.authName,
         commentPageSize: settings.commentPageSize,

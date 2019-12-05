@@ -33,7 +33,8 @@ import {
     faChartLine,
     faCogs,
     faMagic,
-    faSyncAlt
+    faSyncAlt,
+    faAlignJustify
 } from '@fortawesome/free-solid-svg-icons';
 import {
     faMarkdown
@@ -70,7 +71,7 @@ library.add(
     faChartLine,
     faCogs,
     faMagic,
-    faSyncAlt
+    faSyncAlt,
+    faAlignJustify
 );
 Vue.component('font-awesome-icon', FontAwesomeIcon);
-

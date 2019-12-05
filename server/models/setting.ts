@@ -39,11 +39,6 @@ export interface ISetting extends Document {
   enablePreview: boolean,
 
   /**
-   * 是否默认展开文章目录
-   */
-  expandMenu: boolean,
-
-  /**
    * 是否显示文章底部版权信息
    */
   showLicense: boolean,
@@ -79,7 +74,6 @@ export const defaultSetting = {
   blogIntro: "",
   postPageSize: 10,
   enablePreview: true,
-  expandMenu: true,
   showLicense: true,
   authName: "作者",
   commentPageSize: 20,
@@ -99,7 +93,6 @@ export class Setting {
         blogIntro: { type: String },
         pageSize: { type: Number },
         enablePreview: { type: Boolean },
-        expandMenu: { type: Boolean },
         showLicense: { type: Boolean },
         authName: { type: String },
         enableStatistics: { type: Boolean },
