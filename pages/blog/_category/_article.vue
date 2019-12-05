@@ -12,19 +12,23 @@
     </main>
     <div v-if="settings.showLicense" class="license-wrap">
       <span>【END】</span>
-      <p>版权声明：本博客所有文章除声明转载外，均采用<a href="https://creativecommons.org/licenses/by-nc-sa/3.0/deed.zh" target="_blank">CC BY-NC-SA 3.0</a>许可协议。转载请注明来自<a>{{}}</a>。</p>
+      <p>本文链接：{{postLink}}</p>
+      <p>
+        <span>版权声明：本博客所有文章除声明转载外，均采用</span>
+        <a
+          href="https://creativecommons.org/licenses/by-nc-sa/3.0/deed.zh"
+          target="_blank"
+        >CC BY-NC-SA 3.0</a>
+        <span>许可协议。转载请注明来自</span>
+        <a :href="website">{{settings.blogName}}</a>。
+      </p>
     </div>
     <div v-else class="end-wrap">【END】</div>
     <comment-list :from="2" :articleId="article._id"></comment-list>
     <aside class="menu-wrap" v-show="menuShow">
       <div class="menu-container">
         <div class="menu-title">文章目录</div>
-        <a-anchor
-          :affix="false"
-          :showInkInFixed="true"
-          :offsetTop="75"
-          :bounds="10"
-        >
+        <a-anchor :affix="false" :showInkInFixed="true" :offsetTop="75" :bounds="10">
           <a-anchor-link
             v-for="(item1, index1) in menus"
             :href="item1.href"
@@ -65,6 +69,20 @@ export default Vue.extend({
       menus: [] as Array<IHeading2>,
       menuShow: false
     };
+  },
+  computed: {
+    postLink() {
+      if (process.client) {
+        return location.protocol + "//" + location.host + location.pathname;
+      }
+      return "";
+    },
+    website() {
+      if (process.client) {
+        return location.protocol + "//" + location.host;
+      }
+      return "";
+    }
   },
   async asyncData({ $axios, params, error }) {
     const alias = params.article;
