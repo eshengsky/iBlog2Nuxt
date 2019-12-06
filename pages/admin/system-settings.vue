@@ -91,15 +91,6 @@
           </span>
           <a-switch v-decorator="['showLicense', { valuePropName: 'checked' }]" />
         </a-form-item>
-        <a-form-item :colon="false">
-          <span slot="label">
-            版权作者
-            <a-tooltip title="文章底部版权信息中显示的作者名称" placement="topLeft" arrowPointAtCenter>
-              <a-icon type="question-circle-o" />
-            </a-tooltip>
-          </span>
-          <a-input placeholder="请输入版权作者" v-decorator="['authName']" allowClear />
-        </a-form-item>
         <a-form-item label="文章评论及留言的每页条数" :colon="false">
           <a-input-number v-decorator="['commentPageSize', commentPageSizeOpts]" :min="1" :max="999" />
         </a-form-item>
@@ -191,7 +182,6 @@ export default Vue.extend({
         postPageSize: settings.postPageSize,
         enablePreview: settings.enablePreview,
         showLicense: settings.showLicense,
-        authName: settings.authName,
         commentPageSize: settings.commentPageSize,
         enableStatistics: settings.enableStatistics,
         statisticsKey: settings.statisticsKey

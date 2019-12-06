@@ -12,23 +12,32 @@
     </main>
     <div v-if="settings.showLicense" class="license-wrap">
       <span>【END】</span>
-      <p>本文链接：{{postLink}}</p>
+      <p>本文链接：{{ postLink }}</p>
       <p>
         <span>版权声明：本博客所有文章除声明转载外，均采用</span>
         <a
           href="https://creativecommons.org/licenses/by-nc-sa/3.0/deed.zh"
           target="_blank"
-        >CC BY-NC-SA 3.0</a>
+          >CC BY-NC-SA 3.0</a
+        >
         <span>许可协议。转载请注明来自</span>
-        <a :href="website">{{settings.blogName}}</a>。
+        <a :href="website">{{ settings.blogName }}</a
+        >。
       </p>
     </div>
-    <div v-else class="end-wrap">【END】</div>
+    <div v-else class="end-wrap">
+      <span>【END】</span>
+    </div>
     <comment-list :from="2" :articleId="article._id"></comment-list>
     <aside class="menu-wrap" v-show="menuShow">
       <div class="menu-container">
         <div class="menu-title">文章目录</div>
-        <a-anchor :affix="false" :showInkInFixed="true" :offsetTop="75" :bounds="10">
+        <a-anchor
+          :affix="false"
+          :showInkInFixed="true"
+          :offsetTop="75"
+          :bounds="10"
+        >
           <a-anchor-link
             v-for="(item1, index1) in menus"
             :href="item1.href"
@@ -277,5 +286,46 @@ export default Vue.extend({
 .ant-anchor-ink::before {
   width: 3px;
   background-color: #eee;
+}
+
+.license-wrap {
+  position: relative;
+  border: 1px dashed #ccc;
+  border-radius: 5px;
+  padding: 10px 14px 5px;
+  margin: 40px 0 70px;
+}
+
+.license-wrap::after {
+  content: "";
+  position: absolute;
+  right: 7px;
+  top: 7px;
+  width: 7px;
+  height: 7px;
+  background: #1890ff;
+  border-radius: 50%;
+}
+
+.license-wrap > span,
+.end-wrap span {
+  position: absolute;
+  left: 50%;
+  top: -12px;
+  transform: translate(-50%, 0);
+  display: block;
+  background: #fff;
+  font-weight: 500;
+  user-select: none;
+}
+
+.license-wrap > p {
+  margin-bottom: 5px;
+}
+
+.end-wrap {
+  position: relative;
+  border-top: 1px solid #ddd;
+  margin: 40px 0 70px;
 }
 </style>
