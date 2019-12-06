@@ -60,11 +60,6 @@ export default Vue.extend({
       type: String
     } as PropOptions<string>
   },
-  data() {
-    return {
-      authGithub: config.githubAdmin
-    };
-  },
   computed: {
     commentTime(): string {
       return moment(this.comment.createTime).fromNow();

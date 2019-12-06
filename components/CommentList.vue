@@ -18,7 +18,7 @@
         <div class="form-wrap">
           <a-form :form="form">
             <a-row>
-              <a-col :xs="24" :sm="24" :md="6">
+              <a-col :xs="24" :sm="24" :md="11">
                 <a-form-item>
                   <a-input
                     placeholder="你的昵称"
@@ -32,20 +32,11 @@
                   </a-input>
                 </a-form-item>
               </a-col>
-              <a-col :xs="24" :sm="24" :md="{ span: 8, offset: 1 }">
+              <a-col :xs="24" :sm="24" :md="{ span: 11, offset: 2 }">
                 <a-form-item>
                   <a-input placeholder="昵称链接" v-decorator="['website', websiteOpts]" allowClear>
                     <template slot="addonBefore">
                       <font-awesome-icon :icon="['fas', 'link']"></font-awesome-icon>
-                    </template>
-                  </a-input>
-                </a-form-item>
-              </a-col>
-              <a-col :xs="24" :sm="24" :md="{ span: 8, offset: 1 }">
-                <a-form-item>
-                  <a-input placeholder="E-mail" v-decorator="['email', emailOpts]" allowClear>
-                    <template slot="addonBefore">
-                      <font-awesome-icon :icon="['far', 'envelope']"></font-awesome-icon>
                     </template>
                   </a-input>
                 </a-form-item>
@@ -155,14 +146,6 @@ export default Vue.extend({
           {
             pattern: /^http/,
             message: "链接必须以http开头！"
-          }
-        ]
-      },
-      emailOpts: {
-        rules: [
-          {
-            type: "email",
-            message: "E-mail格式不正确！"
           }
         ]
       }

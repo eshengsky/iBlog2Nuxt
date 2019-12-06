@@ -8,9 +8,8 @@
     "lint": "eslint --ext .ts,.js,.vue .",
     "precommit": "npm run lint",
     "dev": "nuxt-ts",
-    "build": "nuxt build",
-    "start": "cross-env NODE_ENV=production node server/index.js",
-    "generate": "nuxt generate"
+    "build": "nuxt-ts build",
+    "start": "nuxt-ts start"
   },
   "dependencies": {
     "@dicebear/avatars": "^3.1.4",

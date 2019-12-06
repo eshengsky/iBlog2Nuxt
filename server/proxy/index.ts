@@ -184,7 +184,6 @@ async function saveComment(params) {
     post: params.articleId,
     username: badWords.filter(params.username),
     website: params.website,
-    email: params.email,
     content: badWords.filter(params.content),
     createTime: new Date()
   });
@@ -228,7 +227,6 @@ async function saveGuestbook(params) {
   const entity = new Guestbook({
     username: badWords.filter(params.username),
     website: params.website,
-    email: params.email,
     content: badWords.filter(params.content),
     createTime: new Date()
   });

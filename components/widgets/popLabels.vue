@@ -44,10 +44,9 @@ export default Vue.extend({
   display: inline-flex;
   justify-content: center;
   align-items: center;
-  color: #777;
+  color: #555;
   border-radius: 50px;
-  background-color: #f7f7f7;
-  -webkit-transition: all 0.3s ease;
+  background-color: #eee;
   transition: all 0.3s ease;
   padding: 3px 14px;
   margin-right: 7px;
@@ -57,6 +56,6 @@ export default Vue.extend({
 
 .pop-label:hover {
   color: #fff;
-  background-color: #72c02c;
+  background-color: #1890ff;
 }
 </style>

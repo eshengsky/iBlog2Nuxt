@@ -1,6 +1,4 @@
 import { Configuration } from "@nuxt/types";
-import bodyParser from "body-parser";
-import cookieParser from "cookie-parser";
 
 const config: Configuration = {
   mode: "universal",
@@ -24,13 +22,7 @@ const config: Configuration = {
     port: 8000,
     host: "localhost"
   },
-  serverMiddleware: [
-    cookieParser(),
-    bodyParser.json(),
-    "@/server/api/index",
-    "@/server/api/admin",
-    "@/server/api/auth"
-  ],
+  serverMiddleware: ["@/server/api"],
   /*
    ** Customize the progress-bar color
    */
@@ -67,17 +59,21 @@ const config: Configuration = {
     strategies: {
       local: {
         endpoints: {
-          login: { url: "/auth/api/login", method: "post", propertyName: 'token.accessToken' },
-          logout: { url: "/auth/api/logout", method: "post" },
-          user: { url: "/auth/api/user", method: "get", propertyName: 'user' }
+          login: {
+            url: "/api/auth/login",
+            method: "post",
+            propertyName: "token.accessToken"
+          },
+          logout: { url: "/api/auth/logout", method: "post" },
+          user: { url: "/api/auth/user", method: "get", propertyName: "user" }
         }
       }
     },
     redirect: {
-      login: '/auth/login',
-      logout: '/',
-      callback: '/auth/login',
-      home: '/'
+      login: "/auth/login",
+      logout: "/",
+      callback: "/auth/login",
+      home: "/"
     }
   },
   /*
@@ -92,7 +88,7 @@ const config: Configuration = {
     /*
      ** You can extend webpack config here
      */
-    extend(config, ctx) { },
+    extend(config, ctx) {},
     loaders: {
       less: {
         modifyVars: {

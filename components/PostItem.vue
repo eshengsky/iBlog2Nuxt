@@ -30,7 +30,7 @@
         {{ post.viewCount }}
       </span>
       <span>
-        <font-awesome-icon :icon="['far', 'comments']"></font-awesome-icon>
+        <font-awesome-icon :icon="['fas', 'comments']"></font-awesome-icon>
         {{ post.comments.length }}
       </span>
     </div>

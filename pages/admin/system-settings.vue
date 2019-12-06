@@ -221,7 +221,7 @@ export default Vue.extend({
         if (!error) {
           const data = values;
           data.blogLogo = this.blogLogo;
-          this.$axios.$put("/admin/api/settings", data).then(resp => {
+          this.$axios.$put("/api/admin/settings", data).then(resp => {
             if (resp.code === 1) {
               this.$message.success("保存成功！");
             } else {

@@ -26,7 +26,7 @@ export default Vue.extend({
   name: "PageLogin",
   layout: "auth",
   async asyncData({ $axios, redirect }) {
-    const { code, data } = await $axios.$get("/auth/api/exists");
+    const { code, data } = await $axios.$get("/api/auth/exists");
     if (code === 1 && !data.exists) {
       // 临时重定向
       redirect(302, "/auth/init-account");

@@ -1,10 +1,10 @@
-import express from "express";
+import { Router } from "express";
 import proxy from "../proxy/index";
 import { IResp } from "../types";
 
-const app = express();
+const router = Router();
 
-app.get("/categories", async (req, res, next) => {
+router.get("/categories", async (req, res, next) => {
   let resp: IResp;
   try {
     const categories = await proxy.getCategories();
@@ -21,7 +21,7 @@ app.get("/categories", async (req, res, next) => {
   res.json(resp);
 });
 
-app.get("/posts", async (req, res, next) => {
+router.get("/posts", async (req, res, next) => {
   let resp: IResp;
   try {
     const data = await proxy.getPosts(req.query);
@@ -38,7 +38,7 @@ app.get("/posts", async (req, res, next) => {
   res.json(resp);
 });
 
-app.get("/popArticles", async (req, res, next) => {
+router.get("/popArticles", async (req, res, next) => {
   let resp: IResp;
   try {
     const data = await proxy.getPopArticles();
@@ -55,7 +55,7 @@ app.get("/popArticles", async (req, res, next) => {
   res.json(resp);
 });
 
-app.get("/popLabels", async (req, res, next) => {
+router.get("/popLabels", async (req, res, next) => {
   let resp: IResp;
   try {
     const data = await proxy.getPopLabels();
@@ -72,7 +72,7 @@ app.get("/popLabels", async (req, res, next) => {
   res.json(resp);
 });
 
-app.get("/article", async (req, res, next) => {
+router.get("/article", async (req, res, next) => {
   let resp: IResp;
   try {
     const data = await proxy.getArticle(req.query);
@@ -89,7 +89,7 @@ app.get("/article", async (req, res, next) => {
   res.json(resp);
 });
 
-app.get("/comments", async (req, res, next) => {
+router.get("/comments", async (req, res, next) => {
   let resp: IResp;
   try {
     const data = await proxy.getComments(req.query);
@@ -106,7 +106,7 @@ app.get("/comments", async (req, res, next) => {
   res.json(resp);
 });
 
-app.post("/comment", async (req, res, next) => {
+router.post("/comment", async (req, res, next) => {
   let resp: IResp;
   // const user = req.user;
   // if (!user) {
@@ -130,7 +130,7 @@ app.post("/comment", async (req, res, next) => {
   res.json(resp);
 });
 
-app.get("/guestbook", async (req, res, next) => {
+router.get("/guestbook", async (req, res, next) => {
   let resp: IResp;
   try {
     const data = await proxy.getGuestbook(req.query);
@@ -147,7 +147,7 @@ app.get("/guestbook", async (req, res, next) => {
   res.json(resp);
 });
 
-app.post("/guestbook", async (req, res, next) => {
+router.post("/guestbook", async (req, res, next) => {
   let resp: IResp;
   // const user = req.user;
   // if (!user) {
@@ -171,7 +171,7 @@ app.post("/guestbook", async (req, res, next) => {
   res.json(resp);
 });
 
-app.get("/settings", async (req, res, next) => {
+router.get("/settings", async (req, res, next) => {
   let resp: IResp;
   try {
     const settings = await proxy.getSettings();
@@ -188,11 +188,4 @@ app.get("/settings", async (req, res, next) => {
   res.json(resp);
 });
 
-app.use((err, req, res, next) => {
-  res.sendStatus(err.status || 500);
-});
-
-export default {
-  path: "/api",
-  handler: app
-};
+export default router;

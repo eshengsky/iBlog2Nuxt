@@ -1,21 +1,14 @@
-import express from "express";
+import { Router } from "express";
 import jwt from "express-jwt";
 import jsonwebtoken from "jsonwebtoken";
 import proxy from "../proxy/auth";
 import { IResp } from "../types";
+import config from "../../blog.config";
 
-const app = express();
-
-app.use(
-  jwt({
-    secret: "iBlog2JsonWebTokenSecretKey123"
-  }).unless({
-    path: ["/auth/api/login", "/auth/api/exists", "/auth/api/account"]
-  })
-);
+const router = Router();
 
 // 判断账户是否存在（是否已初始化）
-app.get("/exists", async (req, res, next) => {
+router.get("/exists", async (req, res, next) => {
   let resp: IResp;
   try {
     const data = await proxy.existsAccount();
@@ -33,7 +26,7 @@ app.get("/exists", async (req, res, next) => {
 });
 
 // 初始化账户
-app.put("/account", async (req, res, next) => {
+router.put("/account", async (req, res, next) => {
   let resp: IResp;
   try {
     const data = await proxy.newAccount(req.body);
@@ -51,18 +44,22 @@ app.put("/account", async (req, res, next) => {
 });
 
 // 修改密码
-app.post("/account", async (req, res, next) => {
-  const resp = await proxy.changePassword(req.body);
-  res.json(resp);
-});
+router.post(
+  "/account",
+  jwt({ secret: config.jwtSecret }),
+  async (req, res, next) => {
+    const resp = await proxy.changePassword(req.body);
+    res.json(resp);
+  }
+);
 
 // 获取当前用户
-app.get("/user", (req, res, next) => {
+router.get("/user", jwt({ secret: config.jwtSecret }), (req, res, next) => {
   res.json({ user: (req as any).user });
 });
 
 // 提交登录请求
-app.post("/login", async (req, res, next) => {
+router.post("/login", async (req, res, next) => {
   try {
     const data = await proxy.findAccount(req.body);
     if (!data.account) {
@@ -73,7 +70,7 @@ app.post("/login", async (req, res, next) => {
       {
         username: "Admin"
       },
-      "iBlog2JsonWebTokenSecretKey123"
+      config.jwtSecret
     );
 
     res.json({
@@ -88,18 +85,10 @@ app.post("/login", async (req, res, next) => {
 });
 
 // 退出登录
-app.post("/logout", (req, res, next) => {
+router.post("/logout", jwt({ secret: config.jwtSecret }), (req, res, next) => {
   res.json({
     code: 1
   });
 });
 
-// 异常处理
-app.use((err, req, res, next) => {
-  res.sendStatus(err.status || 500);
-});
-
-export default {
-  path: "/auth/api",
-  handler: app
-};
+export default router;

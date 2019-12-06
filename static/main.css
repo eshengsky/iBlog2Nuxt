@@ -193,3 +193,8 @@ table th {
 .link-dark:hover {
   color: #777;
 }
+
+::selection {
+  background: #ffbd2e;
+  color: inherit;
+}

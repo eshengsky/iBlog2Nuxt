@@ -1,34 +1,36 @@
 <template>
-  <article class="content-wrap">
-    <header class="article-title">
-      <span>
-        <font-awesome-icon :icon="['far', 'clock']"></font-awesome-icon>
-        {{ article.createTime }}
-      </span>
-      <h1>{{ article.title }}</h1>
-    </header>
-    <main class="article-main">
-      <div class="article-content" v-html="article.html"></div>
-    </main>
-    <div v-if="settings.showLicense" class="license-wrap">
-      <span>【END】</span>
-      <p>本文链接：{{ postLink }}</p>
-      <p>
-        <span>版权声明：本博客所有文章除声明转载外，均采用</span>
-        <a
-          href="https://creativecommons.org/licenses/by-nc-sa/3.0/deed.zh"
-          target="_blank"
-          >CC BY-NC-SA 3.0</a
-        >
-        <span>许可协议。转载请注明来自</span>
-        <a :href="website">{{ settings.blogName }}</a
-        >。
-      </p>
-    </div>
-    <div v-else class="end-wrap">
-      <span>【END】</span>
-    </div>
-    <comment-list :from="2" :articleId="article._id"></comment-list>
+  <div class="post-detail-wrap">
+    <article class="content-wrap">
+      <header class="article-title">
+        <span>
+          <font-awesome-icon :icon="['far', 'clock']"></font-awesome-icon>
+          {{ article.createTime }}
+        </span>
+        <h1>{{ article.title }}</h1>
+      </header>
+      <main class="article-main">
+        <div class="article-content" v-html="article.html"></div>
+      </main>
+      <div v-if="settings.showLicense" class="license-wrap">
+        <span>【END】</span>
+        <p>本文链接：{{ postLink }}</p>
+        <p>
+          <span>版权声明：本博客所有文章除声明转载外，均采用</span>
+          <a
+            href="https://creativecommons.org/licenses/by-nc-sa/3.0/deed.zh"
+            target="_blank"
+            >CC BY-NC-SA 3.0</a
+          >
+          <span>许可协议。转载请注明来自</span>
+          <a :href="website">{{ settings.blogName }}</a
+          >。
+        </p>
+      </div>
+      <div v-else class="end-wrap">
+        <span>【END】</span>
+      </div>
+      <comment-list :from="2" :articleId="article._id"></comment-list>
+    </article>
     <aside class="menu-wrap" v-show="menuShow">
       <div class="menu-container">
         <div class="menu-title">文章目录</div>
@@ -54,7 +56,7 @@
         </a-anchor>
       </div>
     </aside>
-  </article>
+  </div>
 </template>
 <script lang="ts">
 import Vue from "vue";
@@ -178,27 +180,20 @@ export default Vue.extend({
 });
 </script>
 <style>
+.post-detail-wrap {
+  display: flex;
+  justify-content: center;
+  margin-top: 30px;
+}
+
 .content-wrap {
   position: relative;
   padding: 40px;
-  margin-top: 30px;
-  margin-left: auto;
-  margin-right: auto;
   border-radius: 4px;
   background: #fff;
   transition: width 0.3s;
-  max-width: 1012px;
-  width: calc(100% - 560px);
+  max-width: 792px;
   min-height: 70vh;
-}
-
-@media (max-width: 1150px) {
-  .content-wrap {
-    width: 100%;
-  }
-  .menu-wrap {
-    display: none;
-  }
 }
 
 .article-title {
@@ -221,15 +216,20 @@ export default Vue.extend({
 }
 
 .menu-wrap {
-  width: 230px;
-  position: absolute;
-  right: -250px;
-  top: 0;
+  width: 260px;
+  flex: none;
+  margin-left: 20px;
+}
+
+@media (max-width: 835px) {
+  .menu-wrap {
+    display: none;
+  }
 }
 
 .menu-container {
   position: fixed;
-  width: 230px;
+  width: 260px;
   background: #fff;
   padding: 25px 20px;
   user-select: none;

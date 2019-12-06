@@ -5,7 +5,6 @@ export interface IComment extends Document {
   post: IPost;
   username: string;
   website?: string;
-  emial?: string;
   content: string;
   createTime: Date;
 }
@@ -14,12 +13,11 @@ export interface ICommentModel extends Model<IComment> {}
 
 export const schema = new Schema(
   {
-    // 评论者用户名
+    // 评论者昵称
     username: { type: String, required: true },
 
+    // 昵称链接
     website: { type: String },
-
-    emial: { type: String },
 
     // 评论内容
     content: { type: String },

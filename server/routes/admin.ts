@@ -1,19 +1,20 @@
-import express from "express";
+import { Router } from "express";
 import jwt from "express-jwt";
 import proxy from "../proxy/admin";
 import { IResp } from "../types";
 import moment from "moment";
+import config from "../../blog.config";
 
-const app = express();
+const router = Router();
 
 // JWT middleware
-app.use(
+router.use(
   jwt({
-    secret: 'iBlog2JsonWebTokenSecretKey123'
+    secret: config.jwtSecret
   })
 );
 
-app.get('/categories', async (req, res, next) => {
+router.get('/categories', async (req, res, next) => {
   let resp: IResp;
   try {
     const categories = await proxy.getCategories();
@@ -30,7 +31,7 @@ app.get('/categories', async (req, res, next) => {
   res.json(resp);
 });
 
-app.get('/article', async (req, res, next) => {
+router.get('/article', async (req, res, next) => {
   let resp: IResp;
   try {
     const article = await proxy.getArticle(req.query.uid);
@@ -47,7 +48,7 @@ app.get('/article', async (req, res, next) => {
   res.json(resp);
 });
 
-app.get("/posts", async (req, res) => {
+router.get("/posts", async (req, res) => {
   let resp: IResp;
   try {
     const data = await proxy.getPosts(req.query);
@@ -66,7 +67,7 @@ app.get("/posts", async (req, res) => {
 });
 
 // 新增文章
-app.post('/article', async (req, res) => {
+router.post('/article', async (req, res) => {
   let resp: IResp;
   try {
     const article = await proxy.newArticle(req.body);
@@ -85,7 +86,7 @@ app.post('/article', async (req, res) => {
 });
 
 // 修改文章
-app.put('/article', async (req, res) => {
+router.put('/article', async (req, res) => {
   let resp: IResp;
   try {
     const article = await proxy.editArticle(req.query.uid, req.body);
@@ -104,7 +105,7 @@ app.put('/article', async (req, res) => {
 });
 
 // 删除文章
-app.delete('/article', async (req, res) => {
+router.delete('/article', async (req, res) => {
   let resp: IResp;
   try {
     let data;
@@ -130,7 +131,7 @@ app.delete('/article', async (req, res) => {
 });
 
 // 检查文章alias是否重复
-app.get('/checkArticleAlias', async (req, res) => {
+router.get('/checkArticleAlias', async (req, res) => {
   let resp: IResp;
   try {
     const data = await proxy.checkArticleAlias(req.query);
@@ -149,7 +150,7 @@ app.get('/checkArticleAlias', async (req, res) => {
 });
 
 // 检查分类alias是否重复
-app.get('/checkCategoryAlias', async (req, res) => {
+router.get('/checkCategoryAlias', async (req, res) => {
   let resp: IResp;
   try {
     const data = await proxy.checkCategoryAlias(req.query);
@@ -168,7 +169,7 @@ app.get('/checkCategoryAlias', async (req, res) => {
 });
 
 // 新增分类
-app.post('/category', async (req, res) => {
+router.post('/category', async (req, res) => {
   let resp: IResp;
   try {
     const category = await proxy.newCategory(req.body);
@@ -187,7 +188,7 @@ app.post('/category', async (req, res) => {
 });
 
 // 修改分类
-app.put('/category', async (req, res) => {
+router.put('/category', async (req, res) => {
   let resp: IResp;
   try {
     const category = await proxy.editCategory(req.query.uid, req.body);
@@ -206,7 +207,7 @@ app.put('/category', async (req, res) => {
 });
 
 // 删除文章
-app.delete('/category', async (req, res) => {
+router.delete('/category', async (req, res) => {
   let resp: IResp;
   try {
     const data = await proxy.deleteCategory(req.query.uids);
@@ -224,7 +225,7 @@ app.delete('/category', async (req, res) => {
   res.json(resp);
 });
 
-app.get("/comments", async (req, res) => {
+router.get("/comments", async (req, res) => {
   let resp: IResp;
   try {
     const data = await proxy.getComments(req.query);
@@ -243,7 +244,7 @@ app.get("/comments", async (req, res) => {
 });
 
 // 删除评论
-app.delete('/comment', async (req, res) => {
+router.delete('/comment', async (req, res) => {
   let resp: IResp;
   try {
     const data = await proxy.deleteComment(req.query.uids);
@@ -261,7 +262,7 @@ app.delete('/comment', async (req, res) => {
   res.json(resp);
 });
 
-app.get("/guestbook", async (req, res) => {
+router.get("/guestbook", async (req, res) => {
   let resp: IResp;
   try {
     const data = await proxy.getGuestbook(req.query);
@@ -280,7 +281,7 @@ app.get("/guestbook", async (req, res) => {
 });
 
 // 删除留言
-app.delete('/guestbook', async (req, res) => {
+router.delete('/guestbook', async (req, res) => {
   let resp: IResp;
   try {
     const data = await proxy.deleteGuestbook(req.query.uids);
@@ -299,7 +300,7 @@ app.delete('/guestbook', async (req, res) => {
 });
 
 // 修改设置
-app.put('/settings', async (req, res) => {
+router.put('/settings', async (req, res) => {
   let resp: IResp;
   try {
     const settings = await proxy.saveSettings(req.body);
@@ -317,7 +318,7 @@ app.put('/settings', async (req, res) => {
   res.json(resp);
 });
 
-app.get('/guestbookStats', async (req, res) => {
+router.get('/guestbookStats', async (req, res) => {
   let resp: IResp;
   try {
     const stats = await proxy.getGuestBookStats();
@@ -335,7 +336,7 @@ app.get('/guestbookStats', async (req, res) => {
   res.json(resp);
 });
 
-app.get('/commentsStats', async (req, res) => {
+router.get('/commentsStats', async (req, res) => {
   let resp: IResp;
   try {
     const stats = await proxy.getCommentsStats();
@@ -353,7 +354,7 @@ app.get('/commentsStats', async (req, res) => {
   res.json(resp);
 });
 
-app.get('/postsStats', async (req, res) => {
+router.get('/postsStats', async (req, res) => {
   let resp: IResp;
   try {
     const stats = await proxy.getPostsStats();
@@ -371,7 +372,7 @@ app.get('/postsStats', async (req, res) => {
   res.json(resp);
 });
 
-app.get('/categoriesStats', async (req, res) => {
+router.get('/categoriesStats', async (req, res) => {
   let resp: IResp;
   try {
     const stats = await proxy.getCategoriesStats();
@@ -389,7 +390,7 @@ app.get('/categoriesStats', async (req, res) => {
   res.json(resp);
 });
 
-app.get('/commentsAndGuestbookStats', async (req, res) => {
+router.get('/commentsAndGuestbookStats', async (req, res) => {
   let resp: IResp;
   try {
     const stats = await proxy.getComentsAndGuestbookStats();
@@ -429,11 +430,4 @@ app.get('/commentsAndGuestbookStats', async (req, res) => {
   res.json(resp);
 });
 
-app.use((err, req, res, next) => {
-  res.sendStatus(err.status || 500);
-});
-
-export default {
-  path: "/admin/api",
-  handler: app
-};
+export default router;

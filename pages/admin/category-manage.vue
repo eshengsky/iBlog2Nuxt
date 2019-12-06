@@ -275,7 +275,7 @@ export default Vue.extend({
       this.selectedRowKeys = [];
       this.isLoading = true;
       const { code, data }: IResp = await this.$axios.$get(
-        "/admin/api/categories"
+        "/api/admin/categories"
       );
       if (code === 1) {
         data.unshift(allCategoryItem);
@@ -291,7 +291,7 @@ export default Vue.extend({
     checkAlias(rule, value, callback): void {
       if (value) {
         this.$axios
-          .$get("/admin/api/checkCategoryAlias", {
+          .$get("/api/admin/checkCategoryAlias", {
             params: {
               alias: value,
               excludeUid: this.uid
@@ -350,7 +350,7 @@ export default Vue.extend({
         onOk() {
           return new Promise((resolve, reject) => {
             self.$axios
-              .$delete("/admin/api/category", {
+              .$delete("/api/admin/category", {
                 params: {
                   uids: uid
                 }
@@ -381,7 +381,7 @@ export default Vue.extend({
         onOk() {
           return new Promise((resolve, reject) => {
             self.$axios
-              .$delete("/admin/api/category", {
+              .$delete("/api/admin/category", {
                 params: {
                   uids: self.selectedRowKeys
                 }
@@ -454,13 +454,13 @@ export default Vue.extend({
           };
           if (!this.uid) {
             // 新增
-            this.$axios.$post("/admin/api/category", data).then(resp => {
+            this.$axios.$post("/api/admin/category", data).then(resp => {
               done(resp);
             });
           } else {
             // 编辑
             this.$axios
-              .$put("/admin/api/category", data, {
+              .$put("/api/admin/category", data, {
                 params: {
                   uid: this.uid
                 }

@@ -369,7 +369,7 @@ export default Vue.extend({
   },
 
   async asyncData({ $axios }) {
-    const { code, data }: IResp = await $axios.$get("/admin/api/categories");
+    const { code, data }: IResp = await $axios.$get("/api/admin/categories");
     if (code === 1) {
       return {
         categories: data
@@ -475,7 +475,7 @@ export default Vue.extend({
       }
       this.selectedRowKeys = [];
       this.isLoading = true;
-      const { code, data }: IResp = await this.$axios.$get("/admin/api/posts", {
+      const { code, data }: IResp = await this.$axios.$get("/api/admin/posts", {
         params: {
           pageIndex: this.pagination.current,
           pageSize: this.pagination.pageSize,
@@ -532,7 +532,7 @@ export default Vue.extend({
         onOk() {
           return new Promise((resolve, reject) => {
             self.$axios
-              .$delete("/admin/api/article", {
+              .$delete("/api/admin/article", {
                 params: {
                   uids: uid
                 }
@@ -562,7 +562,7 @@ export default Vue.extend({
         onOk() {
           return new Promise((resolve, reject) => {
             self.$axios
-              .$delete("/admin/api/article", {
+              .$delete("/api/admin/article", {
                 params: {
                   uids: self.selectedRowKeys
                 }
@@ -593,7 +593,7 @@ export default Vue.extend({
         onOk() {
           return new Promise((resolve, reject) => {
             self.$axios
-              .$delete("/admin/api/article", {
+              .$delete("/api/admin/article", {
                 params: {
                   uids: uid,
                   force: true
@@ -625,7 +625,7 @@ export default Vue.extend({
           return new Promise((resolve, reject) => {
             self.$axios
               .$put(
-                "/admin/api/article",
+                "/api/admin/article",
                 {
                   isActive: true,
                   isDraft: true

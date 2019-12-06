@@ -242,27 +242,27 @@ export default Vue.extend({
     }
   },
   created() {
-    this.$axios.$get("/admin/api/commentsStats").then(({ code, data }) => {
+    this.$axios.$get("/api/admin/commentsStats").then(({ code, data }) => {
       if (code === 1) {
         this.commentsStats = data;
       }
     });
-    this.$axios.$get("/admin/api/guestbookStats").then(({ code, data }) => {
+    this.$axios.$get("/api/admin/guestbookStats").then(({ code, data }) => {
       if (code === 1) {
         this.guestbookStats = data;
       }
     });
-    this.$axios.$get("/admin/api/postsStats").then(({ code, data }) => {
+    this.$axios.$get("/api/admin/postsStats").then(({ code, data }) => {
       if (code === 1) {
         this.postsStats = data;
       }
     });
-    this.$axios.$get("/admin/api/categoriesStats").then(({ code, data }) => {
+    this.$axios.$get("/api/admin/categoriesStats").then(({ code, data }) => {
       if (code === 1) {
         this.categoriesStats = data;
       }
     });
-    this.$axios.$get("/admin/api/commentsAndGuestbookStats").then(({ code, data }) => {
+    this.$axios.$get("/api/admin/commentsAndGuestbookStats").then(({ code, data }) => {
       if (code === 1) {
         this.commentsAndGuestbookStats = data;
       }

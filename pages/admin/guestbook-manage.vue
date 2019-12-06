@@ -227,7 +227,7 @@ export default Vue.extend({
       this.selectedRowKeys = [];
       this.isLoading = true;
       const { code, data }: IResp = await this.$axios.$get(
-        "/admin/api/guestbook",
+        "/api/admin/guestbook",
         {
           params: {
             pageIndex: this.pagination.current,
@@ -277,7 +277,7 @@ export default Vue.extend({
         onOk() {
           return new Promise((resolve, reject) => {
             self.$axios
-              .$delete("/admin/api/guestbook", {
+              .$delete("/api/admin/guestbook", {
                 params: {
                   uids: uid
                 }
@@ -307,7 +307,7 @@ export default Vue.extend({
         onOk() {
           return new Promise((resolve, reject) => {
             self.$axios
-              .$delete("/admin/api/guestbook", {
+              .$delete("/api/admin/guestbook", {
                 params: {
                   uids: self.selectedRowKeys
                 }

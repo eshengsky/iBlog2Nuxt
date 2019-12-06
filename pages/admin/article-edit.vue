@@ -198,7 +198,7 @@ export default Vue.extend({
   async asyncData({ $axios, query, error }: any) {
     const uid = query.uid;
     if (uid) {
-      const { code, data } = await $axios.$get("/admin/api/article", {
+      const { code, data } = await $axios.$get("/api/admin/article", {
         params: {
           uid
         }
@@ -328,7 +328,7 @@ export default Vue.extend({
   methods: {
     async getCategories() {
       const { code, data }: IResp = await this.$axios.$get(
-        "/admin/api/categories"
+        "/api/admin/categories"
       );
       if (code === 1) {
         this.categories = data;
@@ -342,7 +342,7 @@ export default Vue.extend({
     checkAlias(rule, value, callback) {
       if (value) {
         this.$axios
-          .$get("/admin/api/checkArticleAlias", {
+          .$get("/api/admin/checkArticleAlias", {
             params: {
               alias: value,
               excludeUid: this.initialData._id
@@ -381,7 +381,7 @@ export default Vue.extend({
             cancelText: "取消",
             onOk() {
               return new Promise((resolve, reject) => {
-                self.$axios.$post("/admin/api/article", data).then(resp => {
+                self.$axios.$post("/api/admin/article", data).then(resp => {
                   if (resp.code === 1) {
                     self.initialData = resp.data.article;
                     history.replaceState(
@@ -419,7 +419,7 @@ export default Vue.extend({
             onOk() {
               return new Promise((resolve, reject) => {
                 self.$axios
-                  .$put("/admin/api/article", data, {
+                  .$put("/api/admin/article", data, {
                     params: {
                       uid: self.initialData._id
                     }
@@ -450,7 +450,7 @@ export default Vue.extend({
             isDraft: true,
             ...values
           };
-          this.$axios.$post("/admin/api/article", data).then(resp => {
+          this.$axios.$post("/api/admin/article", data).then(resp => {
             if (resp.code === 1) {
               self.initialData = resp.data.article;
               history.replaceState(
@@ -481,7 +481,7 @@ export default Vue.extend({
           return new Promise((resolve, reject) => {
             self.$axios
               .$put(
-                "/admin/api/article",
+                "/api/admin/article",
                 {
                   isDraft: true
                 },
@@ -515,7 +515,7 @@ export default Vue.extend({
             ...values
           };
           this.$axios
-            .$put("/admin/api/article", data, {
+            .$put("/api/admin/article", data, {
               params: {
                 uid: this.initialData._id
               }

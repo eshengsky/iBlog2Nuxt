@@ -262,7 +262,7 @@ export default Vue.extend({
       this.selectedRowKeys = [];
       this.isLoading = true;
       const { code, data }: IResp = await this.$axios.$get(
-        "/admin/api/comments",
+        "/api/admin/comments",
         {
           params: {
             pageIndex: this.pagination.current,
@@ -313,7 +313,7 @@ export default Vue.extend({
         onOk() {
           return new Promise((resolve, reject) => {
             self.$axios
-              .$delete("/admin/api/comment", {
+              .$delete("/api/admin/comment", {
                 params: {
                   uids: uid
                 }
@@ -343,7 +343,7 @@ export default Vue.extend({
         onOk() {
           return new Promise((resolve, reject) => {
             self.$axios
-              .$delete("/admin/api/comment", {
+              .$delete("/api/admin/comment", {
                 params: {
                   uids: self.selectedRowKeys
                 }

@@ -321,7 +321,6 @@ export default Vue.extend({
   color: #888;
   font-size: 14px;
   padding: 10px;
-  -webkit-user-select: none;
   user-select: none;
 }
 
@@ -330,57 +329,26 @@ export default Vue.extend({
   color: #888;
   font-size: 14px;
   margin: 20px 0;
-  -webkit-user-select: none;
   user-select: none;
-}
-
-@-webkit-keyframes dot-loading {
-  0% {
-    -webkit-transform: scale(1, 1);
-    transform: scale(1, 1);
-    opacity: 0.5;
-  }
-
-  33.33% {
-    -webkit-transform: scale(1.667, 1.667);
-    transform: scale(1.667, 1.667);
-    opacity: 1;
-  }
-
-  66.66% {
-    -webkit-transform: scale(1, 1);
-    transform: scale(1, 1);
-    opacity: 0.5;
-  }
-
-  100% {
-    -webkit-transform: scale(1, 1);
-    transform: scale(1, 1);
-    opacity: 0.5;
-  }
 }
 
 @keyframes dot-loading {
   0% {
-    -webkit-transform: scale(1, 1);
     transform: scale(1, 1);
     opacity: 0.5;
   }
 
   33.33% {
-    -webkit-transform: scale(1.667, 1.667);
     transform: scale(1.667, 1.667);
     opacity: 1;
   }
 
   66.66% {
-    -webkit-transform: scale(1, 1);
     transform: scale(1, 1);
     opacity: 0.5;
   }
 
   100% {
-    -webkit-transform: scale(1, 1);
     transform: scale(1, 1);
     opacity: 0.5;
   }
@@ -407,23 +375,20 @@ export default Vue.extend({
   height: 6px;
   border-radius: 100%;
   opacity: 0.5;
-  -webkit-animation: dot-loading 1.2s linear infinite;
   animation: dot-loading 1.2s linear infinite;
 }
 
 .dot-loading > div:nth-child(1) {
-  background: #fe3c71;
+  background: #1890ff;
 }
 
 .dot-loading > div:nth-child(2) {
-  background: #fe686c;
-  -webkit-animation-delay: 0.4s;
+  background: #1890ff;
   animation-delay: 0.4s;
 }
 
 .dot-loading > div:nth-child(3) {
-  background: #fe7f6a;
-  -webkit-animation-delay: 0.8s;
+  background: #1890ff;
   animation-delay: 0.8s;
 }
 

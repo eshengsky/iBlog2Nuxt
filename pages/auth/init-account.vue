@@ -97,7 +97,7 @@ export default Vue.extend({
         if (!error) {
           this.btnLoading = true;
           const { code, data, message }: IResp = await this.$axios.$put(
-            "/auth/api/account",
+            "/api/auth/account",
             {
               password: md5(values.pwd1)
             }
