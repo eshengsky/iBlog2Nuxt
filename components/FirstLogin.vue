@@ -1,35 +1,27 @@
 <template>
-  <div>
-    <div class="auth-panel">
-      <h2 class="auth-title">首次登录</h2>
-      <p class="auth-desc">请先设置管理员登录密码</p>
-      <a-form label-position="top" :form="form" class="form">
-        <a-form-item label="密码" :colon="false">
-          <a-input-password
-            size="large"
-            placeholder="请输入密码"
-            ref="pwd1"
-            v-decorator="['pwd1', pwd1Opts]"
-          />
-        </a-form-item>
-        <a-form-item label="确认密码" :colon="false">
-          <a-input-password
-            size="large"
-            placeholder="请再次输入密码"
-            v-decorator="['pwd2', pwd2Opts]"
-            @keyup.enter="save"
-          />
-        </a-form-item>
-      </a-form>
-      <div style="text-align: right;">
-        <a-button
-          type="primary"
+  <div class="auth-panel">
+    <h2 class="auth-title">首次登录</h2>
+    <p class="auth-desc">请先设置管理员登录密码</p>
+    <a-form label-position="top" :form="form" class="form">
+      <a-form-item label="密码" :colon="false">
+        <a-input-password
           size="large"
-          :loading="btnLoading"
-          @click="save"
-          >完成</a-button
-        >
-      </div>
+          placeholder="请输入密码"
+          ref="pwd1"
+          v-decorator="['pwd1', pwd1Opts]"
+        />
+      </a-form-item>
+      <a-form-item label="确认密码" :colon="false">
+        <a-input-password
+          size="large"
+          placeholder="请再次输入密码"
+          v-decorator="['pwd2', pwd2Opts]"
+          @keyup.enter="save"
+        />
+      </a-form-item>
+    </a-form>
+    <div style="text-align: right;">
+      <a-button type="primary" size="large" :loading="btnLoading" @click="save">完成</a-button>
     </div>
   </div>
 </template>
@@ -39,8 +31,6 @@ import Vue from "vue";
 import md5 from "blueimp-md5";
 import { IResp } from "@/server/types";
 export default Vue.extend({
-  name: "PageInitAccount",
-  layout: "auth",
   data() {
     return {
       btnLoading: false,
@@ -103,10 +93,7 @@ export default Vue.extend({
             }
           );
           if (code === 1) {
-            this.$message.loading("设置成功！正在跳转登录页...");
-            setTimeout(() => {
-              location.href = "/auth/login";
-            }, 2000);
+            this.$emit('init');
           } else {
             console.error(message);
             this.$message.error("操作失败！");
@@ -120,25 +107,7 @@ export default Vue.extend({
 </script>
 
 <style>
-.auth-panel {
-  max-width: 370px;
-  margin: 13vh auto 0;
-  padding: 50px 40px;
-  background: #fff;
-  border-radius: 6px;
-  box-shadow: 0 20px 25px -12px rgba(0, 0, 0, 0.09);
-}
-
-.auth-title {
-  text-align: center;
-}
-
-.auth-desc {
-  color: #777;
-  text-align: center;
-}
-
-.form {
-    margin: 40px 0 20px;
+.auth-panel .form {
+  margin: 40px 0 20px;
 }
 </style>

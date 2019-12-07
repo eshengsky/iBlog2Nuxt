@@ -1,60 +1,42 @@
 <template>
   <div>
-    <div class="auth-panel">
-      <h2 class="auth-title">后台登录</h2>
-      <p class="auth-desc">Admin</p>
-      <div class="auth-input">
-        <a-input-password
-          size="large"
-          placeholder="请输入密码"
-          ref="input"
-          v-model="pwd"
-          @keyup.enter="login"
-        />
-      </div>
-      <a-button type="primary" :block="true" size="large" @click="login"
-        >登录</a-button
-      >
-    </div>
+    <first-login v-if="isFirst" @init="initComplete"></first-login>
+    <login-account v-else></login-account>
   </div>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
-import md5 from "blueimp-md5";
+import FirstLogin from "@/components/FirstLogin.vue";
+import LoginAccount from "@/components/LoginAccount.vue";
 export default Vue.extend({
   name: "PageLogin",
   layout: "auth",
-  async asyncData({ $axios, redirect }) {
-    const { code, data } = await $axios.$get("/api/auth/exists");
-    if (code === 1 && !data.exists) {
-      // 临时重定向
-      redirect(302, "/auth/init-account");
-    }
+  components: {
+    FirstLogin,
+    LoginAccount
   },
   data() {
     return {
-      pwd: ""
+      isFirst: false
+    }
+  },
+  async asyncData({ $axios, redirect }) {
+    let isFirst: boolean;
+    const { code, data } = await $axios.$get("/api/auth/exists");
+    if (code === 1 && !data.exists) {
+      // 首次登录
+      isFirst = true;
+    } else {
+      isFirst = false;
+    }
+    return {
+      isFirst
     };
   },
-  mounted() {
-    (this.$refs.input as any).$children[0].focus();
-  },
   methods: {
-    login(this: any) {
-      if (!this.pwd) {
-        (this.$refs.input as any).$children[0].focus();
-        return;
-      }
-      this.$auth
-        .loginWith("local", {
-          data: {
-            password: md5(this.pwd)
-          }
-        })
-        .catch(err => {
-          this.$message.error("密码不正确！");
-        });
+    initComplete() {
+      this.isFirst = false;
     }
   }
 });
@@ -77,9 +59,5 @@ export default Vue.extend({
 .auth-desc {
   color: #777;
   text-align: center;
-}
-
-.auth-input {
-  margin: 60px 0 20px;
 }
 </style>

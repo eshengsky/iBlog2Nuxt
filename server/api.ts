@@ -16,7 +16,7 @@ app.use(indexRoute);
 
 // Error
 app.use((err, req, res, next) => {
-  console.error(err);
+  console.error('api route error', err);
   res.sendStatus(err.status || 500);
 });
 
