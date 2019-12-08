@@ -89,6 +89,39 @@ router.get("/article", async (req, res, next) => {
   res.json(resp);
 });
 
+router.get("/postsCountByCate", async (req, res, next) => {
+  let resp: IResp;
+  try {
+    const data = await proxy.getPostsCountByCate(req.query.category);
+    resp = {
+      code: 1,
+      data
+    };
+  } catch (err) {
+    console.error(err);
+    resp = {
+      code: -1
+    };
+  }
+  res.json(resp);
+});
+
+router.get("/increaseViews", async (req, res, next) => {
+  let resp: IResp;
+  try {
+    await proxy.increaseViews(req.query.id);
+    resp = {
+      code: 1
+    };
+  } catch (err) {
+    console.error(err);
+    resp = {
+      code: -1
+    };
+  }
+  res.json(resp);
+});
+
 router.get("/comments", async (req, res, next) => {
   let resp: IResp;
   try {

@@ -139,11 +139,27 @@ async function getArticle(params) {
   let article;
   try {
     const alias = params.alias;
-    article = await Post.findOne({ alias }).exec();
+    article = await Post.findOne({ alias }).populate("category").exec();
   } catch (err) {
     console.error(err);
   }
   return article;
+}
+
+async function getPostsCountByCate(category) {
+  let count = 0;
+  try {
+    count = await Post.countDocuments({ category }).exec();
+  } catch (err) {
+    console.error(err);
+  }
+  return count;
+}
+
+async function increaseViews(id) {
+  await Post.findByIdAndUpdate(id, {
+    $inc: { viewCount: 1 }
+  }).exec();
 }
 
 async function getComments(params) {
@@ -249,6 +265,8 @@ export default {
   getPopArticles,
   getPopLabels,
   getArticle,
+  getPostsCountByCate,
+  increaseViews,
   getComments,
   saveComment,
   getGuestbook,

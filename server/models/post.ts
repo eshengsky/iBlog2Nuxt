@@ -1,9 +1,7 @@
-import { Schema, model, models, Document, Model, Types } from "mongoose";
+import { Schema, model, models, Document, Model } from "mongoose";
 import url from "url";
-import moment from "moment";
 import MarkdownIt from "markdown-it";
 import MarkdownItGithubHeadings from "markdown-it-github-headings";
-import uslug from "uslug";
 import hljs from "highlight.js";
 import { ICategory } from "./category";
 

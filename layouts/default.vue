@@ -20,26 +20,19 @@
               }"
             >
               <nuxt-link to="/">
-                <font-awesome-icon
-                  :icon="['fas', 'pen-nib']"
-                ></font-awesome-icon
-                >博客
+                <font-awesome-icon :icon="['fas', 'pen-nib']"></font-awesome-icon>博客
               </nuxt-link>
               <div class="nav-line"></div>
             </li>
             <li :class="{ 'guestbook-active': $route.path === '/guestbook' }">
               <nuxt-link to="/guestbook">
-                <font-awesome-icon
-                  :icon="['fas', 'comment-dots']"
-                ></font-awesome-icon
-                >留言
+                <font-awesome-icon :icon="['fas', 'comment-dots']"></font-awesome-icon>留言
               </nuxt-link>
               <div class="nav-line"></div>
             </li>
             <li :class="{ 'profile-active': $route.path === '/profile' }">
               <nuxt-link to="/profile">
-                <font-awesome-icon :icon="['fas', 'user']"></font-awesome-icon
-                >关于
+                <font-awesome-icon :icon="['fas', 'user']"></font-awesome-icon>关于
               </nuxt-link>
               <div class="nav-line"></div>
             </li>
@@ -222,5 +215,32 @@ export default Vue.extend({
     -webkit-transform: none;
     transform: none;
   }
+}
+
+.widget-container {
+  border-radius: 5px;
+  background: #fff;
+  margin-bottom: 20px;
+}
+
+.widget-header {
+  font-size: 15px;
+  padding: 0 20px;
+  line-height: 50px;
+  border-bottom: 1px solid #e7eaec;
+  user-select: none;
+}
+
+.widget-body {
+  padding: 20px;
+  min-height: 100px;
+  position: relative;
+}
+
+.widget-body .ant-spin {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin: -10px;
 }
 </style>

@@ -610,7 +610,8 @@ const getComentsAndGuestbookStats = async () => {
           _id: {
             $dateToString: {
               format: "%Y-%m-%d",
-              date: "$createTime"
+              date: "$createTime",
+              timezone: "+08"
             }
           },
           count: { $sum: 1 }
@@ -634,7 +635,8 @@ const getComentsAndGuestbookStats = async () => {
           _id: {
             $dateToString: {
               format: "%Y-%m-%d",
-              date: "$createTime"
+              date: "$createTime",
+              timezone: "+08"
             }
           },
           count: { $sum: 1 }

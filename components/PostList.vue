@@ -418,39 +418,12 @@ export default Vue.extend({
 
 .post-right {
   width: 300px;
-  margin-left: 15px;
+  margin-left: 20px;
 }
 
 .ant-fullcalendar table,
 .ant-fullcalendar th {
   background: #fff !important;
   border: 0 !important;
-}
-
-.widget-container {
-  border: 1px solid #e7eaec;
-  border-radius: 5px;
-  background: #fff;
-  margin-bottom: 15px;
-}
-
-.widget-header {
-  padding: 0 15px;
-  line-height: 45px;
-  border-bottom: 1px solid #e7eaec;
-  user-select: none;
-}
-
-.widget-body {
-  padding: 15px;
-  min-height: 100px;
-  position: relative;
-}
-
-.widget-body .ant-spin {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  margin: -10px;
 }
 </style>

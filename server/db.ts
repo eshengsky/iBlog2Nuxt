@@ -1,5 +1,6 @@
 import { connect, connection, Connection } from "mongoose";
 import { Post, IPostModel } from "./models/post";
+import { PostView, IPostView, IPostViewModel } from "./models/post-view";
 import { Category, ICategoryModel } from "./models/category";
 import { Comment, ICommentModel } from "./models/comment";
 import { Guestbook, IGuestbookModel } from "./models/guestbook";
@@ -9,7 +10,7 @@ import config from "../blog.config";
 
 interface IModels {
   Post: IPostModel;
-
+  PostView: IPostViewModel;
   Category: ICategoryModel,
   Comment: ICommentModel,
   Guestbook: IGuestbookModel,
@@ -45,6 +46,7 @@ export default class DB {
 
     this._models = {
       Post: new Post().model,
+      PostView: new PostView().model,
       Category: new Category().model,
       Comment: new Comment().model,
       Guestbook: new Guestbook().model,

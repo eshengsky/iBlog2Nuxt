@@ -19,11 +19,9 @@
           <a
             href="https://creativecommons.org/licenses/by-nc-sa/3.0/deed.zh"
             target="_blank"
-            >CC BY-NC-SA 3.0</a
-          >
+          >CC BY-NC-SA 3.0</a>
           <span>许可协议。转载请注明来自</span>
-          <a :href="website">{{ settings.blogName }}</a
-          >。
+          <a :href="website">{{ settings.blogName }}</a>。
         </p>
       </div>
       <div v-else class="end-wrap">
@@ -31,29 +29,39 @@
       </div>
       <comment-list :from="2" :articleId="article._id"></comment-list>
     </article>
-    <aside class="menu-wrap" v-show="menuShow">
-      <div class="menu-container">
-        <div class="menu-title">文章目录</div>
-        <a-anchor
-          :affix="false"
-          :showInkInFixed="true"
-          :offsetTop="75"
-          :bounds="10"
-        >
-          <a-anchor-link
-            v-for="(item1, index1) in menus"
-            :href="item1.href"
-            :title="item1.title"
-            :key="index1"
-          >
+    <aside class="side-wrap">
+      <div class="side-block-container">
+        <div class="side-title">分类</div>
+        <div class="category-title">
+          <img :src="article.category.img" />
+          <span>{{ article.category.cateName }}</span>
+        </div>
+        <nuxt-link class="ant-btn ant-btn-dashed" :to="`/blog/${article.category.alias}`">
+          全部
+          <span class="posts-count">{{ postsCount }}</span>
+          篇文章
+        </nuxt-link>
+      </div>
+      <div :class="{ 'sticky-wrap': menuShow }">
+        <div class="side-block-container" v-show="menuShow">
+          <div class="side-title">目录</div>
+          <a-anchor :affix="false" :showInkInFixed="true" :offsetTop="75" :bounds="10">
             <a-anchor-link
-              v-for="(item2, index2) in item1.subs"
-              :href="item2.href"
-              :title="item2.title"
-              :key="index2"
-            />
-          </a-anchor-link>
-        </a-anchor>
+              v-for="(item1, index1) in menus"
+              :href="item1.href"
+              :title="item1.title"
+              :key="index1"
+            >
+              <a-anchor-link
+                v-for="(item2, index2) in item1.subs"
+                :href="item2.href"
+                :title="item2.title"
+                :key="index2"
+              />
+            </a-anchor-link>
+          </a-anchor>
+        </div>
+        <pop-articles></pop-articles>
       </div>
     </aside>
   </div>
@@ -61,7 +69,9 @@
 <script lang="ts">
 import Vue from "vue";
 import "highlight.js/styles/tomorrow.css";
-import CommentList from "~/components/CommentList.vue";
+import CommentList from "@/components/CommentList.vue";
+import PopArticles from "@/components/widgets/popArticles.vue";
+import { IPost } from "@/server/models/post";
 interface IHeading3 {
   href: string;
   title: string;
@@ -71,14 +81,16 @@ interface IHeading2 extends IHeading3 {
 }
 export default Vue.extend({
   components: {
-    CommentList
+    CommentList,
+    PopArticles
   },
   data() {
     return {
       settings: this.$store.state.settings,
-      article: {},
+      article: {} as IPost,
       menus: [] as Array<IHeading2>,
-      menuShow: false
+      menuShow: false,
+      postsCount: 0
     };
   },
   computed: {
@@ -93,6 +105,17 @@ export default Vue.extend({
         return location.protocol + "//" + location.host;
       }
       return "";
+    },
+    stickyCls() {
+      if (this.menuShow) {
+        return {
+          position: "sticky",
+          top: "90px"
+        };
+      }
+      return {
+        position: "relative"
+      };
     }
   },
   async asyncData({ $axios, params, error }) {
@@ -113,12 +136,25 @@ export default Vue.extend({
       });
     }
   },
+  async created() {
+    const { code, data } = await this.$axios.$get("/api/postsCountByCate", {
+      params: {
+        category: this.article.category._id
+      }
+    });
+    if (code === 1) {
+      this.postsCount = data;
+    }
+  },
   mounted() {
     this.scrollByHash();
     window.addEventListener("hashchange", () => {
       this.scrollByHash();
     });
     this.generateMenu();
+    setTimeout(() => {
+      console.log(111111);
+    }, 5000);
   },
   methods: {
     generateMenu() {
@@ -191,7 +227,6 @@ export default Vue.extend({
   padding: 40px;
   border-radius: 4px;
   background: #fff;
-  transition: width 0.3s;
   max-width: 792px;
   min-height: 70vh;
 }
@@ -215,42 +250,23 @@ export default Vue.extend({
   min-height: 50vh;
 }
 
-.menu-wrap {
+.side-wrap {
   width: 260px;
   flex: none;
   margin-left: 20px;
 }
 
 @media (max-width: 835px) {
-  .menu-wrap {
+  .side-wrap {
     display: none;
   }
 }
 
-.menu-container {
-  position: fixed;
-  width: 260px;
+.side-block-container {
   background: #fff;
-  padding: 25px 20px;
-  user-select: none;
+  padding: 20px;
   border-radius: 4px;
-  opacity: 1;
-  transition: opacity 3s;
-}
-
-.btn-menu {
-  position: fixed;
-  background: #fff;
-  outline: none;
-  width: 40px;
-  height: 40px;
-  border: 1px solid #ddd;
-  border-radius: 3px;
-  cursor: pointer;
-}
-
-.ant-affix {
-  top: 100px !important;
+  margin-bottom: 20px;
 }
 
 .article-content h1,
@@ -278,9 +294,35 @@ export default Vue.extend({
   opacity: 1;
 }
 
-.menu-title {
+.side-title {
   font-size: 16px;
   margin-bottom: 8px;
+  user-select: none;
+}
+
+.side-wrap .category-title {
+  border-top: 1px solid transparent;
+  font-size: 15px;
+  height: 50px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  color: #444;
+}
+
+.side-wrap .category-title img {
+  width: 25px;
+  height: 25px;
+  position: absolute;
+}
+
+.side-wrap .category-title span {
+  padding-left: 28px;
+  display: inline-block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 100%;
 }
 
 .ant-anchor-ink::before {
@@ -292,19 +334,8 @@ export default Vue.extend({
   position: relative;
   border: 1px dashed #ccc;
   border-radius: 5px;
-  padding: 10px 14px 5px;
+  padding: 13px 16px 8px;
   margin: 40px 0 70px;
-}
-
-.license-wrap::after {
-  content: "";
-  position: absolute;
-  right: 7px;
-  top: 7px;
-  width: 7px;
-  height: 7px;
-  background: #1890ff;
-  border-radius: 50%;
 }
 
 .license-wrap > span,
@@ -327,5 +358,10 @@ export default Vue.extend({
   position: relative;
   border-top: 1px solid #ddd;
   margin: 40px 0 70px;
+}
+
+.sticky-wrap {
+  position: sticky;
+  top: 90px;
 }
 </style>
