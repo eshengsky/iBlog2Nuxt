@@ -1,6 +1,6 @@
 import DB from "../db";
 import BadWords from "../bad_words/index";
-const { Post, PostView, Category, Comment, Guestbook, Setting } = DB.Models;
+const { Post, Cache, Category, Comment, Guestbook, Setting } = DB.Models;
 const badWords = BadWords.instance;
 
 async function getCategories() {
@@ -160,9 +160,9 @@ async function getPostsCountByCate(category) {
 
 async function increaseViews({ postID, clientIP }) {
   // 判断该IP用户是否已看过该文章
-  const exists = await PostView.exists({
-    postID,
-    clientIP
+  const exists = await Cache.exists({
+    clientIP,
+    ext1: postID
   });
 
   // 如果没看过
@@ -173,9 +173,9 @@ async function increaseViews({ postID, clientIP }) {
     }).exec();
 
     // 同时，将用户IP和文章ID存入缓存
-    PostView.create({
-      postID,
-      clientIP
+    Cache.create({
+      clientIP,
+      ext1: postID
     });
   }
 }
