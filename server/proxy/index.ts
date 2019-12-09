@@ -1,6 +1,6 @@
 import DB from "../db";
 import BadWords from "../bad_words/index";
-const { Post, Category, Comment, Guestbook, Setting } = DB.Models;
+const { Post, PostView, Category, Comment, Guestbook, Setting } = DB.Models;
 const badWords = BadWords.instance;
 
 async function getCategories() {
@@ -139,7 +139,9 @@ async function getArticle(params) {
   let article;
   try {
     const alias = params.alias;
-    article = await Post.findOne({ alias }).populate("category").exec();
+    article = await Post.findOne({ alias })
+      .populate("category")
+      .exec();
   } catch (err) {
     console.error(err);
   }
@@ -156,10 +158,26 @@ async function getPostsCountByCate(category) {
   return count;
 }
 
-async function increaseViews(id) {
-  await Post.findByIdAndUpdate(id, {
-    $inc: { viewCount: 1 }
-  }).exec();
+async function increaseViews({ postID, clientIP }) {
+  // 判断该IP用户是否已看过该文章
+  const exists = await PostView.exists({
+    postID,
+    clientIP
+  });
+
+  // 如果没看过
+  if (!exists) {
+    // 文章浏览数+1
+    Post.findByIdAndUpdate(postID, {
+      $inc: { viewCount: 1 }
+    }).exec();
+
+    // 同时，将用户IP和文章ID存入缓存
+    PostView.create({
+      postID,
+      clientIP
+    });
+  }
 }
 
 async function getComments(params) {

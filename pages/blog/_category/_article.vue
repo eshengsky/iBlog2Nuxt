@@ -152,9 +152,11 @@ export default Vue.extend({
       this.scrollByHash();
     });
     this.generateMenu();
-    setTimeout(() => {
-      console.log(111111);
-    }, 5000);
+    
+    // 文章浏览数+1
+    this.$axios.$put('/api/increaseViews', {
+      postID: this.article._id
+    });
   },
   methods: {
     generateMenu() {

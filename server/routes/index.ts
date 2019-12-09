@@ -106,10 +106,15 @@ router.get("/postsCountByCate", async (req, res, next) => {
   res.json(resp);
 });
 
-router.get("/increaseViews", async (req, res, next) => {
+// 文章浏览数+1
+router.put("/increaseViews", async (req, res, next) => {
   let resp: IResp;
   try {
-    await proxy.increaseViews(req.query.id);
+    const clientIP = req.ip;
+    await proxy.increaseViews({
+      postID: req.body.postID,
+      clientIP
+    });
     resp = {
       code: 1
     };
