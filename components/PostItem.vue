@@ -47,8 +47,9 @@
       :closable="false"
       @close="() => (drawer = false)"
     >
-      <!-- eslint-disable-next-line vue/no-v-html -->
-      <article class="preview-article" v-html="post.html" />
+      <div class="preview-article">
+        <article-content :html="post.html" />
+      </div>
       <footer class="preview-footer">
         <a-button @click="() => (drawer = false)">
           关闭
@@ -67,7 +68,11 @@
 <script lang="ts">
 import Vue from 'vue';
 import moment from 'moment';
+import ArticleContent from '@/components/ArticleContent.vue';
 export default Vue.extend({
+    components: {
+        ArticleContent
+    },
     props: {
         post: {
             type: Object,
@@ -80,7 +85,7 @@ export default Vue.extend({
         return {
             settings: this.$store.state.settings,
             drawer: false,
-            publishDate: moment(this.post.createTime).format('MM/DD, YYYY')
+            publishDate: moment(this.post.createTime).format('YYYY/MM/DD')
         };
     }
 });

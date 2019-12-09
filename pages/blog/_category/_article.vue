@@ -9,8 +9,7 @@
         <h1>{{ article.title }}</h1>
       </header>
       <main class="article-main">
-        <!-- eslint-disable-next-line vue/no-v-html -->
-        <div class="article-content" v-html="article.html" />
+        <article-content :html="article.html" />
       </main>
       <div v-if="settings.showLicense" class="license-wrap">
         <span>【END】</span>
@@ -76,6 +75,7 @@ import Vue from 'vue';
 import 'highlight.js/styles/tomorrow.css';
 import CommentList from '@/components/CommentList.vue';
 import PopArticles from '@/components/widgets/popArticles.vue';
+import ArticleContent from '@/components/ArticleContent.vue';
 import { IPost } from '@/server/models/post';
 interface IHeading3 {
     href: string;
@@ -87,7 +87,8 @@ interface IHeading2 extends IHeading3 {
 export default Vue.extend({
     components: {
         CommentList,
-        PopArticles
+        PopArticles,
+        ArticleContent
     },
     data () {
         return {
@@ -274,31 +275,6 @@ export default Vue.extend({
   padding: 20px;
   border-radius: 4px;
   margin-bottom: 20px;
-}
-
-.article-content h1,
-.article-content h2,
-.article-content h3,
-.article-content h4,
-.article-content h5 {
-  position: relative;
-}
-
-.anchor {
-  float: left;
-  padding-right: 4px;
-  margin-left: -20px;
-  line-height: 1;
-  opacity: 0;
-  transition: opacity 0.2s;
-}
-
-.article-content h1:hover .anchor,
-.article-content h2:hover .anchor,
-.article-content h3:hover .anchor,
-.article-content h4:hover .anchor,
-.article-content h5:hover .anchor {
-  opacity: 1;
 }
 
 .side-title {
