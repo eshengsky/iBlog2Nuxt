@@ -188,7 +188,7 @@ export default Vue.extend({
     }
 });
 </script>
-<style>
+<style scoped>
 .mcs-table {
   width: 100%;
   border: 1px solid #eee;
@@ -207,7 +207,8 @@ export default Vue.extend({
   padding: 10px;
   word-break: break-all;
 }
-
+</style>
+<style>
 .mcs-table img {
   width: 100px;
 }

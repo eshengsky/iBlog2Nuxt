@@ -677,7 +677,7 @@ export default Vue.extend({
     }
 });
 </script>
-<style>
+<style scoped>
 .page-wrap {
   display: flex;
   justify-content: flex-end;
@@ -687,18 +687,6 @@ export default Vue.extend({
 .action-td .ant-btn {
   width: 32px;
   padding: 0;
-}
-
-.badge-count {
-  top: -2px;
-}
-
-.badge-count sup {
-  background: #fff;
-  padding: 0;
-  color: #666;
-  font-weight: bold;
-  min-width: 12px;
 }
 
 .btn-wrap {
@@ -733,9 +721,5 @@ export default Vue.extend({
 
 .data-wrap .ant-tag {
   margin-right: 0;
-}
-
-.del2 .ant-modal-confirm-content {
-  color: #fa541c;
 }
 </style>

@@ -542,65 +542,10 @@ export default Vue.extend({
 });
 </script>
 
-<style>
+<style scoped>
 .link-category-btn {
   display: block;
   padding: 8px 12px;
-}
-
-.tui-editor-defaultUI {
-  border-top-left-radius: 4px;
-  border-top-right-radius: 4px;
-  overflow: auto;
-}
-
-.tui-editor-defaultUI .te-tab button {
-  height: 32px;
-}
-
-.tui-editor-defaultUI-toolbar {
-  padding: 0 20px;
-}
-
-button.tui-scrollsync {
-  display: none !important;
-}
-
-.tui-editor-contents pre {
-  border-radius: 4px;
-}
-
-.tui-tooltip {
-  max-width: 250px;
-  min-height: 34px;
-  padding: 8px 12px;
-  color: #fff;
-  text-align: left;
-  text-decoration: none;
-  background-color: rgba(70, 76, 91, 0.9);
-  border-radius: 4px;
-  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.2);
-  white-space: nowrap;
-  opacity: 1;
-}
-
-.tui-tooltip .arrow {
-  display: none;
-}
-
-.tui-editor-defaultUI-toolbar button:hover,
-.tui-editor-defaultUI-toolbar button:active,
-.tui-editor-defaultUI-toolbar button.active {
-  border-color: #bbb;
-  border-radius: 3px;
-}
-
-.tui-editor-popup {
-  position: fixed;
-  top: 50%;
-  transform: translate(0, -50%);
-  box-shadow: 0px 0px 10px #aaa;
-  border-radius: 5px;
 }
 
 .editor-footer {
@@ -615,7 +560,6 @@ button.tui-scrollsync {
   padding: 2px 10px;
   border-bottom-left-radius: 4px;
   border-bottom-right-radius: 4px;
-  -webkit-user-select: none;
   user-select: none;
 }
 

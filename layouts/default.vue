@@ -74,7 +74,7 @@ export default Vue.extend({
     }
 });
 </script>
-<style>
+<style scoped>
 .navbar {
   position: fixed;
   top: 0;
@@ -187,38 +187,22 @@ export default Vue.extend({
   bottom: 0;
   right: 14px;
   width: 30px;
-  -webkit-animation: fadeInLeft 1s;
   animation: fadeInLeft 1s;
-}
-
-@-webkit-keyframes fadeInLeft {
-  0% {
-    opacity: 0;
-    -webkit-transform: translate3d(-60%, 0, 0);
-    transform: translate3d(-60%, 0, 0);
-  }
-
-  100% {
-    opacity: 1;
-    -webkit-transform: none;
-    transform: none;
-  }
 }
 
 @keyframes fadeInLeft {
   0% {
     opacity: 0;
-    -webkit-transform: translate3d(-60%, 0, 0);
     transform: translate3d(-60%, 0, 0);
   }
 
   100% {
     opacity: 1;
-    -webkit-transform: none;
     transform: none;
   }
 }
-
+</style>
+<style>
 .widget-container {
   border-radius: 5px;
   background: #fff;

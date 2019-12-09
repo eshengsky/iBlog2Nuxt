@@ -245,7 +245,7 @@ export default Vue.extend({
 });
 </script>
 
-<style>
+<style scoped>
 .ant-upload-select-picture-card i {
   font-size: 32px;
   color: #777;

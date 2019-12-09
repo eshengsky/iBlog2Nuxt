@@ -27,7 +27,7 @@ export default Vue.extend({
 });
 </script>
 
-<style>
+<style scoped>
 .intro-content {
   white-space: pre;
 }

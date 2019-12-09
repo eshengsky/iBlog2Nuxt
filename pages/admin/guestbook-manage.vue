@@ -277,6 +277,7 @@ export default Vue.extend({
                 content: '留言将被永久删除，删除后不可恢复！',
                 okText: '确定',
                 cancelText: '取消',
+                class: 'del2',
                 onOk () {
                     return new Promise((resolve, reject) => {
                         self.$axios
@@ -334,22 +335,10 @@ export default Vue.extend({
 });
 </script>
 
-<style>
+<style scoped>
 .action-td .ant-btn {
   width: 32px;
   padding: 0;
-}
-
-.badge-count {
-  top: -2px;
-}
-
-.badge-count sup {
-  background: #fff;
-  padding: 0;
-  color: #666;
-  font-weight: bold;
-  min-width: 12px;
 }
 
 .btn-wrap {

@@ -54,7 +54,7 @@ export default Vue.extend({
 });
 </script>
 
-<style>
+<style scoped>
 .auth-input {
   margin: 60px 0 20px;
 }

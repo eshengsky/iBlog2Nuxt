@@ -35,7 +35,7 @@ export default Vue.extend({
     }
 });
 </script>
-<style>
+<style scoped>
 .auth-wrap {
   min-height: 70vh;
 }
@@ -52,7 +52,7 @@ export default Vue.extend({
 .left-top-header a {
   display: -webkit-box;
   display: flex;
-  -webkit-box-align: center;
+  box-align: center;
   align-items: center;
   height: 100%;
   color: #2b2b2b;

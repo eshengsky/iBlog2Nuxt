@@ -85,7 +85,7 @@ export default Vue.extend({
     }
 });
 </script>
-<style>
+<style scoped>
 .blog-item {
   position: relative;
 }
@@ -113,9 +113,9 @@ export default Vue.extend({
   display: -webkit-inline-box;
   overflow: hidden;
   text-overflow: ellipsis;
-  -webkit-box-orient: vertical;
+  box-orient: vertical;
   word-break: break-all;
-  -webkit-line-clamp: 2;
+  line-clamp: 2;
   z-index: 2;
   transition: color 0.5s ease-in-out;
   line-height: 1.4;
@@ -145,13 +145,6 @@ export default Vue.extend({
   color: #fff;
   height: 1px;
   margin: 20px 0;
-}
-
-.ant-drawer-title {
-  font-size: 18px;
-  line-height: 18px;
-  padding: 0 10px;
-  color: #333;
 }
 
 .preview-article {

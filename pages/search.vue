@@ -123,7 +123,7 @@ export default Vue.extend({
 });
 </script>
 
-<style>
+<style scoped>
 .page-wrap {
   background: #f3f3f4;
   min-height: 100vh;

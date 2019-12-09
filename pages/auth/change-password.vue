@@ -151,7 +151,7 @@ export default Vue.extend({
 });
 </script>
 
-<style>
+<style scoped>
 .auth-panel {
   max-width: 370px;
   margin: 12vh auto 0;

@@ -313,80 +313,8 @@ export default Vue.extend({
     }
 });
 </script>
-<style>
-.tui-editor-defaultUI {
-  border-top-left-radius: 4px;
-  border-top-right-radius: 4px;
-  overflow: auto;
-}
-
-.tui-editor-defaultUI .te-tab button {
-  height: 32px;
-}
-
-.te-markdown-tab-section .te-tab {
-  margin-left: 12px;
-}
-
-.comments-wrap {
-  margin-top: 30px;
-}
-
-.tui-tooltip {
-  border-radius: 4px;
-}
-
-.tui-editor-defaultUI .CodeMirror-lines {
-  padding-top: 10px;
-  padding-bottom: 10px;
-}
-
-.tui-editor-defaultUI .CodeMirror-line {
-  padding-left: 10px;
-  padding-right: 10px;
-}
-
-.tui-toolbar-icons:disabled {
-  display: none;
-}
-
-.tui-toolbar-icons:disabled + .tui-toolbar-divider {
-  display: none;
-}
-
-.CodeMirror pre {
-  line-height: 1.6;
-}
-
-.editor-focus {
-  box-shadow: inset 0 0px 1px 1px rgb(64, 169, 255);
-  border-radius: 3px;
-}
-
-.comments-wrap .tui-editor-contents h1,
-.comments-wrap .tui-editor-contents h2,
-.comments-wrap .tui-editor-contents h3,
-.comments-wrap .tui-editor-contents h4 {
-  font-weight: bold;
-  font-size: 1rem;
-  line-height: 17px;
-  margin: 10px 0 -4px;
-  color: #333;
-  border: 0;
-  padding: 0;
-}
-
-.tui-editor-contents h4 {
-  font-weight: bold;
-}
-
-.te-markdown-tab-section {
-  -webkit-user-select: none;
-  user-select: none;
-}
-
+<style scoped>
 .comment-btn-wrap {
-  display: -webkit-flex;
   display: flex;
   justify-content: space-between;
   background: #fff;
@@ -397,7 +325,6 @@ export default Vue.extend({
   padding: 6px 10px;
   border-bottom-left-radius: 4px;
   border-bottom-right-radius: 4px;
-  -webkit-user-select: none;
   user-select: none;
   display: none;
 }
@@ -408,7 +335,6 @@ export default Vue.extend({
 }
 
 .comments-top {
-  display: -webkit-flex;
   display: flex;
   justify-content: space-between;
   border-bottom: 3px double #eee;
@@ -417,7 +343,6 @@ export default Vue.extend({
 }
 
 .gituser-wrap {
-  display: -webkit-flex;
   display: flex;
   margin-bottom: 20px;
   padding-bottom: 20px;
@@ -443,22 +368,16 @@ export default Vue.extend({
   border-radius: 3px;
 }
 
-.avatar {
-  height: 100%;
-  user-select: none;
-  transition: transform 0.5s, opacity 1.5s;
-}
-
-.avatar:hover {
-  transform: scale(1.3);
-}
-
 .editor-wrap {
   flex: auto;
 }
 
 .te-md-container .te-preview {
   padding: 0 10px;
+}
+
+.comments-wrap {
+  margin-top: 30px;
 }
 
 .comment-list {
@@ -474,57 +393,8 @@ export default Vue.extend({
   font-size: 14px;
 }
 
-.tui-editor-contents pre {
-  border-radius: 4px;
-}
-
-.tui-tooltip {
-  max-width: 250px;
-  min-height: 34px;
-  padding: 8px 12px;
-  color: #fff;
-  text-align: left;
-  text-decoration: none;
-  background-color: rgba(70, 76, 91, 0.9);
-  border-radius: 4px;
-  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.2);
-  white-space: nowrap;
-  opacity: 1;
-}
-
-.tui-tooltip .arrow {
-  display: none;
-}
-
-.tui-editor-defaultUI-toolbar button:hover,
-.tui-editor-defaultUI-toolbar button:active,
-.tui-editor-defaultUI-toolbar button.active {
-  border-color: #bbb;
-  border-radius: 3px;
-}
-
-.tui-editor-popup {
-  position: fixed;
-  top: 50%;
-  transform: translate(0, -50%);
-  box-shadow: 0px 0px 10px #aaa;
-  border-radius: 5px;
-}
-
 .comment-list .te-toolbar-section {
   display: none;
-}
-
-.tui-editor-defaultUI .CodeMirror pre.CodeMirror-placeholder {
-  padding-left: 12px;
-}
-
-.comment-list ul li.comment-li:first-child .comment-item {
-  padding-top: 0;
-}
-
-.comment-list ul li.comment-li:last-child .comment-item {
-  padding-bottom: 0;
 }
 
 .btn-next-wrap {
@@ -556,5 +426,24 @@ export default Vue.extend({
 
 .form-wrap .ant-form-item {
   margin-bottom: 10px;
+}
+</style>
+<style>
+.comments-wrap .avatar {
+  height: 100%;
+  user-select: none;
+  transition: transform 0.5s, opacity 1.5s;
+}
+
+.comments-wrap .avatar:hover {
+  transform: scale(1.3);
+}
+
+.comment-list ul li.comment-li:first-child .comment-item {
+  padding-top: 0;
+}
+
+.comment-list ul li.comment-li:last-child .comment-item {
+  padding-bottom: 0;
 }
 </style>

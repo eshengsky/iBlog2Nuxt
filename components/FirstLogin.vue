@@ -113,7 +113,7 @@ export default Vue.extend({
 });
 </script>
 
-<style>
+<style scoped>
 .auth-panel .form {
   margin: 40px 0 20px;
 }

@@ -130,7 +130,6 @@
     </div>
   </div>
 </template>
-
 <script lang="ts">
 import Vue from 'vue';
 import { IResp } from '@/server/types';
@@ -477,23 +476,10 @@ export default Vue.extend({
     }
 });
 </script>
-
-<style>
+<style scoped>
 .action-td .ant-btn {
   width: 32px;
   padding: 0;
-}
-
-.badge-count {
-  top: -2px;
-}
-
-.badge-count sup {
-  background: #fff;
-  padding: 0;
-  color: #666;
-  font-weight: bold;
-  min-width: 12px;
 }
 
 .btn-wrap {
@@ -519,14 +505,6 @@ export default Vue.extend({
   color: #666;
 }
 
-.has-error .ant-upload.ant-upload-select.ant-upload-select-picture-card {
-  border-color: #f5222d;
-}
-
-.del2 .ant-modal-confirm-content {
-  color: #fa541c;
-}
-
 .img-tip {
   font-size: 12px;
   line-height: 1;
@@ -536,5 +514,10 @@ export default Vue.extend({
 .img-tip i {
   position: relative;
   top: -1px;
+}
+</style>
+<style>
+.has-error .ant-upload.ant-upload-select.ant-upload-select-picture-card {
+  border-color: #f5222d;
 }
 </style>

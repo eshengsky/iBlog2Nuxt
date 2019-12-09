@@ -373,7 +373,7 @@ export default Vue.extend({
 });
 </script>
 
-<style>
+<style scoped>
 .stats-body {
   padding: 25px;
   min-height: 80vh;

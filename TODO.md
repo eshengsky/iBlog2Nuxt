@@ -1,5 +1,4 @@
 ### Features
-- [ ] 使用sass重构css，确保各页面间样式不冲突
 - [ ] proxy类方法的错误处理
 - [ ] 404、500页面自定义
 - [ ] 评论editor支持emoji

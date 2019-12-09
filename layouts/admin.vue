@@ -172,7 +172,7 @@ export default Vue.extend({
     }
 });
 </script>
-<style>
+<style scoped>
 .sider-header {
   padding: 25px;
   transition: all 0.2s;
@@ -217,23 +217,6 @@ export default Vue.extend({
   border-bottom: 1px solid #e7eaec;
 }
 
-.page-header {
-  background: #fff;
-  font-size: 20px;
-  font-weight: 100;
-  padding: 16px 25px;
-  border-bottom: 1px solid #e7eaec;
-  user-select: none;
-}
-
-.page-body {
-  margin: 25px 25px 0;
-  padding: 25px;
-  background: rgb(255, 255, 255);
-  min-height: 80vh;
-  border-radius: 5px;
-}
-
 .auth-actions {
   color: #777;
   font-weight: 500;
@@ -246,12 +229,6 @@ export default Vue.extend({
 
 .auth-actions a {
   color: #777;
-}
-
-.filter-wrap {
-  border: 1px solid #eee;
-  border-radius: 5px;
-  padding: 20px;
 }
 
 .ant-menu-item svg {
@@ -296,5 +273,46 @@ export default Vue.extend({
 .ant-menu.ant-menu-dark .ant-menu-item-selected {
   border-left: 4px solid #1890ff;
   background: #293846;
+}
+</style>
+<style>
+.page-header {
+  background: #fff;
+  font-size: 20px;
+  font-weight: 100;
+  padding: 16px 25px;
+  border-bottom: 1px solid #e7eaec;
+  user-select: none;
+}
+
+.page-body {
+  margin: 25px 25px 0;
+  padding: 25px;
+  background: rgb(255, 255, 255);
+  min-height: 80vh;
+  border-radius: 5px;
+}
+
+.filter-wrap {
+  border: 1px solid #eee;
+  border-radius: 5px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.del2 .ant-modal-confirm-content {
+  color: #fa541c;
+}
+
+.badge-count {
+  top: -2px;
+}
+
+.badge-count sup {
+  background: #fff;
+  padding: 0;
+  color: #666;
+  font-weight: bold;
+  min-width: 12px;
 }
 </style>

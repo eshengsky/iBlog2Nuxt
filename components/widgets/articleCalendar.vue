@@ -46,9 +46,3 @@ export default Vue.extend({
     }
 });
 </script>
-
-<style>
-.widget-container .ant-fullcalendar {
-  border-color: #e7eaec;
-}
-</style>

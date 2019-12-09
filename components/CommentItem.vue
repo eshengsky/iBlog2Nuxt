@@ -70,7 +70,7 @@ export default Vue.extend({
     }
 });
 </script>
-<style>
+<style scoped>
 .comment-item {
   position: relative;
   display: flex;
@@ -113,7 +113,7 @@ export default Vue.extend({
   color: #24292e;
   background-color: #fff;
   border: 1px solid #ddd;
-  border-radius: 3px;
+  border-radius: 4px;
   margin-left: -16px;
 }
 
@@ -152,8 +152,8 @@ export default Vue.extend({
   color: #586069;
   background-color: #f6f8fa;
   border-bottom: 1px solid #ddd;
-  border-top-left-radius: 3px;
-  border-top-right-radius: 3px;
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
 }
 
 .comment-username {
@@ -190,7 +190,6 @@ export default Vue.extend({
 .comment-header-actions a {
   font-size: 12px;
   color: #888;
-  -webkit-user-select: none;
   user-select: none;
 }
 

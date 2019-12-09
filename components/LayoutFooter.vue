@@ -31,7 +31,7 @@ export default Vue.extend({
 });
 </script>
 
-<style>
+<style scoped>
 .layout-footer {
   text-align: center;
   color: #888;

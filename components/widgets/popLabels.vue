@@ -43,7 +43,7 @@ export default Vue.extend({
 });
 </script>
 
-<style>
+<style scoped>
 .pop-label {
   display: inline-flex;
   justify-content: center;

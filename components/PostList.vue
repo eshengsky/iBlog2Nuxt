@@ -279,7 +279,7 @@ export default Vue.extend({
     }
 });
 </script>
-<style>
+<style scoped>
 .post-wrap {
   padding: 30px 20px 0 280px;
   display: flex;
@@ -433,11 +433,5 @@ export default Vue.extend({
 .post-right {
   width: 300px;
   margin-left: 20px;
-}
-
-.ant-fullcalendar table,
-.ant-fullcalendar th {
-  background: #fff !important;
-  border: 0 !important;
 }
 </style>

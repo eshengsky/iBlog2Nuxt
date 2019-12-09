@@ -50,7 +50,7 @@ export default Vue.extend({
 });
 </script>
 
-<style>
+<style scoped>
 .pop-article-title {
   display: inline-block;
   overflow: hidden;
@@ -60,5 +60,9 @@ export default Vue.extend({
   max-width: 100%;
   color: #444;
   line-height: 30px;
+}
+
+.pop-article-title:hover {
+    color: #2d8cf0;
 }
 </style>

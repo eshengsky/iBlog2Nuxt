@@ -222,7 +222,7 @@ export default Vue.extend({
     }
 });
 </script>
-<style>
+<style scoped>
 .post-detail-wrap {
   display: flex;
   justify-content: center;
