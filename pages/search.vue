@@ -5,46 +5,53 @@
         <a-input-group compact>
           <a-select
             v-model="filterType"
-            @change="filterTypeChange"
             size="large"
             class="filter-type"
+            @change="filterTypeChange"
           >
-            <a-select-option value="title">标题</a-select-option>
-            <a-select-option value="text">全文</a-select-option>
-            <a-select-option value="tag">标签</a-select-option>
-            <a-select-option value="date">日期</a-select-option>
+            <a-select-option value="title">
+              标题
+            </a-select-option>
+            <a-select-option value="text">
+              全文
+            </a-select-option>
+            <a-select-option value="tag">
+              标签
+            </a-select-option>
+            <a-select-option value="date">
+              日期
+            </a-select-option>
           </a-select>
           <a-input
             v-if="filterType !== 'date'"
+            ref="inputComp"
             v-model="inputTxt"
             :placeholder="searchPhd"
-            allowClear
-            ref="inputComp"
-            @on-enter="search"
+            allow-clear
             size="large"
             class="input-ele"
+            @on-enter="search"
           />
           <a-range-picker
             v-if="filterType === 'date'"
-            v-model="inputDateMoment"
-            :disabledDate="disabledDate"
-            :ranges="rangeDate"
-            :defaultPickerValue="defaultRange"
-            size="large"
             ref="dateComp"
+            v-model="inputDateMoment"
+            :disabled-date="disabledDate"
+            :ranges="rangeDate"
+            :default-picker-value="defaultRange"
+            size="large"
             class="input-ele"
-          ></a-range-picker>
+          />
           <a-button
             type="primary"
             size="large"
-            @click="search"
             class="search-btn"
+            @click="search"
           >
             <font-awesome-icon
               :icon="['fas', 'search']"
               style="margin-right: 5px;"
-            ></font-awesome-icon
-            >搜索
+            />搜索
           </a-button>
         </a-input-group>
       </div>
@@ -53,66 +60,66 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import moment, { Moment } from "moment";
+import Vue from 'vue';
+import moment from 'moment';
 export default Vue.extend({
-  name: "PageSearch",
-  data() {
-    return {
-      filterType: "title",
-      inputTxt: "",
-      inputDateMoment: [] as Array<Moment>,
-      defaultRange: [moment().subtract(30, "days"), moment()],
-      rangeDate: {
-        今天: [moment(), moment()],
-        昨天: [moment().subtract(1, "days"), moment().subtract(1, "days")],
-        最近一周: [moment().subtract(7, "days"), moment()],
-        最近一个月: [moment().subtract(30, "days"), moment()],
-        最近一年: [moment().subtract(365, "days"), moment()]
-      }
-    };
-  },
-  computed: {
-    searchPhd(): string {
-      let placeholder = "";
-      switch (this.filterType) {
-        case "text":
-          placeholder = "全文关键字";
-          break;
-        case "title":
-          placeholder = "标题关键字";
-          break;
-        case "tag":
-          placeholder = "标签关键字";
-          break;
-        default:
-      }
-      return placeholder;
+    name: 'PageSearch',
+    data () {
+        return {
+            filterType: 'title',
+            inputTxt: '',
+            inputDateMoment: [] as Array<moment.Moment>,
+            defaultRange: [moment().subtract(30, 'days'), moment()],
+            rangeDate: {
+                今天: [moment(), moment()],
+                昨天: [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                最近一周: [moment().subtract(7, 'days'), moment()],
+                最近一个月: [moment().subtract(30, 'days'), moment()],
+                最近一年: [moment().subtract(365, 'days'), moment()]
+            }
+        };
     },
-    inputDate(): Array<string> {
-      const range = this.inputDateMoment;
-      if (!range.length) {
-        return [];
-      }
-      return [
-        range[0].startOf("day").toString(),
-        range[1].endOf("day").toString()
-      ];
+    computed: {
+        searchPhd (): string {
+            let placeholder = '';
+            switch (this.filterType) {
+                case 'text':
+                    placeholder = '全文关键字';
+                    break;
+                case 'title':
+                    placeholder = '标题关键字';
+                    break;
+                case 'tag':
+                    placeholder = '标签关键字';
+                    break;
+                default:
+            }
+            return placeholder;
+        },
+        inputDate (): Array<string> {
+            const range = this.inputDateMoment;
+            if (!range.length) {
+                return [];
+            }
+            return [
+                range[0].startOf('day').toString(),
+                range[1].endOf('day').toString()
+            ];
+        }
+    },
+    methods: {
+        disabledDate (date) {
+            return date && date > moment().endOf('day');
+        },
+        filterTypeChange () {
+            if (this.filterType !== 'date') {
+                this.$nextTick(() => {
+                    (this.$refs.inputComp as any).focus();
+                });
+            }
+        },
+        async search () {}
     }
-  },
-  methods: {
-    disabledDate(date) {
-      return date && date > moment().endOf("day");
-    },
-    filterTypeChange() {
-      if (this.filterType !== "date") {
-        this.$nextTick(() => {
-          (this.$refs.inputComp as any).focus();
-        });
-      }
-    },
-    async search() {}
-  }
 });
 </script>
 

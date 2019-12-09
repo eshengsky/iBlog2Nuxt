@@ -2,26 +2,27 @@
   <div :id="comment._id">
     <div class="comment-item">
       <div class="comment-item-avatar">
-        <div v-html="avatar" class="avatar"></div>
+        <!-- eslint-disable-next-line vue/no-v-html -->
+        <div class="avatar" v-html="avatar" />
       </div>
       <div class="comment-item-body">
         <div class="timeline-comment">
           <div class="timeline-comment-header">
             <div>
               <a
+                v-if="comment.website"
                 class="comment-username"
                 :href="comment.website"
                 :title="comment.website"
-                v-if="comment.website"
                 target="_blank"
-                >{{ comment.username }}</a
-              >
-              <span class="comment-username" v-else>{{
+              >{{ comment.username }}</a>
+              <span v-else class="comment-username">{{
                 comment.username
               }}</span>
-              <span v-if="comment.username === 'Admin'" class="comment-admin"
-                >作者</span
-              >
+              <span
+                v-if="comment.username === 'Admin'"
+                class="comment-admin"
+              >作者</span>
               <span class="comment-time" :title="commentTime2">{{ commentTime }}</span>
             </div>
             <div class="comment-header-actions">
@@ -29,7 +30,7 @@
                 <font-awesome-icon
                   :icon="['fas', 'reply']"
                   style="position: relative; top: -1px;"
-                ></font-awesome-icon>
+                />
                 <span>引用回复</span>
               </a>
             </div>
@@ -45,29 +46,28 @@
   </div>
 </template>
 <script lang="ts">
-import Vue, { PropOptions } from "vue";
-import moment from "moment";
-import { RootState } from "@/store/index";
-import { IComment } from "@/server/models/comment";
-import config from "@/blog.config";
-import { Prop } from "vue/types/options";
+import Vue, { PropOptions } from 'vue';
+import moment from 'moment';
+import { IComment } from '@/server/models/comment';
 export default Vue.extend({
-  props: {
-    comment: {
-      type: Object
-    } as PropOptions<IComment>,
-    avatar: {
-      type: String
-    } as PropOptions<string>
-  },
-  computed: {
-    commentTime(): string {
-      return moment(this.comment.createTime).fromNow();
+    props: {
+        comment: {
+            type: Object,
+            default: null
+        } as PropOptions<IComment>,
+        avatar: {
+            type: String,
+            default: ''
+        } as PropOptions<string>
     },
-    commentTime2(): string {
-      return moment(this.comment.createTime).format("YYYY-MM-DD HH:mm:ss");
+    computed: {
+        commentTime (): string {
+            return moment(this.comment.createTime).fromNow();
+        },
+        commentTime2 (): string {
+            return moment(this.comment.createTime).format('YYYY-MM-DD HH:mm:ss');
+        }
     }
-  }
 });
 </script>
 <style>

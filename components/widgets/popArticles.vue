@@ -1,16 +1,19 @@
 <template>
   <div class="widget-container">
-    <div class="widget-header">热门文章</div>
+    <div class="widget-header">
+      热门文章
+    </div>
     <div class="widget-body">
-      <a-spin :spinning="spinning"/>
+      <a-spin :spinning="spinning" />
       <ul>
         <li v-for="(item, index) in list" :key="index">
           <nuxt-link
             class="pop-article-title"
             :to="articleUrl(item)"
             :title="item.title"
-            >{{ item.title }}</nuxt-link
           >
+            {{ item.title }}
+          </nuxt-link>
         </li>
       </ul>
     </div>
@@ -18,30 +21,32 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import { IPost } from "@/server/models/post";
-import { IResp } from "@/server/types";
+import Vue from 'vue';
+import { IPost } from '@/server/models/post';
+import { IResp } from '@/server/types';
 export default Vue.extend({
-  data() {
-    return {
-      list: [] as Array<IPost>,
-      spinning: false
-    };
-  },
-  async created() {
-    this.spinning = true;
-    const { code, data }: IResp = await this.$axios.$get("/api/popArticles");
-    this.list = data.articles;
-    this.spinning = false;
-  },
-  methods: {
-    articleUrl(item: IPost) {
-      if (!item.isLocal) {
-        return item.url;
-      }
-      return `/blog/${item.category.alias}/${item.alias}`;
+    data () {
+        return {
+            list: [] as Array<IPost>,
+            spinning: false
+        };
+    },
+    async created () {
+        this.spinning = true;
+        const { code, data }: IResp = await this.$axios.$get('/api/popArticles');
+        if (code === 1) {
+            this.list = data.articles;
+        }
+        this.spinning = false;
+    },
+    methods: {
+        articleUrl (item: IPost) {
+            if (!item.isLocal) {
+                return item.url;
+            }
+            return `/blog/${item.category.alias}/${item.alias}`;
+        }
     }
-  }
 });
 </script>
 

@@ -1,36 +1,38 @@
 <template>
-  <a-locale-provider :locale="zh_CN">
+  <a-locale-provider :locale="zhCN">
     <div class="container">
       <div class="left-top-header">
         <nuxt-link to="/">
-          <img :src="settings.blogLogo" />
+          <img :src="settings.blogLogo">
           <h4>
             {{ settings.blogName }}
-            <p v-if="settings.blogSlogan">{{ settings.blogSlogan }}</p>
+            <p v-if="settings.blogSlogan">
+              {{ settings.blogSlogan }}
+            </p>
           </h4>
         </nuxt-link>
       </div>
       <div class="auth-wrap">
         <nuxt />
       </div>
-      <layout-footer></layout-footer>
+      <layout-footer />
     </div>
   </a-locale-provider>
 </template>
 <script lang="ts">
-import Vue from "vue";
-import zh_CN from "ant-design-vue/lib/locale-provider/zh_CN";
-import LayoutFooter from "@/components/LayoutFooter.vue";
+import Vue from 'vue';
+import zhCN from 'ant-design-vue/lib/locale-provider/zh_CN';
+import LayoutFooter from '@/components/LayoutFooter.vue';
 export default Vue.extend({
-  components: {
-    LayoutFooter
-  },
-  data() {
-    return {
-      settings: this.$store.state.settings,
-      zh_CN
-    };
-  }
+    components: {
+        LayoutFooter
+    },
+    data () {
+        return {
+            settings: this.$store.state.settings,
+            zhCN
+        };
+    }
 });
 </script>
 <style>

@@ -1,11 +1,13 @@
 <template>
   <div class="category-wrap">
-    <div class="category-title">文章分类</div>
-    <div class="category-split"></div>
+    <div class="category-title">
+      文章分类
+    </div>
+    <div class="category-split" />
     <ul class="category-list">
       <li v-for="item in categories" :key="item._id">
         <nuxt-link :to="item.alias ? `/blog/${item.alias}` : '/'" exact active-class="active">
-          <img :src="item.img" />
+          <img :src="item.img">
           <span>{{ item.cateName }}</span>
         </nuxt-link>
       </li>
@@ -13,17 +15,17 @@
   </div>
 </template>
 <script lang="ts">
-import Vue, { PropOptions } from "vue";
-import { ICategory } from "@/server/models/category";
+import Vue, { PropOptions } from 'vue';
+import { ICategory } from '@/server/models/category';
 export default Vue.extend({
-  props: {
-    categories: {
-      type: Array,
-      default() {
-        return [];
-      }
-    } as PropOptions<Array<ICategory>>
-  }
+    props: {
+        categories: {
+            type: Array,
+            default () {
+                return [];
+            }
+        } as PropOptions<Array<ICategory>>
+    }
 });
 </script>
 <style scoped>

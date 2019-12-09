@@ -2,23 +2,18 @@
   <div>
     <div class="auth-panel">
       <h2 class="auth-title">
-        修改密码
+        首次登录
       </h2>
+      <p class="auth-desc">
+        请先设置管理员登录密码
+      </p>
       <a-form label-position="top" :form="form" class="form">
-        <a-form-item label="原密码" :colon="false">
-          <a-input-password
-            ref="pwd0"
-            v-decorator="['pwd0', pwd0Opts]"
-            size="large"
-            placeholder="请输入原密码"
-          />
-        </a-form-item>
-        <a-form-item label="新的密码" :colon="false">
+        <a-form-item label="密码" :colon="false">
           <a-input-password
             ref="pwd1"
             v-decorator="['pwd1', pwd1Opts]"
             size="large"
-            placeholder="请输入新的密码"
+            placeholder="请输入密码"
           />
         </a-form-item>
         <a-form-item label="确认密码" :colon="false">
@@ -54,19 +49,11 @@ export default Vue.extend({
     data () {
         return {
             btnLoading: false,
-            pwd0Opts: {
-                rules: [
-                    {
-                        required: true,
-                        message: '请输入原密码！'
-                    }
-                ]
-            },
             pwd1Opts: {
                 rules: [
                     {
                         required: true,
-                        message: '请输入新的密码！'
+                        message: '请输入密码！'
                     },
                     {
                         min: 6,
@@ -75,9 +62,6 @@ export default Vue.extend({
                     {
                         max: 20,
                         message: '密码不能多于20位！'
-                    },
-                    {
-                        validator: (this as any).compareToOldPassword
                     }
                 ]
             }
@@ -102,18 +86,9 @@ export default Vue.extend({
         this.form = this.$form.createForm(this);
     },
     mounted () {
-        (this.$refs.pwd0 as any).$children[0].focus();
+        (this.$refs.pwd1 as any).$children[0].focus();
     },
     methods: {
-        compareToOldPassword (_rule, value, callback) {
-            const form = (this as any).form;
-            if (value && value === form.getFieldValue('pwd0')) {
-                // eslint-disable-next-line standard/no-callback-literal
-                callback('新密码不能与原密码相同！');
-            } else {
-                callback();
-            }
-        },
         compareToFirstPassword (_rule, value, callback) {
             const form = (this as any).form;
             if (value && value !== form.getFieldValue('pwd1')) {
@@ -127,21 +102,20 @@ export default Vue.extend({
             this.form.validateFields(async (error, values) => {
                 if (!error) {
                     this.btnLoading = true;
-                    const { code, message }: IResp = await this.$axios.$post(
+                    const { code, message }: IResp = await this.$axios.$put(
                         '/api/auth/account',
                         {
-                            old: md5(values.pwd0),
                             password: md5(values.pwd1)
                         }
                     );
                     if (code === 1) {
-                        this.$message.loading('修改成功！正在跳转登录页...');
+                        this.$message.loading('设置成功！正在跳转登录页...');
                         setTimeout(() => {
                             location.href = '/auth/login';
                         }, 2000);
                     } else {
                         console.error(message);
-                        this.$message.error(message);
+                        this.$message.error('操作失败！');
                         this.btnLoading = false;
                     }
                 }
@@ -154,7 +128,7 @@ export default Vue.extend({
 <style>
 .auth-panel {
   max-width: 370px;
-  margin: 12vh auto 0;
+  margin: 13vh auto 0;
   padding: 50px 40px;
   background: #fff;
   border-radius: 6px;
@@ -165,7 +139,12 @@ export default Vue.extend({
   text-align: center;
 }
 
+.auth-desc {
+  color: #777;
+  text-align: center;
+}
+
 .form {
-  margin: 40px 0 20px;
+    margin: 40px 0 20px;
 }
 </style>

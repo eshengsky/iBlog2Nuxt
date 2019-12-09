@@ -1,41 +1,45 @@
 <template>
   <div class="widget-container">
-    <div class="widget-header">热门标签</div>
+    <div class="widget-header">
+      热门标签
+    </div>
     <div class="widget-body">
       <a-spin :spinning="spinning" />
       <span
-        class="pop-label"
-        @click="selectLabel(item._id)"
         v-for="(item, index) in list"
         :key="index"
-        >{{ item._id }}
+        class="pop-label"
+        @click="selectLabel(item._id)"
+      >{{ item._id }}
       </span>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import { IResp } from "@/server/types";
+import Vue from 'vue';
+import { IResp } from '@/server/types';
 export default Vue.extend({
-  data() {
-    return {
-      list: [],
-      spinning: false
-    };
-  },
-  async created() {
-    this.spinning = true;
-    const { code, data }: IResp = await this.$axios.$get("/api/popLabels");
-    this.list = data.labels;
-    this.spinning = false;
-  },
-  methods: {
-    selectLabel(label) {
-      window.scrollTo(0, 0);
-      this.$emit("selectLabel", label);
+    data () {
+        return {
+            list: [],
+            spinning: false
+        };
+    },
+    async created () {
+        this.spinning = true;
+        const { code, data }: IResp = await this.$axios.$get('/api/popLabels');
+        if (code === 1) {
+            this.list = data.labels;
+        }
+        this.spinning = false;
+    },
+    methods: {
+        selectLabel (label) {
+            window.scrollTo(0, 0);
+            this.$emit('selectLabel', label);
+        }
     }
-  }
 });
 </script>
 

@@ -1,41 +1,45 @@
 <template>
   <div class="blog-item">
-    <div class="item-header">{{ publishDate }}</div>
+    <div class="item-header">
+      {{ publishDate }}
+    </div>
     <template v-if="!post.isLocal">
       <h4>
         <a :title="post.title" :href="post.url" target="_blank">
-          <i class="fa fa-link"></i>
+          <i class="fa fa-link" />
           {{ post.title }}
         </a>
       </h4>
     </template>
     <template v-else>
       <a
+        v-if="settings.enablePreview"
         class="preview-link"
         title="点击预览"
-        v-if="settings.enablePreview"
         @click="() => (drawer = true)"
-      ></a>
+      />
       <h4>
-        <nuxt-link :to="`/blog/${post.category.alias}/${post.alias}`" :title="post.title">{{ post.title }}</nuxt-link>
+        <nuxt-link :to="`/blog/${post.category.alias}/${post.alias}`" :title="post.title">
+          {{ post.title }}
+        </nuxt-link>
       </h4>
     </template>
     <div class="item-footer">
       <span>
-        <font-awesome-icon :icon="['fas', 'map-signs']"></font-awesome-icon>
+        <font-awesome-icon :icon="['fas', 'map-signs']" />
         {{ post.category.cateName }}
       </span>
       <span>
-        <font-awesome-icon :icon="['far', 'eye']"></font-awesome-icon>
+        <font-awesome-icon :icon="['far', 'eye']" />
         {{ post.viewCount }}
       </span>
       <span>
-        <font-awesome-icon :icon="['fas', 'comments']"></font-awesome-icon>
+        <font-awesome-icon :icon="['fas', 'comments']" />
         {{ post.comments.length }}
       </span>
     </div>
 
-    <div class="hr-line-dashed"></div>
+    <div class="hr-line-dashed" />
     <a-drawer
       :title="post.title"
       :visible="drawer"
@@ -43,38 +47,42 @@
       :closable="false"
       @close="() => (drawer = false)"
     >
-      <article class="preview-article" v-html="post.html"></article>
+      <!-- eslint-disable-next-line vue/no-v-html -->
+      <article class="preview-article" v-html="post.html" />
       <footer class="preview-footer">
-        <a-button @click="() => (drawer = false)">关闭</a-button>
+        <a-button @click="() => (drawer = false)">
+          关闭
+        </a-button>
         <a-button
           type="primary"
           :href="`/blog/${post.category.alias}/${post.alias}`"
           target="_blank"
-          >完整模式</a-button
         >
+          完整模式
+        </a-button>
       </footer>
     </a-drawer>
   </div>
 </template>
 <script lang="ts">
-import Vue, { PropOptions } from "vue";
-import moment from "moment";
+import Vue from 'vue';
+import moment from 'moment';
 export default Vue.extend({
-  props: {
-    post: {
-      type: Object,
-      default() {
-        return {};
-      }
+    props: {
+        post: {
+            type: Object,
+            default () {
+                return {};
+            }
+        }
+    },
+    data () {
+        return {
+            settings: this.$store.state.settings,
+            drawer: false,
+            publishDate: moment(this.post.createTime).format('MM/DD, YYYY')
+        };
     }
-  },
-  data() {
-    return {
-      settings: this.$store.state.settings,
-      drawer: false,
-      publishDate: moment(this.post.createTime).format("MM/DD, YYYY")
-    };
-  }
 });
 </script>
 <style>

@@ -1,31 +1,34 @@
 <template>
   <div class="article-edit">
-    <div class="page-header">{{ pageHeader }}</div>
+    <div class="page-header">
+      {{ pageHeader }}
+    </div>
     <div class="page-body">
-      <a-form :form="form" :selfUpdate="true">
+      <a-form :form="form" :self-update="true">
         <div class="title-line">
           <a-form-item label="标题" :colon="false">
             <a-input
-              placeholder="请输入标题"
-              allowClear
-              v-decorator="['title', titleOpts]"
               ref="titleInput"
+              v-decorator="['title', titleOpts]"
+              placeholder="请输入标题"
+              allow-clear
             />
           </a-form-item>
           <a-form-item :colon="false">
             <span slot="label">
               分类
               <a class="link-dark" @click="refreshCategories">
-                <font-awesome-icon :icon="['fas', 'sync-alt']" :spin="categoryLoading"></font-awesome-icon>
+                <font-awesome-icon :icon="['fas', 'sync-alt']" :spin="categoryLoading" />
               </a>
             </span>
             <a-select v-decorator="['category', categoryOpts]">
               <a-select-option
                 v-for="(item, index) in categories"
-                :value="item._id"
                 :key="index"
-                >{{ item.cateName }}</a-select-option
+                :value="item._id"
               >
+                {{ item.cateName }}
+              </a-select-option>
               <div slot="dropdownRender" slot-scope="menu">
                 <v-nodes :vnodes="menu" />
                 <a-divider style="margin: 4px 0;" />
@@ -37,8 +40,7 @@
                   <font-awesome-icon
                     :icon="['fas', 'plus']"
                     style="margin-right: 4px;"
-                  ></font-awesome-icon
-                  >新的分类
+                  />新的分类
                 </a>
               </div>
             </a-select>
@@ -54,28 +56,32 @@
             </a-tooltip>
           </span>
           <a-input
-            placeholder="请输入Alias"
             v-decorator="['alias', aliasOpts]"
-            allowClear
+            placeholder="请输入Alias"
+            allow-clear
           />
         </a-form-item>
         <a-form-item label="来源" :colon="false">
           <a-radio-group
-            name="radioGroup"
             v-decorator="['isLocal', isLocalOpts]"
+            name="radioGroup"
             @change="isLocalChange"
           >
-            <a-radio :value="true">本地</a-radio>
-            <a-radio :value="false">外链</a-radio>
+            <a-radio :value="true">
+              本地
+            </a-radio>
+            <a-radio :value="false">
+              外链
+            </a-radio>
           </a-radio-group>
         </a-form-item>
         <div v-show="!isLocal">
           <a-form-item label="URL" :colon="false">
             <a-input
-              placeholder="请输入链接地址"
               ref="urlInputComp"
               v-decorator="['url', urlOpts]"
-              allowClear
+              placeholder="请输入链接地址"
+              allow-clear
             />
           </a-form-item>
         </div>
@@ -84,21 +90,23 @@
             <div class="editor-wrap">
               <client-only>
                 <tui-editor
-                  v-model="content"
                   ref="editor"
-                  previewStyle="vertical"
+                  v-model="content"
+                  preview-style="vertical"
                   height="70vh"
                   :options="editorOptions"
                 />
               </client-only>
               <div class="editor-footer">
                 <a-tooltip>
-                  <template slot="title">打开Markdown语法速查</template>
+                  <template slot="title">
+                    打开Markdown语法速查
+                  </template>
                   <a @click="mcsShow = true">
                     <font-awesome-icon
                       :icon="['fab', 'markdown']"
                       style="font-size: 14px"
-                    ></font-awesome-icon>
+                    />
                     <span>支持Markdown语法</span>
                   </a>
                 </a-tooltip>
@@ -110,8 +118,8 @@
               v-decorator="['labels', labelsOpts]"
               mode="tags"
               placeholder="回车新增"
-              notFoundContent
-            ></a-select>
+              not-found-content
+            />
           </a-form-item>
         </div>
         <div>
@@ -120,15 +128,13 @@
               <font-awesome-icon
                 :icon="['far', 'paper-plane']"
                 style="margin-right: 4px;"
-              ></font-awesome-icon
-              >发布文章
+              />发布文章
             </a-button>
             <a-button @click="saveDraft">
               <font-awesome-icon
                 :icon="['far', 'file-alt']"
                 style="margin-right: 4px;"
-              ></font-awesome-icon
-              >存为草稿
+              />存为草稿
             </a-button>
           </template>
           <template v-else>
@@ -137,15 +143,13 @@
                 <font-awesome-icon
                   :icon="['far', 'paper-plane']"
                   style="margin-right: 4px;"
-                ></font-awesome-icon
-                >发布文章
+                />发布文章
               </a-button>
               <a-button @click="save">
                 <font-awesome-icon
                   :icon="['far', 'save']"
                   style="margin-right: 4px;"
-                ></font-awesome-icon
-                >保存更改
+                />保存更改
               </a-button>
             </template>
             <template v-else>
@@ -153,385 +157,388 @@
                 <font-awesome-icon
                   :icon="['far', 'save']"
                   style="margin-right: 4px;"
-                ></font-awesome-icon
-                >保存更改
+                />保存更改
               </a-button>
               <a-button @click="unpublish">
                 <font-awesome-icon
                   :icon="['fas', 'history']"
                   style="margin-right: 4px;"
-                ></font-awesome-icon
-                >取消发布
+                />取消发布
               </a-button>
             </template>
           </template>
-          <a-button @click="back">返回</a-button>
+          <a-button @click="back">
+            返回
+          </a-button>
         </div>
       </a-form>
     </div>
     <a-modal v-model="mcsShow" title="Markdown 语法速查" width="640px">
-      <md-cheat-sheet></md-cheat-sheet>
+      <md-cheat-sheet />
       <div slot="footer">
-        <a-button type="primary" @click="mcsShow = false">关闭</a-button>
+        <a-button type="primary" @click="mcsShow = false">
+          关闭
+        </a-button>
       </div>
     </a-modal>
   </div>
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import MdCheatSheet from "@/components/MdCheatSheet.vue";
-import { IResp } from "@/server/types";
-import { IPost } from "@/server/models/post";
-import { otherCategoryItem } from "@/server/models/category";
-import "highlight.js/styles/tomorrow.css";
+import Vue from 'vue';
+import MdCheatSheet from '@/components/MdCheatSheet.vue';
+import { IResp } from '@/server/types';
+import { IPost } from '@/server/models/post';
+import { otherCategoryItem } from '@/server/models/category';
+import 'highlight.js/styles/tomorrow.css';
 export default Vue.extend({
-  name: "PageAdminArticle",
-  layout: "admin",
-  components: {
-    VNodes: {
-      functional: true,
-      render: (h, ctx) => ctx.props.vnodes
+    name: 'PageAdminArticle',
+    layout: 'admin',
+    components: {
+        VNodes: {
+            functional: true,
+            render: (_h, ctx) => ctx.props.vnodes
+        },
+        MdCheatSheet
     },
-    MdCheatSheet
-  },
-  async asyncData({ $axios, query, error }: any) {
-    const uid = query.uid;
-    if (uid) {
-      const { code, data } = await $axios.$get("/api/admin/article", {
-        params: {
-          uid
+    data () {
+        return {
+            settings: this.$store.state.settings,
+            initialData: {} as IPost,
+            isLocal: true,
+            content: '',
+            mcsShow: false,
+            categories: [],
+            titleOpts: {
+                rules: [
+                    {
+                        required: true,
+                        message: '标题不能为空！'
+                    }
+                ]
+            },
+            categoryOpts: {
+                initialValue: otherCategoryItem._id.toHexString()
+            },
+            isLocalOpts: {
+                initialValue: true
+            },
+            labelsOpts: {
+                initialValue: []
+            },
+            editorOptions: {
+                hideModeSwitch: true,
+                language: 'zh_CN',
+                usageStatistics: false,
+                placeholder: '请输入文章正文',
+                toolbarItems: [
+                    'heading',
+                    'bold',
+                    'italic',
+                    'strike',
+                    'divider',
+                    'hr',
+                    'quote',
+                    'divider',
+                    'ul',
+                    'ol',
+                    'task',
+                    'divider',
+                    'image',
+                    'table',
+                    'link',
+                    'divider',
+                    'code',
+                    'codeblock'
+                ],
+                exts: ['scrollSync']
+            },
+            categoryLoading: false
+        };
+    },
+    computed: {
+        pageHeader (): string {
+            return this.initialData._id ? '编辑文章' : '新增文章';
+        },
+        form (): any {
+            return this.$form.createForm(this);
+        },
+        aliasOpts (): object {
+            return {
+                rules: [
+                    {
+                        required: true,
+                        message: 'Alias不能为空！'
+                    },
+                    {
+                        validator: this.checkAlias
+                    }
+                ]
+            };
+        },
+        urlOpts (): object {
+            return {
+                rules: [
+                    {
+                        required: !this.isLocal,
+                        message: '链接地址不能为空！'
+                    }
+                ]
+            };
         }
-      });
-      if (code === 1) {
-        if (data && data.isActive) {
-          return {
-            initialData: data
-          };
-        }
-        error({
-          statusCode: 404,
-          message: "未找到该页面"
-        });
-      } else {
-        error({
-          statusCode: 500,
-          message: "内部服务器错误"
-        });
-      }
-    }
-  },
-  data() {
-    return {
-      settings: this.$store.state.settings,
-      initialData: {} as IPost,
-      isLocal: true,
-      content: "",
-      mcsShow: false,
-      categories: [],
-      titleOpts: {
-        rules: [
-          {
-            required: true,
-            message: "标题不能为空！"
-          }
-        ]
-      },
-      categoryOpts: {
-        initialValue: otherCategoryItem._id.toHexString()
-      },
-      isLocalOpts: {
-        initialValue: true
-      },
-      labelsOpts: {
-        initialValue: []
-      },
-      editorOptions: {
-        hideModeSwitch: true,
-        language: "zh_CN",
-        usageStatistics: false,
-        placeholder: "请输入文章正文",
-        toolbarItems: [
-          "heading",
-          "bold",
-          "italic",
-          "strike",
-          "divider",
-          "hr",
-          "quote",
-          "divider",
-          "ul",
-          "ol",
-          "task",
-          "divider",
-          "image",
-          "table",
-          "link",
-          "divider",
-          "code",
-          "codeblock"
-        ],
-        exts: ["scrollSync"]
-      },
-      categoryLoading: false
-    };
-  },
-  created() {
-    this.getCategories();
-  },
-  mounted() {
-    if (this.initialData._id) {
-      // 编辑模式
-      this.form.setFieldsValue({
-        title: this.initialData.title,
-        alias: this.initialData.alias,
-        category: this.initialData.category,
-        isLocal: this.initialData.isLocal,
-        url: this.initialData.url || "",
-        labels: this.initialData.labels
-      });
-      this.content = this.initialData.content;
-    }
-    this.$refs.titleInput.focus();
-  },
-  computed: {
-    pageHeader(): string {
-      return this.initialData._id ? "编辑文章" : "新增文章";
     },
-    form(): any {
-      return this.$form.createForm(this);
-    },
-    aliasOpts(): object {
-      return {
-        rules: [
-          {
-            required: true,
-            message: "Alias不能为空！"
-          },
-          {
-            validator: this.checkAlias
-          }
-        ]
-      };
-    },
-    urlOpts(): object {
-      return {
-        rules: [
-          {
-            required: !this.isLocal,
-            message: "链接地址不能为空！"
-          }
-        ]
-      };
-    }
-  },
-  methods: {
-    async getCategories() {
-      const { code, data }: IResp = await this.$axios.$get(
-        "/api/admin/categories"
-      );
-      if (code === 1) {
-        this.categories = data;
-      }
-    },
-    async refreshCategories() {
-      this.categoryLoading = true;
-      await this.getCategories();
-      this.categoryLoading = false;
-    },
-    checkAlias(rule, value, callback) {
-      if (value) {
-        this.$axios
-          .$get("/api/admin/checkArticleAlias", {
-            params: {
-              alias: value,
-              excludeUid: this.initialData._id
-            }
-          })
-          .then(({ code, data }: IResp) => {
-            if (code === 1 && !data.exists) {
-              callback();
-            } else {
-              callback("alias已存在！");
-            }
-          });
-      } else {
-        callback();
-      }
-    },
-    isLocalChange(e) {
-      this.isLocal = e.target.value;
-      this.$nextTick(() => {
-        if (!this.isLocal) {
-          this.$refs.urlInputComp.focus();
-        }
-      });
-    },
-    publish() {
-      this.form.validateFieldsAndScroll((error, values) => {
-        if (!error) {
-          const self = this;
-          const data = {
-            content: this.content,
-            ...values
-          };
-          this.$confirm({
-            title: "确定要发布吗？",
-            okText: "确定",
-            cancelText: "取消",
-            onOk() {
-              return new Promise((resolve, reject) => {
-                self.$axios.$post("/api/admin/article", data).then(resp => {
-                  if (resp.code === 1) {
-                    self.initialData = resp.data.article;
-                    history.replaceState(
-                      null,
-                      "",
-                      `${location.protocol}//${location.host}${location.pathname}?uid=${self.initialData._id}`
-                    );
-                    resolve();
-                    self.$message.success("文章发布成功！");
-                  } else {
-                    console.error(resp.message);
-                    reject();
-                    self.$message.error("操作失败！");
-                  }
+    async asyncData ({ $axios, query, error }: any) {
+        const uid = query.uid;
+        if (uid) {
+            const { code, data } = await $axios.$get('/api/admin/article', {
+                params: {
+                    uid
+                }
+            });
+            if (code === 1) {
+                if (data && data.isActive) {
+                    return {
+                        initialData: data
+                    };
+                }
+                error({
+                    statusCode: 404,
+                    message: '未找到该页面'
                 });
-              });
-            }
-          });
-        }
-      });
-    },
-    publish2() {
-      this.form.validateFieldsAndScroll((error, values) => {
-        if (!error) {
-          const self = this;
-          const data = {
-            content: this.content,
-            isDraft: false,
-            ...values
-          };
-          this.$confirm({
-            title: "确定要发布吗？",
-            okText: "确定",
-            cancelText: "取消",
-            onOk() {
-              return new Promise((resolve, reject) => {
-                self.$axios
-                  .$put("/api/admin/article", data, {
-                    params: {
-                      uid: self.initialData._id
-                    }
-                  })
-                  .then(resp => {
-                    if (resp.code === 1) {
-                      self.initialData = resp.data.article;
-                      resolve();
-                      self.$message.success("文章发布成功！");
-                    } else {
-                      console.error(resp.message);
-                      reject();
-                      self.$message.error("操作失败！");
-                    }
-                  });
-              });
-            }
-          });
-        }
-      });
-    },
-    saveDraft() {
-      this.form.validateFieldsAndScroll((error, values) => {
-        if (!error) {
-          const self = this;
-          const data = {
-            content: this.content,
-            isDraft: true,
-            ...values
-          };
-          this.$axios.$post("/api/admin/article", data).then(resp => {
-            if (resp.code === 1) {
-              self.initialData = resp.data.article;
-              history.replaceState(
-                null,
-                "",
-                `${location.protocol}//${location.host}${location.pathname}?uid=${self.initialData._id}`
-              );
-              self.$message.success("新建草稿成功！");
             } else {
-              console.error(resp.message);
-              self.$message.error("操作失败！");
+                error({
+                    statusCode: 500,
+                    message: '内部服务器错误'
+                });
             }
-          });
         }
-      });
     },
-    back() {
-      location.href = "/admin/article-manage";
+    created () {
+        this.getCategories();
     },
-    unpublish() {
-      const self = this;
-      this.$confirm({
-        title: "确定要取消发布吗？",
-        content: "文章将变成草稿状态，只有你自己可见。",
-        okText: "确定",
-        cancelText: "取消",
-        onOk() {
-          return new Promise((resolve, reject) => {
-            self.$axios
-              .$put(
-                "/api/admin/article",
-                {
-                  isDraft: true
-                },
-                {
-                  params: {
-                    uid: self.initialData._id
-                  }
-                }
-              )
-              .then(resp => {
-                if (resp.code === 1) {
-                  self.initialData = resp.data.article;
-                  resolve();
-                  self.$message.success("取消发布成功！");
-                } else {
-                  console.error(resp.message);
-                  reject();
-                  self.$message.error("操作失败！");
-                }
-              });
-          });
+    mounted () {
+        if (this.initialData._id) {
+            // 编辑模式
+            this.form.setFieldsValue({
+                title: this.initialData.title,
+                alias: this.initialData.alias,
+                category: this.initialData.category,
+                isLocal: this.initialData.isLocal,
+                url: this.initialData.url || '',
+                labels: this.initialData.labels
+            });
+            this.content = this.initialData.content;
         }
-      });
+        this.$refs.titleInput.focus();
     },
-    save() {
-      this.form.validateFieldsAndScroll((error, values) => {
-        if (!error) {
-          const self = this;
-          const data = {
-            content: this.content,
-            ...values
-          };
-          this.$axios
-            .$put("/api/admin/article", data, {
-              params: {
-                uid: this.initialData._id
-              }
-            })
-            .then(resp => {
-              if (resp.code === 1) {
-                self.$message.success("保存成功！");
-              } else {
-                console.error(resp.message);
-                self.$message.error("操作失败！");
-              }
+    methods: {
+        async getCategories () {
+            const { code, data }: IResp = await this.$axios.$get(
+                '/api/admin/categories'
+            );
+            if (code === 1) {
+                this.categories = data;
+            }
+        },
+        async refreshCategories () {
+            this.categoryLoading = true;
+            await this.getCategories();
+            this.categoryLoading = false;
+        },
+        checkAlias (_rule, value, callback) {
+            if (value) {
+                this.$axios
+                    .$get('/api/admin/checkArticleAlias', {
+                        params: {
+                            alias: value,
+                            excludeUid: this.initialData._id
+                        }
+                    })
+                    .then(({ code, data }: IResp) => {
+                        if (code === 1 && !data.exists) {
+                            callback();
+                        } else {
+                            // eslint-disable-next-line standard/no-callback-literal
+                            callback('alias已存在！');
+                        }
+                    });
+            } else {
+                callback();
+            }
+        },
+        isLocalChange (e) {
+            this.isLocal = e.target.value;
+            this.$nextTick(() => {
+                if (!this.isLocal) {
+                    this.$refs.urlInputComp.focus();
+                }
+            });
+        },
+        publish () {
+            this.form.validateFieldsAndScroll((error, values) => {
+                if (!error) {
+                    const self = this;
+                    const data = {
+                        content: this.content,
+                        ...values
+                    };
+                    this.$confirm({
+                        title: '确定要发布吗？',
+                        okText: '确定',
+                        cancelText: '取消',
+                        onOk () {
+                            return new Promise((resolve, reject) => {
+                                self.$axios.$post('/api/admin/article', data).then(resp => {
+                                    if (resp.code === 1) {
+                                        self.initialData = resp.data.article;
+                                        history.replaceState(
+                                            null,
+                                            '',
+                                            `${location.protocol}//${location.host}${location.pathname}?uid=${self.initialData._id}`
+                                        );
+                                        resolve();
+                                        self.$message.success('文章发布成功！');
+                                    } else {
+                                        console.error(resp.message);
+                                        reject(resp.message);
+                                        self.$message.error('操作失败！');
+                                    }
+                                });
+                            });
+                        }
+                    });
+                }
+            });
+        },
+        publish2 () {
+            this.form.validateFieldsAndScroll((error, values) => {
+                if (!error) {
+                    const self = this;
+                    const data = {
+                        content: this.content,
+                        isDraft: false,
+                        ...values
+                    };
+                    this.$confirm({
+                        title: '确定要发布吗？',
+                        okText: '确定',
+                        cancelText: '取消',
+                        onOk () {
+                            return new Promise((resolve, reject) => {
+                                self.$axios
+                                    .$put('/api/admin/article', data, {
+                                        params: {
+                                            uid: self.initialData._id
+                                        }
+                                    })
+                                    .then(resp => {
+                                        if (resp.code === 1) {
+                                            self.initialData = resp.data.article;
+                                            resolve();
+                                            self.$message.success('文章发布成功！');
+                                        } else {
+                                            console.error(resp.message);
+                                            reject(resp.message);
+                                            self.$message.error('操作失败！');
+                                        }
+                                    });
+                            });
+                        }
+                    });
+                }
+            });
+        },
+        saveDraft () {
+            this.form.validateFieldsAndScroll((error, values) => {
+                if (!error) {
+                    const self = this;
+                    const data = {
+                        content: this.content,
+                        isDraft: true,
+                        ...values
+                    };
+                    this.$axios.$post('/api/admin/article', data).then(resp => {
+                        if (resp.code === 1) {
+                            self.initialData = resp.data.article;
+                            history.replaceState(
+                                null,
+                                '',
+                                `${location.protocol}//${location.host}${location.pathname}?uid=${self.initialData._id}`
+                            );
+                            self.$message.success('新建草稿成功！');
+                        } else {
+                            console.error(resp.message);
+                            self.$message.error('操作失败！');
+                        }
+                    });
+                }
+            });
+        },
+        back () {
+            location.href = '/admin/article-manage';
+        },
+        unpublish () {
+            const self = this;
+            this.$confirm({
+                title: '确定要取消发布吗？',
+                content: '文章将变成草稿状态，只有你自己可见。',
+                okText: '确定',
+                cancelText: '取消',
+                onOk () {
+                    return new Promise((resolve, reject) => {
+                        self.$axios
+                            .$put(
+                                '/api/admin/article',
+                                {
+                                    isDraft: true
+                                },
+                                {
+                                    params: {
+                                        uid: self.initialData._id
+                                    }
+                                }
+                            )
+                            .then(resp => {
+                                if (resp.code === 1) {
+                                    self.initialData = resp.data.article;
+                                    resolve();
+                                    self.$message.success('取消发布成功！');
+                                } else {
+                                    console.error(resp.message);
+                                    reject(resp.message);
+                                    self.$message.error('操作失败！');
+                                }
+                            });
+                    });
+                }
+            });
+        },
+        save () {
+            this.form.validateFieldsAndScroll((error, values) => {
+                if (!error) {
+                    const self = this;
+                    const data = {
+                        content: this.content,
+                        ...values
+                    };
+                    this.$axios
+                        .$put('/api/admin/article', data, {
+                            params: {
+                                uid: this.initialData._id
+                            }
+                        })
+                        .then(resp => {
+                            if (resp.code === 1) {
+                                self.$message.success('保存成功！');
+                            } else {
+                                console.error(resp.message);
+                                self.$message.error('操作失败！');
+                            }
+                        });
+                }
             });
         }
-      });
     }
-  }
 });
 </script>
 

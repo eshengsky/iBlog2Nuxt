@@ -1,26 +1,26 @@
 <template>
-  <a-locale-provider :locale="zh_CN">
+  <a-locale-provider :locale="zhCN">
     <a-layout class="layout-admin">
       <a-layout-sider
+        v-model="collapsed"
         :trigger="null"
         breakpoint="lg"
         collapsible
-        v-model="collapsed"
         class="layout-sider"
       >
         <div class="sider-header">
           <nuxt-link to="/" title="iBlog2">
-            <img src="/images/iBlog2-logo.png" />
+            <img src="/images/iBlog2-logo.png">
           </nuxt-link>
           <h4>后台管理</h4>
         </div>
-        <a-menu theme="dark" mode="inline" :selectedKeys="[currentKey]">
+        <a-menu theme="dark" mode="inline" :selected-keys="[currentKey]">
           <a-menu-item key="index" title="数据统计">
             <nuxt-link to="/admin">
               <font-awesome-icon
                 :icon="['fas', 'chart-line']"
                 fixed-width
-              ></font-awesome-icon>
+              />
               <span>数据统计</span>
             </nuxt-link>
           </a-menu-item>
@@ -29,7 +29,7 @@
               <font-awesome-icon
                 :icon="['fas', 'pen-nib']"
                 fixed-width
-              ></font-awesome-icon>
+              />
               <span>文章管理</span>
             </nuxt-link>
           </a-menu-item>
@@ -38,7 +38,7 @@
               <font-awesome-icon
                 :icon="['fas', 'map-signs']"
                 fixed-width
-              ></font-awesome-icon>
+              />
               <span>分类管理</span>
             </nuxt-link>
           </a-menu-item>
@@ -47,7 +47,7 @@
               <font-awesome-icon
                 :icon="['fas', 'comments']"
                 fixed-width
-              ></font-awesome-icon>
+              />
               <span>评论管理</span>
             </nuxt-link>
           </a-menu-item>
@@ -56,7 +56,7 @@
               <font-awesome-icon
                 :icon="['fas', 'comment-dots']"
                 fixed-width
-              ></font-awesome-icon>
+              />
               <span>留言管理</span>
             </nuxt-link>
           </a-menu-item>
@@ -65,7 +65,7 @@
               <font-awesome-icon
                 :icon="['fas', 'cogs']"
                 fixed-width
-              ></font-awesome-icon>
+              />
               <span>系统设置</span>
             </nuxt-link>
           </a-menu-item>
@@ -90,17 +90,15 @@
                     <font-awesome-icon
                       :icon="['fas', 'key']"
                       style="margin-right: 5px;"
-                    ></font-awesome-icon
-                    >修改密码
+                    />修改密码
                   </a>
                 </a-menu-item>
                 <a-menu-item>
-                  <a @click="logout" title="退出登录">
+                  <a title="退出登录" @click="logout">
                     <font-awesome-icon
                       :icon="['fas', 'sign-out-alt']"
                       style="margin-right: 5px;"
-                    ></font-awesome-icon
-                    >退出登录
+                    />退出登录
                   </a>
                 </a-menu-item>
               </a-menu>
@@ -110,69 +108,68 @@
         <a-layout-content>
           <nuxt />
         </a-layout-content>
-        <layout-footer></layout-footer>
+        <layout-footer />
       </a-layout>
     </a-layout>
   </a-locale-provider>
 </template>
 <script lang="ts">
-import Vue from "vue";
-import moment from "moment";
-import zh_CN from "ant-design-vue/lib/locale-provider/zh_CN";
-import LayoutFooter from "@/components/LayoutFooter.vue";
-import { CombinedVueInstance, VueConstructor } from "vue/types/vue";
-Vue.filter("toDate", (date: string) => {
-  return moment(date).format("YYYY-MM-DD HH:mm:ss");
+import Vue from 'vue';
+import moment from 'moment';
+import zhCN from 'ant-design-vue/lib/locale-provider/zh_CN';
+import LayoutFooter from '@/components/LayoutFooter.vue';
+Vue.filter('toDate', (date: string) => {
+    return moment(date).format('YYYY-MM-DD HH:mm:ss');
 });
 export default Vue.extend({
-  middleware: "auth",
-  components: {
-    LayoutFooter
-  },
-  data() {
-    return {
-      collapsed: false,
-      year: new Date().getFullYear(),
-      zh_CN,
-      currentKey: ""
-    };
-  },
-  computed: {
-    marginLeft(): string {
-      return this.collapsed ? "80px" : "200px";
-    }
-  },
-  created() {
-    this.currentKey = this.getCurrentKey(this.$route.path);
-    this.$router.afterEach((to, from) => {
-      this.currentKey = this.getCurrentKey(to.path);
-    });
-  },
-  methods: {
-    toggleCollapsed() {
-      this.collapsed = !this.collapsed;
-      this.$bus.$emit("changeLayout");
+    middleware: 'auth',
+    components: {
+        LayoutFooter
     },
-    logout(this: any) {
-      this.$auth.logout("local");
+    data () {
+        return {
+            collapsed: false,
+            year: new Date().getFullYear(),
+            zhCN,
+            currentKey: ''
+        };
     },
-    getCurrentKey(originalPath) {
-      let path = originalPath.replace("/admin", "");
-      if (path.substring(0, 1) === "/") {
-        path = path.substring(1);
-      }
-      if (path.substring(path.length - 1) === "/") {
-        path = path.substring(0, path.length - 1);
-      }
-      if (!path) {
-        return "index";
-      }
-      if (path === "article-edit") {
-        return "article-manage";
-      }
-      return path;
+    computed: {
+        marginLeft (): string {
+            return this.collapsed ? '80px' : '200px';
+        }
+    },
+    created () {
+        this.currentKey = this.getCurrentKey(this.$route.path);
+        this.$router.afterEach(to => {
+            this.currentKey = this.getCurrentKey(to.path);
+        });
+    },
+    methods: {
+        toggleCollapsed () {
+            this.collapsed = !this.collapsed;
+            this.$bus.$emit('changeLayout');
+        },
+        logout (this: any) {
+            this.$auth.logout('local');
+        },
+        getCurrentKey (originalPath) {
+            let path = originalPath.replace('/admin', '');
+            if (path.substring(0, 1) === '/') {
+                path = path.substring(1);
+            }
+            if (path.substring(path.length - 1) === '/') {
+                path = path.substring(0, path.length - 1);
+            }
+            if (!path) {
+                return 'index';
+            }
+            if (path === 'article-edit') {
+                return 'article-manage';
+            }
+            return path;
+        }
     }
-  }
 });
 </script>
 <style>

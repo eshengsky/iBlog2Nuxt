@@ -1,9 +1,13 @@
 <template>
   <div class="widget-container">
-    <div class="widget-header">博客简介</div>
+    <div class="widget-header">
+      博客简介
+    </div>
     <div class="widget-body">
       <template v-if="intro">
-        <div class="intro-content">{{ intro }}</div>
+        <div class="intro-content">
+          {{ intro }}
+        </div>
       </template>
       <a-empty v-else>
         <span slot="description">暂无内容</span>
@@ -13,13 +17,13 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
+import Vue from 'vue';
 export default Vue.extend({
-  data() {
-    return {
-      intro: this.$store.state.settings.blogIntro
+    data () {
+        return {
+            intro: this.$store.state.settings.blogIntro
+        };
     }
-  }
 });
 </script>
 

@@ -1,18 +1,18 @@
 <template>
   <div class="guestbook-wrap">
     <article class="list-wrap">
-      <comment-list :from="1"></comment-list>
+      <comment-list :from="1" />
     </article>
   </div>
 </template>
 <script lang="ts">
-import Vue from "vue";
-import CommentList from "@/components/CommentList.vue";
-import "highlight.js/styles/tomorrow.css";
+import Vue from 'vue';
+import CommentList from '@/components/CommentList.vue';
+import 'highlight.js/styles/tomorrow.css';
 export default Vue.extend({
-  components: {
-    CommentList
-  }
+    components: {
+        CommentList
+    }
 });
 </script>
 <style scoped>

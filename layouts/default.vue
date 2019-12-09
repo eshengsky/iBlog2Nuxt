@@ -1,13 +1,15 @@
 <template>
-  <a-locale-provider :locale="zh_CN">
+  <a-locale-provider :locale="zhCN">
     <div class="container">
       <div class="navbar">
         <div class="navbar-header">
           <nuxt-link class="navbar-brand" to="/">
-            <img :src="settings.blogLogo" />
+            <img :src="settings.blogLogo">
             <h4>
               {{ settings.blogName }}
-              <p v-if="settings.blogSlogan">{{ settings.blogSlogan }}</p>
+              <p v-if="settings.blogSlogan">
+                {{ settings.blogSlogan }}
+              </p>
             </h4>
           </nuxt-link>
         </div>
@@ -20,56 +22,56 @@
               }"
             >
               <nuxt-link to="/">
-                <font-awesome-icon :icon="['fas', 'pen-nib']"></font-awesome-icon>博客
+                <font-awesome-icon :icon="['fas', 'pen-nib']" />博客
               </nuxt-link>
-              <div class="nav-line"></div>
+              <div class="nav-line" />
             </li>
             <li :class="{ 'guestbook-active': $route.path === '/guestbook' }">
               <nuxt-link to="/guestbook">
-                <font-awesome-icon :icon="['fas', 'comment-dots']"></font-awesome-icon>留言
+                <font-awesome-icon :icon="['fas', 'comment-dots']" />留言
               </nuxt-link>
-              <div class="nav-line"></div>
+              <div class="nav-line" />
             </li>
             <li :class="{ 'profile-active': $route.path === '/profile' }">
               <nuxt-link to="/profile">
-                <font-awesome-icon :icon="['fas', 'user']"></font-awesome-icon>关于
+                <font-awesome-icon :icon="['fas', 'user']" />关于
               </nuxt-link>
-              <div class="nav-line"></div>
+              <div class="nav-line" />
             </li>
           </ul>
         </div>
       </div>
       <nuxt />
-      <layout-footer :showLogin="true"></layout-footer>
+      <layout-footer :show-login="true" />
     </div>
   </a-locale-provider>
 </template>
 <script lang="ts">
-import Vue from "vue";
-import zh_CN from "ant-design-vue/lib/locale-provider/zh_CN";
-import LayoutFooter from "@/components/LayoutFooter.vue";
-import { ISetting } from "@/server/models/setting";
+import Vue from 'vue';
+import zhCN from 'ant-design-vue/lib/locale-provider/zh_CN';
+import LayoutFooter from '@/components/LayoutFooter.vue';
+import { ISetting } from '@/server/models/setting';
 export default Vue.extend({
-  components: {
-    LayoutFooter
-  },
-  data() {
-    return {
-      year: new Date().getFullYear(),
-      settings: this.$store.state.settings as ISetting,
-      zh_CN
-    };
-  },
-  mounted() {
-    if (this.settings.enableStatistics && this.settings.statisticsKey) {
-      const hm = document.createElement("script");
-      hm.src = `https://hm.baidu.com/hm.js?${this.settings.statisticsKey}`;
-      const script = document.getElementsByTagName("script")[0];
-      if (script && script.parentNode) {
-        script.parentNode.insertBefore(hm, script);
-      }
+    components: {
+        LayoutFooter
+    },
+    data () {
+        return {
+            year: new Date().getFullYear(),
+            settings: this.$store.state.settings as ISetting,
+            zhCN
+        };
+    },
+    mounted () {
+        if (this.settings.enableStatistics && this.settings.statisticsKey) {
+            const hm = document.createElement('script');
+            hm.src = `https://hm.baidu.com/hm.js?${this.settings.statisticsKey}`;
+            const script = document.getElementsByTagName('script')[0];
+            if (script && script.parentNode) {
+                script.parentNode.insertBefore(hm, script);
+            }
+        }
     }
-  }
 });
 </script>
 <style>

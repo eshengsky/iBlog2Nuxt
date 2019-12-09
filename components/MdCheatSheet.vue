@@ -1,5 +1,6 @@
 <template>
   <div>
+    <!-- eslint-disable vue/no-v-html -->
     <table class="mcs-table">
       <thead>
         <tr>
@@ -12,7 +13,7 @@
         <tr>
           <td>标题</td>
           <td>
-            <code v-html="title"></code>
+            <code v-html="title" />
           </td>
           <td>
             <tui-editor-viewer :value="title | clean" />
@@ -21,7 +22,7 @@
         <tr>
           <td>加粗</td>
           <td>
-            <code v-html="bold"></code>
+            <code v-html="bold" />
           </td>
           <td>
             <tui-editor-viewer :value="bold | clean" />
@@ -30,7 +31,7 @@
         <tr>
           <td>斜体</td>
           <td>
-            <code v-html="italic"></code>
+            <code v-html="italic" />
           </td>
           <td>
             <tui-editor-viewer :value="italic | clean" />
@@ -39,7 +40,7 @@
         <tr>
           <td>删除</td>
           <td>
-            <code v-html="strike"></code>
+            <code v-html="strike" />
           </td>
           <td>
             <tui-editor-viewer :value="strike | clean" />
@@ -48,7 +49,7 @@
         <tr>
           <td>引用</td>
           <td>
-            <code v-html="blockquote"></code>
+            <code v-html="blockquote" />
           </td>
           <td>
             <tui-editor-viewer :value="blockquote | clean" />
@@ -57,7 +58,7 @@
         <tr>
           <td>有序列表</td>
           <td>
-            <code v-html="ol"></code>
+            <code v-html="ol" />
           </td>
           <td>
             <tui-editor-viewer :value="ol | clean" />
@@ -66,7 +67,7 @@
         <tr>
           <td>无序列表</td>
           <td>
-            <code v-html="ul"></code>
+            <code v-html="ul" />
           </td>
           <td>
             <tui-editor-viewer :value="ul | clean" />
@@ -75,7 +76,7 @@
         <tr>
           <td>任务列表</td>
           <td>
-            <code v-html="taskList"></code>
+            <code v-html="taskList" />
           </td>
           <td>
             <tui-editor-viewer :value="taskList | clean" />
@@ -84,7 +85,7 @@
         <tr>
           <td>行内代码</td>
           <td>
-            <code v-html="code"></code>
+            <code v-html="code" />
           </td>
           <td>
             <tui-editor-viewer :value="code | clean" />
@@ -93,7 +94,7 @@
         <tr>
           <td>块级代码</td>
           <td>
-            <code v-html="blockCode"></code>
+            <code v-html="blockCode" />
           </td>
           <td>
             <tui-editor-viewer :value="blockCode | clean" />
@@ -102,7 +103,7 @@
         <tr>
           <td>分隔线</td>
           <td>
-            <code v-html="hr"></code>
+            <code v-html="hr" />
           </td>
           <td>
             <tui-editor-viewer :value="hr | clean" />
@@ -111,7 +112,7 @@
         <tr>
           <td>链接</td>
           <td>
-            <code v-html="link"></code>
+            <code v-html="link" />
           </td>
           <td>
             <tui-editor-viewer :value="link | clean" />
@@ -120,7 +121,7 @@
         <tr>
           <td>图片</td>
           <td style="max-width: 270px;">
-            <code v-html="image"></code>
+            <code v-html="image" />
           </td>
           <td>
             <tui-editor-viewer :value="image | clean" />
@@ -129,7 +130,7 @@
         <tr>
           <td>表格</td>
           <td>
-            <code v-html="table"></code>
+            <code v-html="table" />
           </td>
           <td>
             <tui-editor-viewer :value="table | clean" />
@@ -140,51 +141,51 @@
   </div>
 </template>
 <script lang="ts">
-import Vue from "vue";
+import Vue from 'vue';
 export default Vue.extend({
-  data() {
-    return {
-      title: `# 1级标题
+    filters: {
+        clean (val) {
+            return val.replace(/<br>/g, '').replace(/&nbsp;/g, ' ');
+        }
+    },
+    data () {
+        return {
+            title: `# 1级标题
 <br>## 2级标题
 <br>### 3级标题
 <br>#### 4级标题
 <br>##### 5级标题`,
-      bold: `**加粗文本**`,
-      italic: `*斜体文本*`,
-      strike: `~~已删除文本~~`,
-      blockquote: `> 引用内容`,
-      ol: `1. 第一项
+            bold: '**加粗文本**',
+            italic: '*斜体文本*',
+            strike: '~~已删除文本~~',
+            blockquote: '> 引用内容',
+            ol: `1. 第一项
 <br>2. 第二项
 <br>3. 第三项
 <br>`,
-      ul: `* 第一项
+            ul: `* 第一项
 <br>* 第二项
 <br>* 第三项
 <br>`,
-      taskList: `* [x] 已完成
+            taskList: `* [x] 已完成
 <br>* [ ] 未完成1
 <br>* [ ] 未完成2`,
-      code: "`code`",
-      blockCode: `\`\`\`js
+            code: '`code`',
+            blockCode: `\`\`\`js
 <br>function foo() {
 <br>&nbsp;&nbsp;const name = "iBlog2";
 <br>&nbsp;&nbsp;console.log(name);
 <br>}
 <br>\`\`\``,
-      hr: `---`,
-      link: `[链接地址](https://skysun.name)`,
-      image: `![logo](/images/iBlog2-logo.png)`,
-      table: `| 框架 | 类型 |
+            hr: '---',
+            link: '[链接地址](https://skysun.name)',
+            image: '![logo](/images/iBlog2-logo.png)',
+            table: `| 框架 | 类型 |
 <br>| ----------- | ----------- |
 <br>| Vue.js | 前端 |
 <br>| Express.js | 后端 |`
-    };
-	},
-	filters: {
-		clean(val) {
-			return val.replace(/<br>/g, '').replace(/&nbsp;/g, ' ');
-		}
-	}
+        };
+    }
 });
 </script>
 <style>

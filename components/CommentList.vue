@@ -11,8 +11,9 @@
     </div>
     <div class="gituser-wrap">
       <div class="avatar-wrap">
-        <div v-if="getAvatar()" v-html="getAvatar()" class="avatar"></div>
-        <div v-else class="default-avatar"></div>
+        <!-- eslint-disable-next-line vue/no-v-html -->
+        <div v-if="getAvatar()" class="avatar" v-html="getAvatar()" />
+        <div v-else class="default-avatar" />
       </div>
       <div class="editor-wrap">
         <div class="form-wrap">
@@ -21,22 +22,22 @@
               <a-col :xs="24" :sm="24" :md="11">
                 <a-form-item>
                   <a-input
-                    placeholder="你的昵称"
                     v-decorator="['username', usernameOpts]"
-                    allowClear
+                    placeholder="你的昵称"
+                    allow-clear
                     class="username-input"
                   >
                     <template slot="addonBefore">
-                      <font-awesome-icon :icon="['far', 'user']"></font-awesome-icon>
+                      <font-awesome-icon :icon="['far', 'user']" />
                     </template>
                   </a-input>
                 </a-form-item>
               </a-col>
               <a-col :xs="24" :sm="24" :md="{ span: 11, offset: 2 }">
                 <a-form-item>
-                  <a-input placeholder="昵称链接" v-decorator="['website', websiteOpts]" allowClear>
+                  <a-input v-decorator="['website', websiteOpts]" placeholder="昵称链接" allow-clear>
                     <template slot="addonBefore">
-                      <font-awesome-icon :icon="['fas', 'link']"></font-awesome-icon>
+                      <font-awesome-icon :icon="['fas', 'link']" />
                     </template>
                   </a-input>
                 </a-form-item>
@@ -57,13 +58,15 @@
         </client-only>
         <div class="comment-btn-wrap">
           <a-tooltip>
-            <template slot="title">打开Markdown语法速查</template>
+            <template slot="title">
+              打开Markdown语法速查
+            </template>
             <a @click="mcsShow = true">
-              <font-awesome-icon :icon="['fab', 'markdown']" style="font-size: 14px"></font-awesome-icon>
+              <font-awesome-icon :icon="['fab', 'markdown']" style="font-size: 14px" />
               <span>支持Markdown语法</span>
             </a>
           </a-tooltip>
-          <a-button type="primary" @click="postComment" :disabled="!editorText">
+          <a-button type="primary" :disabled="!editorText" @click="postComment">
             <span>发表{{ commentName }}</span>
           </a-button>
         </div>
@@ -76,233 +79,238 @@
             :comment="comment"
             :avatar="getAvatar(comment.username)"
             @referenceReply="referenceReply"
-          ></comment-item>
+          />
         </li>
       </ul>
-      <div class="btn-next-wrap" v-if="hasNext">
-        <a-button size="large" @click="loadNext">查看更多</a-button>
+      <div v-if="hasNext" class="btn-next-wrap">
+        <a-button size="large" @click="loadNext">
+          查看更多
+        </a-button>
       </div>
     </div>
     <a-modal v-model="mcsShow" title="Markdown 语法速查" width="640px">
-      <a-alert type="warning" message="评论及留言的内容不支持1-4级标题。" showIcon style="margin-bottom: 10px;" />
-      <md-cheat-sheet></md-cheat-sheet>
+      <a-alert type="warning" message="评论及留言的内容不支持1-4级标题。" show-icon style="margin-bottom: 10px;" />
+      <md-cheat-sheet />
       <div slot="footer">
-        <a-button type="primary" @click="mcsShow = false">关闭</a-button>
+        <a-button type="primary" @click="mcsShow = false">
+          关闭
+        </a-button>
       </div>
     </a-modal>
   </div>
 </template>
 <script lang="ts">
-import Vue, { PropOptions } from "vue";
-import Avatars from "@dicebear/avatars";
-import sprites from "@dicebear/avatars-jdenticon-sprites";
-import "lazysizes";
-import CommentItem from "@/components/CommentItem.vue";
-import MdCheatSheet from "@/components/MdCheatSheet.vue";
-import { IComment } from "@/server/models/comment";
-import { IResp } from "@/server/types";
-import { RootState } from "@/store/index";
+import Vue, { PropOptions } from 'vue';
+import Avatars from '@dicebear/avatars';
+import sprites from '@dicebear/avatars-jdenticon-sprites';
+import 'lazysizes';
+import CommentItem from '@/components/CommentItem.vue';
+import MdCheatSheet from '@/components/MdCheatSheet.vue';
+import { IComment } from '@/server/models/comment';
+import { IResp } from '@/server/types';
 export default Vue.extend({
-  components: {
-    CommentItem,
-    MdCheatSheet
-  },
-  props: {
-    from: {
-      type: Number
-    } as PropOptions<1 | 2>,
-    articleId: {
-      type: String
-    } as PropOptions<string>
-  },
-  data() {
-    return {
-      comments: [] as Array<IComment>,
-      page: 1,
-      pageSize: this.$store.state.settings.commentPageSize,
-      mcsShow: false,
-      editorText: "",
-      isLoading: false,
-      count: 0,
-      hasNext: false,
-      usernameOpts: {
-        rules: [
-          {
-            required: true,
-            message: "昵称不能为空！"
-          },
-          {
-            min: 3,
-            message: "昵称太短了！"
-          },
-          {
-            max: 20,
-            message: "昵称太长了！"
-          }
-        ]
-      },
-      websiteOpts: {
-        rules: [
-          {
-            pattern: /^http/,
-            message: "链接必须以http开头！"
-          }
-        ]
-      }
-    };
-  },
-  created() {
-    this.getComments();
-  },
-  mounted() {
-    const userInfo = localStorage.getItem("commentUserInfo");
-    if (userInfo) {
-      try {
-        const user = JSON.parse(userInfo);
-        this.form.setFieldsValue(user);
-      } catch (err) {}
-    }
-  },
-  computed: {
-    form(): any {
-      return this.$form.createForm(this);
+    components: {
+        CommentItem,
+        MdCheatSheet
     },
-    isGuestbook(): boolean {
-      return this.from === 1;
+    props: {
+        from: {
+            type: Number,
+            default: 1
+        } as PropOptions<1 | 2>,
+        articleId: {
+            type: String,
+            default: ''
+        } as PropOptions<string>
     },
-    commentName(): string {
-      return this.isGuestbook ? "留言" : "评论";
-    },
-    editorOptions(): object {
-      return {
-        hideModeSwitch: true,
-        language: "zh_CN",
-        placeholder: `输入${this.commentName}内容`,
-        toolbarItems: [
-          "bold",
-          "italic",
-          "strike",
-          "divider",
-          "hr",
-          "quote",
-          "divider",
-          "ul",
-          "ol",
-          "task",
-          "divider",
-          "image",
-          "table",
-          "link",
-          "divider",
-          "code",
-          "codeblock"
-        ]
-      };
-    }
-  },
-  methods: {
-    async getComments() {
-      this.isLoading = true;
-      const { code, data }: IResp = await this.$axios.$get(
-        `/api/${this.isGuestbook ? "guestbook" : "comments"}`,
-        {
-          params: {
-            articleId: this.articleId,
-            pageIndex: this.page,
-            pageSize: this.pageSize
-          }
-        }
-      );
-
-      if (code === 1) {
-        this.comments.push(...data.comments);
-        this.hasNext = data.hasNext;
-        this.count = data.count;
-      }
-      this.isLoading = false;
-    },
-    postComment() {
-      this.form.validateFieldsAndScroll(async (error, values) => {
-        if (!error) {
-          const { code, data } = await this.$axios.$post(
-            `/api/${this.isGuestbook ? "guestbook" : "comment"}`,
-            {
-              articleId: this.articleId,
-              content: this.editorText,
-              ...values
+    data () {
+        return {
+            comments: [] as Array<IComment>,
+            page: 1,
+            pageSize: this.$store.state.settings.commentPageSize,
+            mcsShow: false,
+            editorText: '',
+            isLoading: false,
+            count: 0,
+            hasNext: false,
+            usernameOpts: {
+                rules: [
+                    {
+                        required: true,
+                        message: '昵称不能为空！'
+                    },
+                    {
+                        min: 3,
+                        message: '昵称太短了！'
+                    },
+                    {
+                        max: 20,
+                        message: '昵称太长了！'
+                    }
+                ]
+            },
+            websiteOpts: {
+                rules: [
+                    {
+                        pattern: /^http/,
+                        message: '链接必须以http开头！'
+                    }
+                ]
             }
-          );
-          if (code === 1) {
-            this.comments.unshift(data.comment);
-            this.count++;
-            this.editorText = "";
-          } else {
-            this.$message.error(`${this.commentName}失败`);
-          }
-          localStorage.setItem("commentUserInfo", JSON.stringify(values));
+        };
+    },
+    computed: {
+        form (): any {
+            return this.$form.createForm(this);
+        },
+        isGuestbook (): boolean {
+            return this.from === 1;
+        },
+        commentName (): string {
+            return this.isGuestbook ? '留言' : '评论';
+        },
+        editorOptions (): object {
+            return {
+                hideModeSwitch: true,
+                language: 'zh_CN',
+                placeholder: `输入${this.commentName}内容`,
+                toolbarItems: [
+                    'bold',
+                    'italic',
+                    'strike',
+                    'divider',
+                    'hr',
+                    'quote',
+                    'divider',
+                    'ul',
+                    'ol',
+                    'task',
+                    'divider',
+                    'image',
+                    'table',
+                    'link',
+                    'divider',
+                    'code',
+                    'codeblock'
+                ]
+            };
         }
-      });
     },
+    created () {
+        this.getComments();
+    },
+    mounted () {
+        const userInfo = localStorage.getItem('commentUserInfo');
+        if (userInfo) {
+            try {
+                const user = JSON.parse(userInfo);
+                this.form.setFieldsValue(user);
+            } catch (err) {}
+        }
+    },
+    methods: {
+        async getComments () {
+            this.isLoading = true;
+            const { code, data }: IResp = await this.$axios.$get(
+                `/api/${this.isGuestbook ? 'guestbook' : 'comments'}`,
+                {
+                    params: {
+                        articleId: this.articleId,
+                        pageIndex: this.page,
+                        pageSize: this.pageSize
+                    }
+                }
+            );
 
-    onEditorLoad() {
-      (<HTMLElement>(
-        document.querySelector(".gituser-wrap .comment-btn-wrap")
-      )).style.display = "flex";
-    },
+            if (code === 1) {
+                this.comments.push(...data.comments);
+                this.hasNext = data.hasNext;
+                this.count = data.count;
+            }
+            this.isLoading = false;
+        },
+        postComment () {
+            this.form.validateFieldsAndScroll(async (error, values) => {
+                if (!error) {
+                    const { code, data } = await this.$axios.$post(
+                        `/api/${this.isGuestbook ? 'guestbook' : 'comment'}`,
+                        {
+                            articleId: this.articleId,
+                            content: this.editorText,
+                            ...values
+                        }
+                    );
+                    if (code === 1) {
+                        this.comments.unshift(data.comment);
+                        this.count++;
+                        this.editorText = '';
+                    } else {
+                        this.$message.error(`${this.commentName}失败`);
+                    }
+                    localStorage.setItem('commentUserInfo', JSON.stringify(values));
+                }
+            });
+        },
 
-    onEditorFocus() {
-      (<HTMLElement>(
-        document.querySelector(".gituser-wrap .te-md-container .CodeMirror")
-      )).classList.add("editor-focus");
-    },
+        onEditorLoad () {
+            (<HTMLElement>(
+        document.querySelector('.gituser-wrap .comment-btn-wrap')
+      )).style.display = 'flex';
+        },
 
-    onEditorBlur() {
-      (<HTMLElement>(
-        document.querySelector(".gituser-wrap .te-md-container .CodeMirror")
-      )).classList.remove("editor-focus");
-    },
+        onEditorFocus () {
+            (<HTMLElement>(
+        document.querySelector('.gituser-wrap .te-md-container .CodeMirror')
+      )).classList.add('editor-focus');
+        },
 
-    onEditorReplyLoad() {
-      (<HTMLElement>(
-        document.querySelector(".comment-list .comment-btn-wrap")
-      )).style.display = "flex";
-    },
+        onEditorBlur () {
+            (<HTMLElement>(
+        document.querySelector('.gituser-wrap .te-md-container .CodeMirror')
+      )).classList.remove('editor-focus');
+        },
 
-    onEditorReplyFocus() {
-      (<HTMLElement>(
-        document.querySelector(".comment-list .te-md-container .CodeMirror")
-      )).classList.add("editor-focus");
-    },
+        onEditorReplyLoad () {
+            (<HTMLElement>(
+        document.querySelector('.comment-list .comment-btn-wrap')
+      )).style.display = 'flex';
+        },
 
-    onEditorReplyBlur() {
-      (<HTMLElement>(
-        document.querySelector(".comment-list .te-md-container .CodeMirror")
-      )).classList.remove("editor-focus");
-    },
+        onEditorReplyFocus () {
+            (<HTMLElement>(
+        document.querySelector('.comment-list .te-md-container .CodeMirror')
+      )).classList.add('editor-focus');
+        },
 
-    referenceReply(content) {
-      let refText = content.replace(/^.*(\n+|$)/gm, text => "> " + text);
-      refText += "\n\n";
-      this.editorText = refText;
-      const editorComp = this.$refs.editor as any;
-      editorComp.$el.scrollIntoViewIfNeeded();
-      editorComp.invoke("focus");
-    },
+        onEditorReplyBlur () {
+            (<HTMLElement>(
+        document.querySelector('.comment-list .te-md-container .CodeMirror')
+      )).classList.remove('editor-focus');
+        },
 
-    loadNext() {
-      this.page++;
-      this.getComments();
-    },
-    getAvatar(username: string | undefined) {
-      if (!username) {
-        username = this.form.getFieldValue("username");
-      }
-      if (!username) {
-        return "";
-      }
-      return new Avatars(sprites()).create(username);
+        referenceReply (content) {
+            let refText = content.replace(/^.*(\n+|$)/gm, text => '> ' + text);
+            refText += '\n\n';
+            this.editorText = refText;
+            const editorComp = this.$refs.editor as any;
+            editorComp.$el.scrollIntoViewIfNeeded();
+            editorComp.invoke('focus');
+        },
+
+        loadNext () {
+            this.page++;
+            this.getComments();
+        },
+        getAvatar (username: string | undefined) {
+            if (!username) {
+                username = this.form.getFieldValue('username');
+            }
+            if (!username) {
+                return '';
+            }
+            return new Avatars(sprites()).create(username);
+        }
     }
-  }
 });
 </script>
 <style>

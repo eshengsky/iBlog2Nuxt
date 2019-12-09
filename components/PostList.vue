@@ -3,266 +3,280 @@
     <div class="post-left">
       <div class="post-top">
         <div class="post-top-left">
-          <a @click="sortList('date')" :class="{ active: sortBy === 'date' }"
-            >日期</a
-          >
-          <a @click="sortList('title')" :class="{ active: sortBy === 'title' }"
-            >标题</a
-          >
+          <a
+            :class="{ active: sortBy === 'date' }"
+            @click="sortList('date')"
+          >日期</a>
+          <a
+            :class="{ active: sortBy === 'title' }"
+            @click="sortList('title')"
+          >标题</a>
         </div>
         <div class="post-top-right">
           <a-input-group compact>
             <a-select
               v-model="filterType"
-              @change="filterTypeChange"
               style="width: 75px"
+              @change="filterTypeChange"
             >
-              <a-select-option value="text">全文</a-select-option>
-              <a-select-option value="title">标题</a-select-option>
-              <a-select-option value="tag">标签</a-select-option>
-              <a-select-option value="date">日期</a-select-option>
+              <a-select-option value="text">
+                全文
+              </a-select-option>
+              <a-select-option value="title">
+                标题
+              </a-select-option>
+              <a-select-option value="tag">
+                标签
+              </a-select-option>
+              <a-select-option value="date">
+                日期
+              </a-select-option>
             </a-select>
             <a-input
               v-if="filterType !== 'date'"
+              ref="inputComp"
               v-model="inputTxt"
               style="width: 250px"
               :placeholder="searchPhd"
-              allowClear
-              ref="inputComp"
+              allow-clear
               @keyup.enter="search"
             />
             <a-range-picker
               v-if="filterType === 'date'"
-              v-model="inputDateMoment"
-              :disabledDate="disabledDate"
-              :ranges="rangeDate"
-              :defaultPickerValue="defaultRange"
-              style="width: 250px"
               ref="dateComp"
-            ></a-range-picker>
-            <a-button @click="search">搜索</a-button>
+              v-model="inputDateMoment"
+              :disabled-date="disabledDate"
+              :ranges="rangeDate"
+              :default-picker-value="defaultRange"
+              style="width: 250px"
+            />
+            <a-button @click="search">
+              搜索
+            </a-button>
           </a-input-group>
         </div>
       </div>
       <ul class="post-list">
-        <li class="filter-li" v-show="alertShow">
+        <li v-show="alertShow" class="filter-li">
           <div class="alert-filter">
             <div>
-              共有<span>{{ count }}</span
-              >条筛选结果
+              共有<span>{{ count }}</span>条筛选结果
             </div>
             <a @click="clearSearch">清除搜索</a>
           </div>
         </li>
         <li v-for="item in posts" :key="item._id">
-          <post-item :post="item"></post-item>
+          <post-item :post="item" />
         </li>
         <li class="last-li">
-          <div class="dot-loading" v-if="isLoading">
-            <div></div>
-            <div></div>
-            <div></div>
+          <div v-if="isLoading" class="dot-loading">
+            <div />
+            <div />
+            <div />
           </div>
           <template v-else>
             <template v-if="posts.length">
               <a-button
+                v-if="hasNext"
                 class="btn-load"
                 size="large"
-                @click="loadNext"
-                v-if="hasNext"
                 :loading="isLoading"
-                >下一页</a-button
+                @click="loadNext"
               >
-              <div class="no-more" v-else>没有更多数据</div>
+                下一页
+              </a-button>
+              <div v-else class="no-more">
+                没有更多数据
+              </div>
             </template>
-            <div class="no-data" v-else>
-              <a-empty></a-empty>
+            <div v-else class="no-data">
+              <a-empty />
             </div>
           </template>
         </li>
       </ul>
     </div>
     <div class="post-right">
-      <blog-intro v-if="settings.showBlogIntro"></blog-intro>
-      <article-calendar @selectCalendar="selectCalendar"></article-calendar>
-      <pop-articles></pop-articles>
-      <pop-labels @selectLabel="selectLabel"></pop-labels>
+      <blog-intro v-if="settings.showBlogIntro" />
+      <article-calendar @selectCalendar="selectCalendar" />
+      <pop-articles />
+      <pop-labels @selectLabel="selectLabel" />
     </div>
   </div>
 </template>
 <script lang="ts">
-import Vue, { PropOptions } from "vue";
-import moment, { Moment } from "moment";
-import { ICategory } from "@/server/models/category";
-import { IPost } from "@/server/models/post";
-import { IResp } from "@/server/types";
-import PostItem from "@/components/PostItem.vue";
-import BlogIntro from "@/components/widgets/blogIntro.vue";
-import ArticleCalendar from "@/components/widgets/articleCalendar.vue";
-import PopArticles from "@/components/widgets/popArticles.vue";
-import PopLabels from "@/components/widgets/popLabels.vue";
-import "highlight.js/styles/tomorrow.css";
+import Vue, { PropOptions } from 'vue';
+import moment from 'moment';
+import { ICategory } from '@/server/models/category';
+import { IPost } from '@/server/models/post';
+import { IResp } from '@/server/types';
+import PostItem from '@/components/PostItem.vue';
+import BlogIntro from '@/components/widgets/blogIntro.vue';
+import ArticleCalendar from '@/components/widgets/articleCalendar.vue';
+import PopArticles from '@/components/widgets/popArticles.vue';
+import PopLabels from '@/components/widgets/popLabels.vue';
+import 'highlight.js/styles/tomorrow.css';
 export default Vue.extend({
-  scrollToTop: true,
-  components: {
-    PostItem,
-    BlogIntro,
-    ArticleCalendar,
-    PopArticles,
-    PopLabels
-  },
-  props: {
-    category: {
-      type: Object,
-      default() {
-        return null;
-      }
-    } as PropOptions<ICategory>
-  },
-  data() {
-    return {
-      settings: this.$store.state.settings,
-      posts: [] as Array<IPost>,
-      isLoading: false,
-      hasNext: false,
-      count: 0,
-      sortBy: "date",
-      keyword: "" as Array<string> | string,
-      filterType: "text" as ("text" | "title" | "tag" | "date"),
-      inputTxt: "",
-      inputDateMoment: [] as Array<Moment>,
-      page: 1,
-      pageSize: this.$store.state.settings.postPageSize,
-      alertShow: false,
-      defaultRange: [moment().subtract(30, "days"), moment()],
-      rangeDate: {
-        今天: [moment(), moment()],
-        昨天: [moment().subtract(1, "days"), moment().subtract(1, "days")],
-        最近一周: [moment().subtract(7, "days"), moment()],
-        最近一个月: [moment().subtract(30, "days"), moment()],
-        最近一年: [moment().subtract(365, "days"), moment()]
-      }
-    };
-  },
-  created() {
-    this.isLoading = true;
-    this.getPosts();
-  },
-  computed: {
-    searchPhd(): string {
-      let placeholder = "";
-      switch (this.filterType) {
-        case "text":
-          placeholder = "全文关键字";
-          break;
-        case "title":
-          placeholder = "标题关键字";
-          break;
-        case "tag":
-          placeholder = "标签关键字";
-          break;
-        default:
-      }
-      return placeholder;
+    scrollToTop: true,
+    components: {
+        PostItem,
+        BlogIntro,
+        ArticleCalendar,
+        PopArticles,
+        PopLabels
     },
-    inputDate(): Array<string> {
-      const range = this.inputDateMoment;
-      if (!range.length) {
-        return [];
-      }
-      return [
-        range[0].startOf("day").toString(),
-        range[1].endOf("day").toString()
-      ];
-    }
-  },
-  methods: {
-    disabledDate(date) {
-      return date && date > moment().endOf("day");
+    props: {
+        category: {
+            type: Object,
+            default () {
+                return null;
+            }
+        } as PropOptions<ICategory>
     },
-    async getPosts() {
-      this.isLoading = true;
-      const { code, data }: IResp = await this.$axios.$get("/api/posts", {
-        params: {
-          category: this.category._id,
-          pageIndex: this.page,
-          pageSize: this.pageSize,
-          filterType: this.filterType,
-          keyword: this.keyword,
-          sortBy: this.sortBy
+    data () {
+        return {
+            settings: this.$store.state.settings,
+            posts: [] as Array<IPost>,
+            isLoading: false,
+            hasNext: false,
+            count: 0,
+            sortBy: 'date',
+            keyword: '' as Array<string> | string,
+            filterType: 'text' as ('text' | 'title' | 'tag' | 'date'),
+            inputTxt: '',
+            inputDateMoment: [] as Array<moment.Moment>,
+            page: 1,
+            pageSize: this.$store.state.settings.postPageSize,
+            alertShow: false,
+            defaultRange: [moment().subtract(30, 'days'), moment()],
+            rangeDate: {
+                今天: [moment(), moment()],
+                昨天: [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                最近一周: [moment().subtract(7, 'days'), moment()],
+                最近一个月: [moment().subtract(30, 'days'), moment()],
+                最近一年: [moment().subtract(365, 'days'), moment()]
+            }
+        };
+    },
+    computed: {
+        searchPhd (): string {
+            let placeholder = '';
+            switch (this.filterType) {
+                case 'text':
+                    placeholder = '全文关键字';
+                    break;
+                case 'title':
+                    placeholder = '标题关键字';
+                    break;
+                case 'tag':
+                    placeholder = '标签关键字';
+                    break;
+                default:
+            }
+            return placeholder;
+        },
+        inputDate (): Array<string> {
+            const range = this.inputDateMoment;
+            if (!range.length) {
+                return [];
+            }
+            return [
+                range[0].startOf('day').toString(),
+                range[1].endOf('day').toString()
+            ];
         }
-      });
+    },
+    created () {
+        this.isLoading = true;
+        this.getPosts();
+    },
+    methods: {
+        disabledDate (date) {
+            return date && date > moment().endOf('day');
+        },
+        async getPosts () {
+            this.isLoading = true;
+            const { code, data }: IResp = await this.$axios.$get('/api/posts', {
+                params: {
+                    category: this.category._id,
+                    pageIndex: this.page,
+                    pageSize: this.pageSize,
+                    filterType: this.filterType,
+                    keyword: this.keyword,
+                    sortBy: this.sortBy
+                }
+            });
 
-      if (code === 1) {
-        this.posts.push(...data.postList);
-        this.hasNext = data.hasNext;
-        this.count = data.count;
-      }
-      this.isLoading = false;
-    },
-    loadNext() {
-      this.page++;
-      this.getPosts();
-    },
-    filterTypeChange() {
-      if (this.filterType !== "date") {
-        this.$nextTick(() => {
-          (this.$refs.inputComp as any).focus();
-        });
-      }
-    },
-    async search(checkKeyword = true) {
-      let input: Array<string> | string;
-      if (this.filterType === "date") {
-        input = this.inputDate;
-        if (checkKeyword && !input[0] && !input[1]) {
-          return;
+            if (code === 1) {
+                this.posts.push(...data.postList);
+                this.hasNext = data.hasNext;
+                this.count = data.count;
+            }
+            this.isLoading = false;
+        },
+        loadNext () {
+            this.page++;
+            this.getPosts();
+        },
+        filterTypeChange () {
+            if (this.filterType !== 'date') {
+                this.$nextTick(() => {
+                    (this.$refs.inputComp as any).focus();
+                });
+            }
+        },
+        async search (checkKeyword = true) {
+            let input: Array<string> | string;
+            if (this.filterType === 'date') {
+                input = this.inputDate;
+                if (checkKeyword && !input[0] && !input[1]) {
+                    return;
+                }
+            } else {
+                input = this.inputTxt;
+                if (checkKeyword && !input) {
+                    (this.$refs.inputComp as any).focus();
+                    return;
+                }
+            }
+            this.alertShow = false;
+            this.posts = [];
+            this.page = 1;
+            this.hasNext = false;
+            this.keyword = input;
+            await this.getPosts();
+            if (input) {
+                this.alertShow = true;
+            }
+        },
+        clearSearch () {
+            this.alertShow = false;
+            this.posts = [];
+            this.page = 1;
+            this.hasNext = false;
+            this.keyword = '';
+            this.inputTxt = '';
+            this.inputDateMoment = [];
+            this.getPosts();
+        },
+        sortList (sortBy) {
+            if (this.sortBy === sortBy) {
+                return;
+            }
+            this.sortBy = sortBy;
+            this.search(false);
+        },
+        selectCalendar (inputDateMoment: [moment.Moment, moment.Moment]) {
+            this.filterType = 'date';
+            this.inputDateMoment = inputDateMoment;
+            this.search();
+        },
+        selectLabel (tag) {
+            this.filterType = 'tag';
+            this.inputTxt = tag;
+            this.search();
         }
-      } else {
-        input = this.inputTxt;
-        if (checkKeyword && !input) {
-          (this.$refs.inputComp as any).focus();
-          return;
-        }
-      }
-      this.alertShow = false;
-      this.posts = [];
-      this.page = 1;
-      this.hasNext = false;
-      this.keyword = input;
-      await this.getPosts();
-      if (input) {
-        this.alertShow = true;
-      }
-    },
-    clearSearch() {
-      this.alertShow = false;
-      this.posts = [];
-      this.page = 1;
-      this.hasNext = false;
-      this.keyword = "";
-      this.inputTxt = "";
-      this.inputDateMoment = [];
-      this.getPosts();
-    },
-    async sortList(sortBy) {
-      if (this.sortBy === sortBy) {
-        return;
-      }
-      this.sortBy = sortBy;
-      this.search(false);
-    },
-    selectCalendar(inputDateMoment: [Moment, Moment]) {
-      this.filterType = "date";
-      this.inputDateMoment = inputDateMoment;
-      this.search();
-    },
-    selectLabel(tag) {
-      this.filterType = "tag";
-      this.inputTxt = tag;
-      this.search();
     }
-  }
 });
 </script>
 <style>

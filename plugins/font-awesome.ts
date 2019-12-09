@@ -38,7 +38,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import {
     faMarkdown
-} from '@fortawesome/free-brands-svg-icons'
+} from '@fortawesome/free-brands-svg-icons';
 config.autoAddCss = false;
 library.add(
     faClock,
