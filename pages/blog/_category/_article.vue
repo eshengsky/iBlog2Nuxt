@@ -1,31 +1,37 @@
 <template>
   <div class="post-detail-wrap">
-    <article class="content-wrap">
-      <header class="article-title">
-        <span>
-          <font-awesome-icon :icon="['far', 'clock']" />
-          {{ article.createTime }}
-        </span>
-        <h1>{{ article.title }}</h1>
-      </header>
-      <main class="article-main">
-        <article-content :html="article.html" />
-      </main>
-      <div v-if="settings.showLicense" class="license-wrap">
-        <span>【END】</span>
-        <p>本文链接：{{ postLink }}</p>
-        <p>
-          <span>版权声明：本博客所有文章除声明转载外，均采用</span>
-          <a
-            href="https://creativecommons.org/licenses/by-nc-sa/3.0/deed.zh"
-            target="_blank"
-          >CC BY-NC-SA 3.0</a>
-          <span>许可协议。转载请注明来自</span>
-          <a :href="website">{{ settings.blogName }}</a>。
-        </p>
-      </div>
-      <div v-else class="end-wrap">
-        <span>【END】</span>
+    <article class="left-wrap">
+      <div class="content-wrap">
+        <header class="article-title">
+          <span>
+            <font-awesome-icon :icon="['far', 'clock']" />
+            {{ article.createTime }}
+          </span>
+          <h1>{{ article.title }}</h1>
+        </header>
+        <main class="article-main">
+          <article-content :html="article.html" />
+          <div class="article-views">
+            <span>阅读 {{ article.viewCount }}</span>
+            <span>发布于 {{ publishDate }}</span>
+          </div>
+        </main>
+        <div v-if="settings.showLicense" class="license-wrap">
+          <span>【END】</span>
+          <p>本文链接：{{ postLink }}</p>
+          <p>
+            <span>版权声明：本博客所有文章除声明转载外，均采用</span>
+            <a
+              href="https://creativecommons.org/licenses/by-nc-sa/3.0/deed.zh"
+              target="_blank"
+            >CC BY-NC-SA 3.0</a>
+            <span>许可协议。转载请注明来自</span>
+            <a :href="website">{{ settings.blogName }}</a>。
+          </p>
+        </div>
+        <div v-else class="end-wrap">
+          <span>【END】</span>
+        </div>
       </div>
       <comment-list :from="2" :article-id="article._id" />
     </article>
@@ -72,6 +78,7 @@
 </template>
 <script lang="ts">
 import Vue from 'vue';
+import moment from 'moment';
 import 'highlight.js/styles/tomorrow.css';
 import CommentList from '@/components/CommentList.vue';
 import PopArticles from '@/components/widgets/popArticles.vue';
@@ -122,6 +129,9 @@ export default Vue.extend({
             return {
                 position: 'relative'
             };
+        },
+        publishDate (): string {
+            return moment(this.article.createTime).format('YYYY-MM-DD');
         }
     },
     async asyncData ({ $axios, params, error }) {
@@ -230,13 +240,16 @@ export default Vue.extend({
   margin-top: 30px;
 }
 
-.content-wrap {
+.left-wrap {
   position: relative;
-  padding: 40px;
-  border-radius: 4px;
-  background: #fff;
   max-width: 792px;
-  min-height: 70vh;
+}
+
+.content-wrap {
+  background: #fff;
+  border-radius: 4px;
+  padding: 30px;
+  min-height: 50vh;
 }
 
 .article-title {
@@ -318,7 +331,7 @@ export default Vue.extend({
   border: 1px dashed #ccc;
   border-radius: 5px;
   padding: 13px 16px 8px;
-  margin: 40px 0 70px;
+  margin: 50px 0 0;
 }
 
 .license-wrap > span,
@@ -346,5 +359,9 @@ export default Vue.extend({
 .sticky-wrap {
   position: sticky;
   top: 90px;
+}
+
+.article-views {
+  color: #666;
 }
 </style>

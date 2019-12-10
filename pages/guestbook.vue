@@ -19,17 +19,11 @@ export default Vue.extend({
 .guestbook-wrap {
   background: #f3f3f4;
   min-height: 85vh;
-  padding-top: 30px;
+  padding-top: 20px;
 }
 .list-wrap {
   max-width: 1012px;
   margin: 0 auto 20px;
-  padding: 0 30px 30px;
-  background: #fff;
-  border-color: #e7eaec;
-  border-style: solid solid none;
-  border-width: 1px 0;
-  transition: width 0.3s;
-  min-height: 400px;
+  padding: 0 40px 40px;
 }
 </style>

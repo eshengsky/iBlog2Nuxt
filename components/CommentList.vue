@@ -9,85 +9,88 @@
         </span>
       </div>
     </div>
-    <div class="gituser-wrap">
-      <div class="avatar-wrap">
-        <!-- eslint-disable-next-line vue/no-v-html -->
-        <div v-if="getAvatar()" class="avatar" v-html="getAvatar()" />
-        <div v-else class="default-avatar" />
-      </div>
-      <div class="editor-wrap">
-        <div class="form-wrap">
-          <a-form :form="form">
-            <a-row>
-              <a-col :xs="24" :sm="24" :md="11">
-                <a-form-item>
-                  <a-input
-                    v-decorator="['username', usernameOpts]"
-                    placeholder="你的昵称"
-                    allow-clear
-                    class="username-input"
-                  >
-                    <template slot="addonBefore">
-                      <font-awesome-icon :icon="['far', 'user']" />
-                    </template>
-                  </a-input>
-                </a-form-item>
-              </a-col>
-              <a-col :xs="24" :sm="24" :md="{ span: 11, offset: 2 }">
-                <a-form-item>
-                  <a-input v-decorator="['website', websiteOpts]" placeholder="昵称链接" allow-clear>
-                    <template slot="addonBefore">
-                      <font-awesome-icon :icon="['fas', 'link']" />
-                    </template>
-                  </a-input>
-                </a-form-item>
-              </a-col>
-            </a-row>
-          </a-form>
+    <div class="comments-panel">
+      <div class="gituser-wrap">
+        <div class="avatar-wrap">
+          <!-- eslint-disable-next-line vue/no-v-html -->
+          <div v-if="getAvatar()" class="avatar" v-html="getAvatar()" />
+          <div v-else class="default-avatar" />
         </div>
-        <client-only>
-          <tui-editor
-            ref="editor"
-            v-model="editorText"
-            height="150px"
-            :options="editorOptions"
-            @load="onEditorLoad"
-            @focus="onEditorFocus"
-            @blur="onEditorBlur"
-          />
-        </client-only>
-        <div class="comment-btn-wrap">
-          <a-tooltip>
-            <template slot="title">
-              打开Markdown语法速查
-            </template>
-            <a @click="mcsShow = true">
-              <font-awesome-icon :icon="['fab', 'markdown']" style="font-size: 14px" />
-              <span>支持Markdown语法</span>
-            </a>
-          </a-tooltip>
-          <a-button type="primary" :disabled="!editorText" @click="postComment">
-            <span>发表{{ commentName }}</span>
+        <div class="editor-wrap">
+          <div class="form-wrap">
+            <a-form :form="form">
+              <a-row>
+                <a-col :xs="24" :sm="24" :md="11">
+                  <a-form-item>
+                    <a-input
+                      v-decorator="['username', usernameOpts]"
+                      placeholder="你的昵称"
+                      allow-clear
+                      class="username-input"
+                    >
+                      <template slot="addonBefore">
+                        <font-awesome-icon :icon="['far', 'user']" />
+                      </template>
+                    </a-input>
+                  </a-form-item>
+                </a-col>
+                <a-col :xs="24" :sm="24" :md="{ span: 11, offset: 2 }">
+                  <a-form-item>
+                    <a-input v-decorator="['website', websiteOpts]" placeholder="昵称链接" allow-clear>
+                      <template slot="addonBefore">
+                        <font-awesome-icon :icon="['fas', 'link']" />
+                      </template>
+                    </a-input>
+                  </a-form-item>
+                </a-col>
+              </a-row>
+            </a-form>
+          </div>
+          <client-only>
+            <tui-editor
+              ref="editor"
+              v-model="editorText"
+              height="150px"
+              :options="editorOptions"
+              @load="onEditorLoad"
+              @focus="onEditorFocus"
+              @blur="onEditorBlur"
+            />
+          </client-only>
+          <div class="comment-btn-wrap">
+            <a-tooltip>
+              <template slot="title">
+                打开Markdown语法速查
+              </template>
+              <a @click="mcsShow = true">
+                <font-awesome-icon :icon="['fab', 'markdown']" style="font-size: 14px" />
+                <span>支持Markdown语法</span>
+              </a>
+            </a-tooltip>
+            <a-button type="primary" :disabled="!editorText" @click="postComment">
+              <span>发表{{ commentName }}</span>
+            </a-button>
+          </div>
+        </div>
+      </div>
+      <div class="comment-list">
+        <ul>
+          <li v-for="comment in comments" :key="comment._id" class="comment-li">
+            <comment-item
+              :comment="comment"
+              :avatar="getAvatar(comment.username)"
+              @referenceReply="referenceReply"
+            />
+          </li>
+        </ul>
+        <div v-if="hasNext" class="btn-next-wrap">
+          <a-button size="large" @click="loadNext">
+            查看更多
           </a-button>
         </div>
       </div>
     </div>
-    <div class="comment-list">
-      <ul>
-        <li v-for="comment in comments" :key="comment._id" class="comment-li">
-          <comment-item
-            :comment="comment"
-            :avatar="getAvatar(comment.username)"
-            @referenceReply="referenceReply"
-          />
-        </li>
-      </ul>
-      <div v-if="hasNext" class="btn-next-wrap">
-        <a-button size="large" @click="loadNext">
-          查看更多
-        </a-button>
-      </div>
-    </div>
+
     <a-modal v-model="mcsShow" title="Markdown 语法速查" width="640px">
       <a-alert type="warning" message="评论及留言的内容不支持1-4级标题。" show-icon style="margin-bottom: 10px;" />
       <md-cheat-sheet />
@@ -337,14 +340,11 @@ export default Vue.extend({
 .comments-top {
   display: flex;
   justify-content: space-between;
-  border-bottom: 3px double #eee;
-  margin-bottom: 30px;
-  padding-bottom: 15px;
+  margin-bottom: 15px;
 }
 
 .gituser-wrap {
   display: flex;
-  margin-bottom: 20px;
   padding-bottom: 20px;
   border-bottom: 1px solid #eee;
 }
@@ -372,8 +372,10 @@ export default Vue.extend({
   flex: auto;
 }
 
-.te-md-container .te-preview {
-  padding: 0 10px;
+.comments-panel {
+  background: #fff;
+  border-radius: 4px;
+  padding: 30px;
 }
 
 .comments-wrap {
@@ -382,6 +384,7 @@ export default Vue.extend({
 
 .comment-list {
   margin-left: 56px;
+  margin-top: 20px;
 }
 
 .comments-top-left {
@@ -391,10 +394,6 @@ export default Vue.extend({
 
 .comments-top-right {
   font-size: 14px;
-}
-
-.comment-list .te-toolbar-section {
-  display: none;
 }
 
 .btn-next-wrap {
@@ -437,13 +436,5 @@ export default Vue.extend({
 
 .comments-wrap .avatar:hover {
   transform: scale(1.3);
-}
-
-.comment-list ul li.comment-li:first-child .comment-item {
-  padding-top: 0;
-}
-
-.comment-list ul li.comment-li:last-child .comment-item {
-  padding-bottom: 0;
 }
 </style>

@@ -78,17 +78,6 @@ export default Vue.extend({
   margin-left: 27px;
 }
 
-.comment-item:before {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  display: block;
-  width: 2px;
-  content: "";
-  background-color: #e1e4e8;
-}
-
 .comment-item-avatar {
   position: absolute;
   left: -82px;
@@ -97,7 +86,7 @@ export default Vue.extend({
   height: 50px;
   border-radius: 4px;
   overflow: hidden;
-  border: 1px solid #ddd;
+  border: 1px solid #d9d9d9;
   padding: 3px;
 }
 
@@ -112,7 +101,7 @@ export default Vue.extend({
   position: relative;
   color: #24292e;
   background-color: #fff;
-  border: 1px solid #ddd;
+  border: 1px solid #d9d9d9;
   border-radius: 4px;
   margin-left: -16px;
 }
@@ -134,7 +123,7 @@ export default Vue.extend({
 
 .timeline-comment:before {
   border-width: 8px;
-  border-right-color: #ddd;
+  border-right-color: #d9d9d9;
 }
 
 .timeline-comment:after {
@@ -151,7 +140,7 @@ export default Vue.extend({
   padding: 8px 16px;
   color: #586069;
   background-color: #f6f8fa;
-  border-bottom: 1px solid #ddd;
+  border-bottom: 1px solid #d9d9d9;
   border-top-left-radius: 4px;
   border-top-right-radius: 4px;
 }
