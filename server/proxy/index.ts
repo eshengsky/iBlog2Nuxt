@@ -162,7 +162,8 @@ async function increaseViews ({ postID, clientIP }) {
     // 判断该IP用户是否已看过该文章
     const exists = await Cache.exists({
         clientIP,
-        ext1: postID
+        ext1: postID,
+        ext2: 'viewCount'
     });
 
     // 如果没看过
@@ -175,7 +176,8 @@ async function increaseViews ({ postID, clientIP }) {
         // 同时，将用户IP和文章ID存入缓存
         Cache.create({
             clientIP,
-            ext1: postID
+            ext1: postID,
+            ext2: 'viewCount'
         });
     }
 }
