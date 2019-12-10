@@ -27,6 +27,7 @@
                       placeholder="你的昵称"
                       allow-clear
                       class="username-input"
+                      :disabled="!!$auth.user"
                     >
                       <template slot="addonBefore">
                         <font-awesome-icon :icon="['far', 'user']" />
@@ -235,7 +236,7 @@ export default Vue.extend({
         postComment () {
             this.form.validateFieldsAndScroll(async (error, values) => {
                 if (!error) {
-                    const { code, data } = await this.$axios.$post(
+                    const { code, data, message } = await this.$axios.$post(
                         `/api/${this.isGuestbook ? 'guestbook' : 'comment'}`,
                         {
                             articleId: this.articleId,
@@ -248,7 +249,7 @@ export default Vue.extend({
                         this.count++;
                         this.editorText = '';
                     } else {
-                        this.$message.error(`${this.commentName}失败`);
+                        this.$message.error(message || `${this.commentName}失败`);
                     }
                     localStorage.setItem('commentUserInfo', JSON.stringify(values));
                 }

@@ -16,6 +16,9 @@ app.use(indexRoute);
 
 // Error
 app.use((err, _req, res, _next) => {
+    if (err.name === 'UnauthorizedError') {
+        return res.sendStatus(401);
+    }
     console.error('api route error', err);
     res.sendStatus(err.statusCode || 500);
 });

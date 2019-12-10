@@ -1,8 +1,18 @@
 import { Router } from 'express';
+import jwt from 'express-jwt';
 import proxy from '../proxy/index';
 import { IResp } from '../types';
+import config from '../../blog.config';
 
 const router = Router();
+
+// JWT middleware
+router.use(
+    jwt({
+        secret: config.jwtSecret,
+        credentialsRequired: false
+    })
+);
 
 router.get('/categories', async (_req, res) => {
     let resp: IResp;
@@ -146,13 +156,13 @@ router.get('/comments', async (req, res) => {
 
 router.post('/comment', async (req, res) => {
     let resp: IResp;
-    // const user = req.user;
-    // if (!user) {
-    //     resp = {
-    //         code: -2
-    //     }
-    //     return res.json(resp);
-    // }
+    if (/^admin$/i.test(req.body.username) && !(req as any).user) {
+        resp = {
+            code: -1,
+            message: '非法昵称！'
+        };
+        return res.json(resp);
+    }
     try {
         const article = await proxy.saveComment(req.body);
         resp = {
@@ -187,13 +197,13 @@ router.get('/guestbook', async (req, res) => {
 
 router.post('/guestbook', async (req, res) => {
     let resp: IResp;
-    // const user = req.user;
-    // if (!user) {
-    //     resp = {
-    //         code: -2
-    //     }
-    //     return res.json(resp);
-    // }
+    if (/^admin$/i.test(req.body.username) && !(req as any).user) {
+        resp = {
+            code: -1,
+            message: '非法昵称！'
+        };
+        return res.json(resp);
+    }
     try {
         const guestbookItem = await proxy.saveGuestbook(req.body);
         resp = {
