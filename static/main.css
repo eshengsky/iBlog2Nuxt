@@ -10,6 +10,7 @@
 html {
   word-spacing: 1px;
   box-sizing: border-box;
+  scroll-behavior: smooth;
 }
 
 body {
