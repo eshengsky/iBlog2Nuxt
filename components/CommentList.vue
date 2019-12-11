@@ -211,6 +211,11 @@ export default Vue.extend({
                 this.form.setFieldsValue(user);
             } catch (err) {}
         }
+        if (this.$auth.user) {
+            this.form.setFieldsValue({
+                username: 'Admin'
+            });
+        }
     },
     methods: {
         async getComments () {
