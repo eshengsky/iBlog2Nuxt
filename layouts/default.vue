@@ -43,6 +43,9 @@
       </div>
       <nuxt />
       <layout-footer :show-login="true" />
+      <div class="fixed-tools">
+        <div class="to-top" @click="toTop" />
+      </div>
     </div>
   </a-locale-provider>
 </template>
@@ -70,6 +73,11 @@ export default Vue.extend({
             if (script && script.parentNode) {
                 script.parentNode.insertBefore(hm, script);
             }
+        }
+    },
+    methods: {
+        toTop () {
+            window.scrollTo(0, 0);
         }
     }
 });
