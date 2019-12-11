@@ -5,9 +5,7 @@
     </div>
     <div class="widget-body">
       <template v-if="intro">
-        <div class="intro-content">
-          {{ intro }}
-        </div>
+        <div class="intro-content">{{ intro }}</div>
       </template>
       <a-empty v-else>
         <span slot="description">暂无内容</span>
