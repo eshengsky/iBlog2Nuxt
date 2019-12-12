@@ -29,6 +29,19 @@
               :md="{ span: 11, offset: 2 }"
               :xxl="{ span: 5, offset: 1 }"
             >
+              <a-form-item label="Alias" :colon="false">
+                <a-input
+                  v-decorator="['alias']"
+                  placeholder="文章Alias"
+                  allow-clear
+                />
+              </a-form-item>
+            </a-col>
+            <a-col
+              :sm="24"
+              :md="11"
+              :xxl="{ span: 5, offset: 1 }"
+            >
               <a-form-item label="标题" :colon="false">
                 <a-input
                   v-decorator="['title']"
@@ -37,7 +50,7 @@
                 />
               </a-form-item>
             </a-col>
-            <a-col :sm="24" :md="11" :xxl="{ span: 6, offset: 1 }">
+            <a-col :sm="24" :md="{ span: 11, offset: 2 }" :xxl="{ span: 5, offset: 1 }">
               <a-form-item label="全文" :colon="false">
                 <a-input
                   v-decorator="['content']"
@@ -48,8 +61,8 @@
             </a-col>
             <a-col
               :sm="24"
-              :md="{ span: 11, offset: 2 }"
-              :xxl="{ span: 5, offset: 1 }"
+              :md="11"
+              :xxl="5"
             >
               <a-form-item label="标签" :colon="false">
                 <a-input
@@ -59,7 +72,17 @@
                 />
               </a-form-item>
             </a-col>
-            <a-col :sm="24" :md="11" :xxl="5">
+            <a-col :sm="24" :md="{ span: 11, offset: 2 }" :xxl="{ span: 5, offset: 1 }">
+              <a-form-item label="发布日期" :colon="false">
+                <a-range-picker
+                  v-decorator="['publishTime', publishTimeOpts]"
+                  :disabled-date="disabledDate"
+                  :ranges="rangeDate"
+                  :default-picker-value="defaultRange"
+                />
+              </a-form-item>
+            </a-col>
+            <a-col :sm="24" :md="11" :xxl="{ span: 5, offset: 1 }">
               <a-form-item label="创建日期" :colon="false">
                 <a-range-picker
                   v-decorator="['createTime', createTimeOpts]"
@@ -83,7 +106,7 @@
                 />
               </a-form-item>
             </a-col>
-            <a-col :xs="24" :sm="11" :md="5" :xxl="{ span: 3, offset: 1 }">
+            <a-col :sm="24" :md="11" :xxl="5">
               <a-form-item label="是否外链" :colon="false">
                 <a-select
                   v-decorator="['isLink']"
@@ -100,10 +123,9 @@
               </a-form-item>
             </a-col>
             <a-col
-              :xs="24"
-              :sm="{ span: 11, offset: 2 }"
-              :md="{ span: 5, offset: 1 }"
-              :xxl="{ span: 2, offset: 1 }"
+              :sm="24"
+              :md="{ span: 11, offset: 2 }"
+              :xxl="{ span: 5, offset: 1 }"
             >
               <a-form-item label="是否草稿" :colon="false">
                 <a-select
@@ -121,10 +143,9 @@
               </a-form-item>
             </a-col>
             <a-col
-              :xs="24"
-              :sm="11"
-              :md="{ span: 5, offset: 2 }"
-              :xxl="{ span: 2, offset: 1 }"
+              :sm="24"
+              :md="11"
+              :xxl="{ span: 5, offset: 1 }"
             >
               <a-form-item label="是否有评论" :colon="false">
                 <a-select
@@ -142,10 +163,9 @@
               </a-form-item>
             </a-col>
             <a-col
-              :xs="24"
-              :sm="{ span: 11, offset: 2 }"
-              :md="{ span: 5, offset: 1 }"
-              :xxl="{ span: 2, offset: 1 }"
+              :sm="24"
+              :md="{ span: 11, offset: 2 }"
+              :xxl="{ span: 5, offset: 1 }"
             >
               <a-form-item label="是否已删除" :colon="false">
                 <a-select
@@ -436,6 +456,16 @@ export default Vue.extend({
                 initialValue
             };
         },
+        publishTimeOpts (): FieldDecoratorOptions {
+            let initialValue: Array<moment.Moment> = [];
+            const publishTimeParam = this.$route.query.modifyTime as [string, string];
+            if (publishTimeParam) {
+                initialValue = [moment(publishTimeParam[0]), moment(publishTimeParam[1])];
+            }
+            return {
+                initialValue
+            };
+        },
         isDraftOpts (): FieldDecoratorOptions {
             return {
                 initialValue: this.$route.query.isDraft || undefined
@@ -503,9 +533,17 @@ export default Vue.extend({
             const modifyTimeMomentArr = values.modifyTime;
             let modifyTime: string[] | undefined;
             if (modifyTimeMomentArr && modifyTimeMomentArr.length === 2) {
-                createTime = [
+                modifyTime = [
                     modifyTimeMomentArr[0].startOf('day').toString(),
                     modifyTimeMomentArr[1].endOf('day').toString()
+                ];
+            }
+            const publishTimeMomentArr = values.publishTime;
+            let publishTime: string[] | undefined;
+            if (publishTimeMomentArr && publishTimeMomentArr.length === 2) {
+                publishTime = [
+                    publishTimeMomentArr[0].startOf('day').toString(),
+                    publishTimeMomentArr[1].endOf('day').toString()
                 ];
             }
             this.selectedRowKeys = [];
@@ -518,7 +556,8 @@ export default Vue.extend({
                     order: this.order,
                     ...values,
                     createTime,
-                    modifyTime
+                    modifyTime,
+                    publishTime
                 }
             });
             if (code === 1) {
@@ -533,11 +572,13 @@ export default Vue.extend({
         reset () {
             this.form.setFieldsValue({
                 category: '',
+                alias: '',
                 title: '',
                 content: '',
                 label: '',
                 createTime: [],
                 modifyTime: [],
+                publishTime: [],
                 isLink: '',
                 isDraft: '',
                 hasComments: '',

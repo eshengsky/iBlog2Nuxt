@@ -18,11 +18,13 @@ const getPosts = async (params: any) => {
     const matchObj: any = {};
     const {
         category,
+        alias,
         title,
         content,
         label,
         createTime,
         modifyTime,
+        publishTime,
         isLink,
         isDraft,
         hasComments,
@@ -30,6 +32,9 @@ const getPosts = async (params: any) => {
     } = params;
     if (category) {
         matchObj.category = mongoose.Types.ObjectId(category);
+    }
+    if (alias) {
+        matchObj.alias = alias;
     }
     if (title) {
         matchObj.title = { $regex: title, $options: 'gi' };
@@ -42,9 +47,9 @@ const getPosts = async (params: any) => {
     }
     if (
         Array.isArray(createTime) &&
-    createTime.length === 2 &&
-    createTime[0] &&
-    createTime[1]
+        createTime.length === 2 &&
+        createTime[0] &&
+        createTime[1]
     ) {
         const start = new Date(createTime[0]);
         const end = new Date(createTime[1]);
@@ -52,13 +57,23 @@ const getPosts = async (params: any) => {
     }
     if (
         Array.isArray(modifyTime) &&
-    modifyTime.length === 2 &&
-    modifyTime[0] &&
-    modifyTime[1]
+        modifyTime.length === 2 &&
+        modifyTime[0] &&
+        modifyTime[1]
     ) {
         const start = new Date(modifyTime[0]);
         const end = new Date(modifyTime[1]);
         matchObj.modifyTime = { $gte: start, $lt: end };
+    }
+    if (
+        Array.isArray(publishTime) &&
+        publishTime.length === 2 &&
+        publishTime[0] &&
+        publishTime[1]
+    ) {
+        const start = new Date(publishTime[0]);
+        const end = new Date(publishTime[1]);
+        matchObj.publishTime = { $gte: start, $lt: end };
     }
     if (isLink === '1' || isLink === '-1') {
         matchObj.isLocal = isLink === '-1';
@@ -79,11 +94,15 @@ const getPosts = async (params: any) => {
     let sortObj: any = {
         createTime: -1
     };
+
+    // 先按sortBy字段进行排序
     if (params.sortBy) {
         sortObj = {
             [params.sortBy]: params.order === 'descend' ? -1 : 1
         };
     }
+
+    // 再按创建时间排序
     if (params.sortBy !== 'createTime') {
         sortObj.createTime = -1;
     }
