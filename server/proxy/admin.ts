@@ -558,7 +558,7 @@ const getCommentsStats = async () => {
 
 const getPostsStats = async () => {
     const stats = await Promise.all([
-    // 草稿
+        // 草稿
         Post.countDocuments({
             isDraft: true,
             isActive: true
@@ -568,7 +568,7 @@ const getPostsStats = async () => {
         Post.countDocuments({
             isDraft: false,
             isActive: true,
-            createTime: {
+            publishTime: {
                 $gte: subtractDate(7),
                 $lt: moment().toDate()
             }
@@ -578,7 +578,7 @@ const getPostsStats = async () => {
         Post.countDocuments({
             isDraft: false,
             isActive: true,
-            createTime: {
+            publishTime: {
                 $gte: subtractDate(30),
                 $lt: moment().toDate()
             }

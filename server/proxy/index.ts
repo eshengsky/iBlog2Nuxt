@@ -40,13 +40,13 @@ async function getPosts (params) {
                 case 'date':
                     if (
                         Array.isArray(keyword) &&
-            keyword.length === 2 &&
-            keyword[0] &&
-            keyword[1]
+                        keyword.length === 2 &&
+                        keyword[0] &&
+                        keyword[1]
                     ) {
                         const start = new Date(keyword[0]);
                         const end = new Date(keyword[1]);
-                        conditions.createTime = { $gte: start, $lt: end };
+                        conditions.publishTime = { $gte: start, $lt: end };
                     }
                     break;
                 default:
@@ -79,7 +79,7 @@ async function getPosts (params) {
                 {
                     skip: (page - 1) * pageSize,
                     limit: pageSize,
-                    sort: '-createTime'
+                    sort: '-publishTime'
                 }
             )
                 .populate('category', '-img')
