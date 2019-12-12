@@ -15,9 +15,12 @@
           <font-awesome-icon :icon="['fas', 'map-signs']" />
           {{ post.category.cateName }}
         </span>
-        <span>
-          <a :href="redirectUrl(post.url)" :title="redirectUrl(post.url)" target="_blank">{{ displayUrl(post.url) }}</a>
-        </span>
+        <a class="website-link" :href="redirectUrl(post.url)" :title="redirectUrl(post.url)" target="_blank">
+          <font-awesome-icon
+            :icon="['fas', 'globe-americas']"
+          />
+          {{ displayUrl(post.url) }}
+        </a>
       </div>
     </template>
     <template v-else>
@@ -140,7 +143,6 @@ export default Vue.extend({
   word-break: break-all;
   line-clamp: 2;
   z-index: 2;
-  transition: color 0.5s ease-in-out;
   line-height: 1.4;
 }
 
@@ -193,5 +195,13 @@ export default Vue.extend({
   padding: 10px 16px;
   text-align: right;
   background: #fff;
+}
+
+.website-link {
+  color: #777;
+}
+
+.website-link:hover {
+  color: #1890ff;
 }
 </style>

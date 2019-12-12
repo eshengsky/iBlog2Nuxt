@@ -34,7 +34,8 @@ import {
     faCogs,
     faMagic,
     faSyncAlt,
-    faAlignJustify
+    faAlignJustify,
+    faGlobeAmericas
 } from '@fortawesome/free-solid-svg-icons';
 import {
     faMarkdown
@@ -72,6 +73,7 @@ library.add(
     faCogs,
     faMagic,
     faSyncAlt,
-    faAlignJustify
+    faAlignJustify,
+    faGlobeAmericas
 );
 Vue.component('font-awesome-icon', FontAwesomeIcon);

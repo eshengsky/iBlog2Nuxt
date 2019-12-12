@@ -258,9 +258,8 @@ export default Vue.extend({
 }
 
 .article-title h1 {
-  font-size: 25px;
+  font-size: 28px;
   font-weight: 500;
-  margin-top: 8px;
 }
 
 .article-main {
