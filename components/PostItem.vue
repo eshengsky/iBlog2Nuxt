@@ -6,10 +6,19 @@
     <template v-if="!post.isLocal">
       <h4>
         <a :title="post.title" :href="post.url" target="_blank">
-          <i class="fa fa-link" />
-          {{ post.title }}
+          <web-font icon="external-link" />
+          <span>{{ post.title }}</span>
         </a>
       </h4>
+      <div class="item-footer2">
+        <span>
+          <font-awesome-icon :icon="['fas', 'map-signs']" />
+          {{ post.category.cateName }}
+        </span>
+        <span>
+          <a :href="redirectUrl(post.url)" :title="redirectUrl(post.url)" target="_blank">{{ displayUrl(post.url) }}</a>
+        </span>
+      </div>
     </template>
     <template v-else>
       <a
@@ -23,22 +32,21 @@
           {{ post.title }}
         </nuxt-link>
       </h4>
+      <div class="item-footer1">
+        <span>
+          <font-awesome-icon :icon="['fas', 'map-signs']" />
+          {{ post.category.cateName }}
+        </span>
+        <span>
+          <font-awesome-icon :icon="['far', 'eye']" />
+          {{ post.viewCount }}
+        </span>
+        <span>
+          <font-awesome-icon :icon="['fas', 'comments']" />
+          {{ post.comments.length }}
+        </span>
+      </div>
     </template>
-    <div class="item-footer">
-      <span>
-        <font-awesome-icon :icon="['fas', 'map-signs']" />
-        {{ post.category.cateName }}
-      </span>
-      <span>
-        <font-awesome-icon :icon="['far', 'eye']" />
-        {{ post.viewCount }}
-      </span>
-      <span>
-        <font-awesome-icon :icon="['fas', 'comments']" />
-        {{ post.comments.length }}
-      </span>
-    </div>
-
     <div class="hr-line-dashed" />
     <a-drawer
       :title="post.title"
@@ -87,6 +95,16 @@ export default Vue.extend({
             drawer: false,
             publishDate: moment(this.post.publishTime).format('YYYY/MM/DD')
         };
+    },
+    methods: {
+        displayUrl(link) {
+            const url = new URL(link);
+            return url.hostname;
+        },
+        redirectUrl(link) {
+            const url = new URL(link);
+            return url.origin;
+        },
     }
 });
 </script>
@@ -140,8 +158,18 @@ export default Vue.extend({
   font-size: 13px;
 }
 
-.blog-item .item-footer {
+.item-footer1,
+.item-footer2 {
   color: #777;
+}
+
+.item-footer1 span {
+  margin-right: 8px;
+}
+
+.item-footer2 {
+  display: flex;
+  justify-content: space-between;
 }
 
 .hr-line-dashed {
@@ -165,9 +193,5 @@ export default Vue.extend({
   padding: 10px 16px;
   text-align: right;
   background: #fff;
-}
-
-.blog-item .item-footer span {
-  margin-right: 8px;
 }
 </style>

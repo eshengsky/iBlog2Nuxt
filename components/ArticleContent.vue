@@ -57,12 +57,22 @@ export default Vue.extend({
 }
 
 .article-content .anchor {
-  float: left;
-  padding-right: 4px;
-  margin-left: -20px;
-  line-height: 1;
-  opacity: 0;
-  transition: opacity 0.2s;
+  position: absolute;
+    display: flex;
+    height: 100%;
+    align-items: center;
+    left: -20px;
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+
+.article-content h1 .anchor,
+.article-content h2 .anchor {
+  padding-bottom: 8px;
+}
+
+.preview-article .article-content .anchor {
+  display: none;
 }
 
 .article-content h1:hover .anchor,

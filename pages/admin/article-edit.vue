@@ -317,6 +317,12 @@ export default Vue.extend({
                     message: '内部服务器错误'
                 });
             }
+        } else {
+            return {
+                initialData: {
+                    isLocal: true
+                }
+            }
         }
     },
     created () {
