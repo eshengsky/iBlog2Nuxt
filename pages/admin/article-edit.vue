@@ -46,21 +46,6 @@
             </a-select>
           </a-form-item>
         </div>
-        <a-form-item :colon="false">
-          <span slot="label">
-            Alias
-            <a-tooltip
-              title="文章别名，如：this-is-my-fist-post，将作为URL的一部分"
-            >
-              <a-icon type="question-circle-o" />
-            </a-tooltip>
-          </span>
-          <a-input
-            v-decorator="['alias', aliasOpts]"
-            placeholder="请输入Alias"
-            allow-clear
-          />
-        </a-form-item>
         <a-form-item label="来源" :colon="false">
           <a-radio-group
             v-decorator="['isLocal', isLocalOpts]"
@@ -75,7 +60,7 @@
             </a-radio>
           </a-radio-group>
         </a-form-item>
-        <div v-show="!isLocal">
+        <div v-show="!initialData.isLocal">
           <a-form-item label="URL" :colon="false">
             <a-input
               ref="urlInputComp"
@@ -85,7 +70,23 @@
             />
           </a-form-item>
         </div>
-        <div v-show="isLocal">
+        <div v-show="initialData.isLocal">
+          <a-form-item :colon="false">
+            <span slot="label">
+              Alias
+              <a-tooltip
+                title="文章别名，如：this-is-my-fist-post，将作为URL的一部分"
+              >
+                <a-icon type="question-circle-o" />
+              </a-tooltip>
+            </span>
+            <a-input
+              ref="aliasInputComp"
+              v-decorator="['alias', aliasOpts]"
+              placeholder="请输入Alias"
+              allow-clear
+            />
+          </a-form-item>
           <a-form-item label="正文" :colon="false">
             <div class="editor-wrap">
               <client-only>
@@ -167,9 +168,9 @@
               </a-button>
             </template>
           </template>
-          <a-button @click="back">
+          <nuxt-link class="ant-btn" to="/admin/article-manage">
             返回
-          </a-button>
+          </nuxt-link>
         </div>
       </a-form>
     </div>
@@ -204,8 +205,9 @@ export default Vue.extend({
     data () {
         return {
             settings: this.$store.state.settings,
-            initialData: {} as IPost,
-            isLocal: true,
+            initialData: {
+                isLocal: true
+            } as IPost,
             content: '',
             mcsShow: false,
             categories: [],
@@ -267,7 +269,7 @@ export default Vue.extend({
             return {
                 rules: [
                     {
-                        required: true,
+                        required: this.initialData.isLocal,
                         message: 'Alias不能为空！'
                     },
                     {
@@ -280,8 +282,12 @@ export default Vue.extend({
             return {
                 rules: [
                     {
-                        required: !this.isLocal,
+                        required: !this.initialData.isLocal,
                         message: '链接地址不能为空！'
+                    },
+                    {
+                        type: 'url',
+                        message: '链接地址格式不正确！'
                     }
                 ]
             };
@@ -367,10 +373,14 @@ export default Vue.extend({
             }
         },
         isLocalChange (e) {
-            this.isLocal = e.target.value;
+            this.initialData.isLocal = e.target.value;
+
+            // 切换本地外链后，光标聚焦
             this.$nextTick(() => {
-                if (!this.isLocal) {
+                if (!this.initialData.isLocal) {
                     this.$refs.urlInputComp.focus();
+                } else {
+                    this.$refs.aliasInputComp.focus();
                 }
             });
         },
@@ -474,9 +484,6 @@ export default Vue.extend({
                     });
                 }
             });
-        },
-        back () {
-            location.href = '/admin/article-manage';
         },
         unpublish () {
             const self = this;

@@ -235,10 +235,13 @@
             <a
               class="link-title"
               :class="{ 'title-deleted': !row.isActive }"
-              :href="`/blog/${row.categories[0].alias}/${row.alias}`"
+              :href="row.isLocal ? `/blog/${row.categories[0].alias}/${row.alias}` : row.url"
               target="_blank"
               :title="row.title"
-            >{{ row.title }}</a>
+            >
+              <web-font v-if="!row.isLocal" icon="external-link" />
+              <span>{{ row.title }}</span>
+            </a>
           </template>
           <template slot="tags" slot-scope="text, row">
             <a-tag
