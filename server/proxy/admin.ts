@@ -2,6 +2,7 @@ import moment from 'moment';
 import mongoose from 'mongoose';
 import DB from '../db';
 import { otherCategoryItem } from '../models/category';
+import { IPost } from '../models/post';
 const { Category, Post, Comment, Guestbook, Setting } = DB.Models;
 
 async function getCategories () {
@@ -155,20 +156,35 @@ const getArticle = async uid => {
 
 const newArticle = async params => {
     const now = new Date();
-    const entity = new Post({
+    const doc: IPost = {
         createTime: now,
         modifyTime: now,
         ...params
-    });
+    };
+    if (!params.isDraft) {
+        doc.publishTime = now;
+    }
+    const entity = new Post(doc);
     const newArticle = await entity.save();
     return {
         article: newArticle
     };
 };
 
-const editArticle = async (uid, params) => {
-    params.modifyTime = new Date();
-    const article = await Post.findByIdAndUpdate(uid, params, {
+const editArticle = async (query, params) => {
+    const now = new Date();
+    params.modifyTime = now;
+
+    // 草稿状态->已发布，要修改publishTime字段
+    if (query.pubtype === 'publish') {
+        params.publishTime = now;
+    }
+
+    // 已发布->草稿状态，要移除publishTime字段
+    if (query.pubtype === 'unpublish') {
+        params.publishTime = null;
+    }
+    const article = await Post.findByIdAndUpdate(query.uid, params, {
         new: true
     }).exec();
     return {
@@ -182,7 +198,7 @@ const deleteArticle = async (uids: Array<string> | string) => {
     }
     const result = await Post.updateMany(
         { _id: { $in: uids } },
-        { isActive: false }
+        { isActive: false, publishTime: null }
     ).exec();
     return {
         result

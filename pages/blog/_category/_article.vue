@@ -3,10 +3,6 @@
     <article class="left-wrap">
       <div class="content-wrap">
         <header class="article-title">
-          <span>
-            <font-awesome-icon :icon="['far', 'clock']" />
-            {{ article.createTime }}
-          </span>
           <h1>{{ article.title }}</h1>
         </header>
         <main class="article-main">
@@ -131,7 +127,7 @@ export default Vue.extend({
             };
         },
         publishDate (): string {
-            return moment(this.article.createTime).format('YYYY-MM-DD');
+            return moment(this.article.publishTime).format('YYYY-MM-DD');
         }
     },
     async asyncData ({ $axios, params, error }) {

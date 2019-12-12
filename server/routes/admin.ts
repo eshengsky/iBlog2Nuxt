@@ -89,7 +89,7 @@ router.post('/article', async (req, res) => {
 router.put('/article', async (req, res) => {
     let resp: IResp;
     try {
-        const article = await proxy.editArticle(req.query.uid, req.body);
+        const article = await proxy.editArticle(req.query, req.body);
         resp = {
             code: 1,
             data: article

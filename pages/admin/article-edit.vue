@@ -149,7 +149,7 @@
                 <font-awesome-icon
                   :icon="['far', 'save']"
                   style="margin-right: 4px;"
-                />保存更改
+                />保存草稿
               </a-button>
             </template>
             <template v-else>
@@ -428,7 +428,8 @@ export default Vue.extend({
                                 self.$axios
                                     .$put('/api/admin/article', data, {
                                         params: {
-                                            uid: self.initialData._id
+                                            uid: self.initialData._id,
+                                            pubtype: 'publish'
                                         }
                                     })
                                     .then(resp => {
@@ -494,7 +495,8 @@ export default Vue.extend({
                                 },
                                 {
                                     params: {
-                                        uid: self.initialData._id
+                                        uid: self.initialData._id,
+                                        pubtype: 'unpublish'
                                     }
                                 }
                             )

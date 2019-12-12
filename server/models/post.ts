@@ -66,6 +66,11 @@ export interface IPost extends Document {
    * 修改时间
    */
     modifyTime: Date;
+
+    /**
+     *发布时间
+     */
+    publishTime: Date;
 }
 
 export interface IPostModel extends Model<IPost> {}
@@ -110,7 +115,10 @@ export class Post {
                 createTime: { type: Date, default: new Date() },
 
                 // 修改时间
-                modifyTime: { type: Date, default: new Date() }
+                modifyTime: { type: Date, default: new Date() },
+
+                // 发布时间
+                publishTime: { type: Date }
             },
             {
                 // 设置查询时默认返回虚拟字段

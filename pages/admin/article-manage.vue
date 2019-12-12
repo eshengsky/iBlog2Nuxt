@@ -245,6 +245,10 @@
           <template slot="modifyTime" slot-scope="text, row">
             {{ row.modifyTime | toDate }}
           </template>
+          <template slot="publishTime" slot-scope="text, row">
+            <span v-if="row.publishTime">{{ row.publishTime | toDate }}</span>
+            <span v-else>-</span>
+          </template>
           <template slot="commentsCount" slot-scope="text, row">
             <nuxt-link
               v-if="row.commentsCount > 0"
@@ -362,6 +366,14 @@ export default Vue.extend({
                     align: 'center',
                     sorter: true,
                     scopedSlots: { customRender: 'modifyTime' }
+                },
+                {
+                    title: '发布时间',
+                    dataIndex: 'publishTime',
+                    width: 160,
+                    align: 'center',
+                    sorter: true,
+                    scopedSlots: { customRender: 'publishTime' }
                 },
                 {
                     title: '浏览数',
