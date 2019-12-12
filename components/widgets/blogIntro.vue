@@ -5,6 +5,7 @@
     </div>
     <div class="widget-body">
       <template v-if="intro">
+        <!-- eslint-disable-next-line vue/singleline-html-element-content-newline -->
         <div class="intro-content">{{ intro }}</div>
       </template>
       <a-empty v-else>

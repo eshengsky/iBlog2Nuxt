@@ -45,7 +45,16 @@
       <layout-footer :show-login="true" />
       <div class="fixed-tools">
         <div :class="{ 'show-to-top': showToTop }" class="to-top" @click="toTop">
-          <svg aria-hidden="true" focusable="false" data-prefix="fal" data-icon="arrow-to-top" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512" class="svg-inline--fa fa-arrow-to-top fa-w-12 fa-3x"><path fill="currentColor" d="M35.5 248l148-148.5c4.7-4.7 12.3-4.7 17 0l148 148.5c4.7 4.7 4.7 12.3 0 17l-7.1 7.1c-4.7 4.7-12.3 4.7-17 0L209 156.1V468c0 6.6-5.4 12-12 12h-10c-6.6 0-12-5.4-12-12V156.1L59.6 272c-4.7 4.7-12.3 4.7-17 0l-7.1-7.1c-4.7-4.6-4.7-12.2 0-16.9zM0 44v8c0 6.6 5.4 12 12 12h360c6.6 0 12-5.4 12-12v-8c0-6.6-5.4-12-12-12H12C5.4 32 0 37.4 0 44z" class=""></path></svg>
+          <svg
+            aria-hidden="true"
+            focusable="false"
+            data-prefix="fal"
+            data-icon="arrow-to-top"
+            role="img"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 384 512"
+            class="svg-inline--fa fa-arrow-to-top"
+          ><path fill="currentColor" d="M35.5 248l148-148.5c4.7-4.7 12.3-4.7 17 0l148 148.5c4.7 4.7 4.7 12.3 0 17l-7.1 7.1c-4.7 4.7-12.3 4.7-17 0L209 156.1V468c0 6.6-5.4 12-12 12h-10c-6.6 0-12-5.4-12-12V156.1L59.6 272c-4.7 4.7-12.3 4.7-17 0l-7.1-7.1c-4.7-4.6-4.7-12.2 0-16.9zM0 44v8c0 6.6 5.4 12 12 12h360c6.6 0 12-5.4 12-12v-8c0-6.6-5.4-12-12-12H12C5.4 32 0 37.4 0 44z" class="" /></svg>
         </div>
       </div>
     </div>
@@ -80,12 +89,12 @@ export default Vue.extend({
 
         window.addEventListener('scroll', () => {
             if (window.scrollY > 300) {
-              this.showToTop = true;
+                this.showToTop = true;
             } else {
-              this.showToTop = false;
+                this.showToTop = false;
             }
         }, {
-          passive: true
+            passive: true
         });
     },
     methods: {
@@ -237,6 +246,7 @@ export default Vue.extend({
   align-items: center;
   width: 45px;
   height: 45px;
+  font-size: 22px;
   border-radius: 50%;
   color: #555;
   opacity: .7;
@@ -248,10 +258,6 @@ export default Vue.extend({
 
 .to-top.show-to-top {
   display: flex;
-}
-
-.to-top svg {
-  font-size: 22px;
 }
 
 .to-top:hover {

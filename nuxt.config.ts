@@ -92,7 +92,7 @@ const config: Configuration = {
         loaders: {
             less: {
                 modifyVars: {
-                    // "primary-color": "#5d77d7",
+                    // 'primary-color': '#22b8cf',
                     'outline-width': 0
                 },
                 javascriptEnabled: true
