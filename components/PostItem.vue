@@ -85,7 +85,7 @@ export default Vue.extend({
         return {
             settings: this.$store.state.settings,
             drawer: false,
-            publishDate: moment(this.post.createTime).format('YYYY/MM/DD')
+            publishDate: moment(this.post.publishTime).format('YYYY/MM/DD')
         };
     }
 });
