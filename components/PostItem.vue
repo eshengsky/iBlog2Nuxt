@@ -100,14 +100,14 @@ export default Vue.extend({
         };
     },
     methods: {
-        displayUrl(link) {
+        displayUrl (link) {
             const url = new URL(link);
             return url.hostname;
         },
-        redirectUrl(link) {
+        redirectUrl (link) {
             const url = new URL(link);
             return url.origin;
-        },
+        }
     }
 });
 </script>

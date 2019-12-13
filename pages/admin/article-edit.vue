@@ -49,7 +49,7 @@
         <a-form-item label="来源" :colon="false">
           <a-radio-group
             v-decorator="['isLocal', isLocalOpts]"
-            name="radioGroup"
+            name="isLocalGroup"
             @change="isLocalChange"
           >
             <a-radio :value="true">
@@ -122,8 +122,29 @@
               not-found-content
             />
           </a-form-item>
+          <a-form-item label="允许评论" :colon="false">
+            <a-radio-group
+              v-decorator="['commentsFlag', commentsFlagOpts]"
+              name="commentsFlagGroup"
+            >
+              <a-radio :value="0">
+                默认
+                <a-tooltip
+                  title="遵循系统设置 - 开启文章评论"
+                >
+                  <a-icon type="question-circle-o" />
+                </a-tooltip>
+              </a-radio>
+              <a-radio :value="1">
+                允许评论
+              </a-radio>
+              <a-radio :value="-1">
+                禁止评论
+              </a-radio>
+            </a-radio-group>
+          </a-form-item>
         </div>
-        <div>
+        <div class="btn-wrap">
           <template v-if="!initialData._id">
             <a-button type="primary" @click="publish">
               <font-awesome-icon
@@ -206,7 +227,8 @@ export default Vue.extend({
         return {
             settings: this.$store.state.settings,
             initialData: {
-                isLocal: true
+                isLocal: true,
+                commentsFlag: 0
             } as IPost,
             content: '',
             mcsShow: false,
@@ -227,6 +249,9 @@ export default Vue.extend({
             },
             labelsOpts: {
                 initialValue: []
+            },
+            commentsFlagOpts: {
+                initialValue: 0
             },
             editorOptions: {
                 hideModeSwitch: true,
@@ -320,9 +345,10 @@ export default Vue.extend({
         } else {
             return {
                 initialData: {
-                    isLocal: true
+                    isLocal: true,
+                    commentsFlag: 0
                 }
-            }
+            };
         }
     },
     created () {
@@ -337,7 +363,8 @@ export default Vue.extend({
                 category: this.initialData.category,
                 isLocal: this.initialData.isLocal,
                 url: this.initialData.url || '',
-                labels: this.initialData.labels
+                labels: this.initialData.labels,
+                commentsFlag: this.initialData.commentsFlag
             });
             this.content = this.initialData.content;
         }
@@ -591,7 +618,7 @@ export default Vue.extend({
   margin-left: 10px;
 }
 
-.article-edit .tui-editor-defaultUI {
-  border: 1px solid #d9d9d9;
+.btn-wrap {
+  margin-top: 30px;
 }
 </style>

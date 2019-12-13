@@ -58,6 +58,11 @@ export interface IPost extends Document {
     isActive: boolean;
 
     /**
+     * 是否允许评论的标识
+     */
+    commentsFlag: number;
+
+    /**
    * 创建时间
    */
     createTime: Date;
@@ -110,6 +115,8 @@ export class Post {
 
                 // 是否有效
                 isActive: { type: Boolean, default: true },
+
+                commentsFlag: { type: Number, default: 0 },
 
                 // 创建时间
                 createTime: { type: Date, default: new Date() },

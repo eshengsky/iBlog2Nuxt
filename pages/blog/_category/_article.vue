@@ -29,7 +29,7 @@
           <span>【END】</span>
         </div>
       </div>
-      <comment-list :from="2" :article-id="article._id" />
+      <comment-list v-if="showComments" :from="2" :article-id="article._id" />
     </article>
     <aside class="side-wrap">
       <div class="side-block-container">
@@ -80,6 +80,7 @@ import CommentList from '@/components/CommentList.vue';
 import PopArticles from '@/components/widgets/popArticles.vue';
 import ArticleContent from '@/components/ArticleContent.vue';
 import { IPost } from '@/server/models/post';
+import { ISetting } from '@/server/models/setting';
 interface IHeading3 {
     href: string;
     title: string;
@@ -95,7 +96,7 @@ export default Vue.extend({
     },
     data () {
         return {
-            settings: this.$store.state.settings,
+            settings: this.$store.state.settings as ISetting,
             article: {} as IPost,
             menus: [] as Array<IHeading2>,
             menuShow: false,
@@ -128,6 +129,15 @@ export default Vue.extend({
         },
         publishDate (): string {
             return moment(this.article.publishTime).format('YYYY-MM-DD');
+        },
+        showComments (): boolean {
+            if (this.article.commentsFlag === 1) {
+                return true;
+            }
+            if (this.article.commentsFlag === -1) {
+                return false;
+            }
+            return this.settings.enableComments;
         }
     },
     async asyncData ({ $axios, params, error }) {
@@ -262,8 +272,8 @@ export default Vue.extend({
   font-weight: 500;
 }
 
-.article-main {
-  min-height: 50vh;
+.article-content {
+  min-height: 60vh;
 }
 
 .side-wrap {
@@ -326,7 +336,7 @@ export default Vue.extend({
   border: 1px dashed #ccc;
   border-radius: 5px;
   padding: 13px 16px 8px;
-  margin: 50px 0 0;
+  margin: 50px 0 20px;
 }
 
 .license-wrap > span,

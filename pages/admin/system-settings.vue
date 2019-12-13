@@ -95,6 +95,15 @@
           </span>
           <a-switch v-decorator="['showLicense', { valuePropName: 'checked' }]" />
         </a-form-item>
+        <a-form-item :colon="false">
+          <span slot="label">
+            开启文章评论
+            <a-tooltip title="是否允许对文章评论，文章编辑页面可覆盖该设置" placement="topLeft" arrow-point-at-center>
+              <a-icon type="question-circle-o" />
+            </a-tooltip>
+          </span>
+          <a-switch v-decorator="['enableComments', { valuePropName: 'checked' }]" />
+        </a-form-item>
         <a-form-item label="文章评论及留言的每页条数" :colon="false">
           <a-input-number v-decorator="['commentPageSize', commentPageSizeOpts]" :min="1" :max="999" />
         </a-form-item>
@@ -186,6 +195,7 @@ export default Vue.extend({
                 postPageSize: settings.postPageSize,
                 enablePreview: settings.enablePreview,
                 showLicense: settings.showLicense,
+                enableComments: settings.enableComments,
                 commentPageSize: settings.commentPageSize,
                 enableStatistics: settings.enableStatistics,
                 statisticsKey: settings.statisticsKey

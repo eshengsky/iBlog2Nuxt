@@ -44,6 +44,11 @@ export interface ISetting extends Document {
     showLicense: boolean,
 
     /**
+     * 是否允许文章评论
+     */
+    enableComments: boolean,
+
+    /**
    * 评论及留言每页条数
    */
     commentPageSize: 20,
@@ -70,6 +75,7 @@ export const defaultSetting = {
     postPageSize: 10,
     enablePreview: true,
     showLicense: true,
+    enableComments: true,
     commentPageSize: 20,
     enableStatistics: false,
     statisticsKey: ''
@@ -88,6 +94,8 @@ export class Setting {
             pageSize: { type: Number },
             enablePreview: { type: Boolean },
             showLicense: { type: Boolean },
+            enableComments: { type: Boolean },
+            commentPageSize: { type: Number },
             enableStatistics: { type: Boolean },
             statisticsKey: { type: String }
         });
