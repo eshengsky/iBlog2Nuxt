@@ -185,4 +185,19 @@ export default Vue.extend({
 .comment-header-actions a:hover {
   color: #444;
 }
+
+@media (max-width: 540px) {
+  .comment-item {
+    margin-left: 16px;
+  }
+
+  .comment-item-avatar {
+    display: none;
+  }
+
+  .timeline-comment:after,
+  .timeline-comment:before {
+    display: none;
+  }
+}
 </style>

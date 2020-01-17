@@ -380,7 +380,7 @@ export default Vue.extend({
 
 .comments-panel {
   background: #fff;
-  border-radius: 4px;
+  border-radius: 5px;
   padding: 30px;
 }
 
@@ -431,6 +431,16 @@ export default Vue.extend({
 
 .form-wrap .ant-form-item {
   margin-bottom: 10px;
+}
+
+@media (max-width: 540px) {
+  .avatar-wrap {
+    display: none;
+  }
+
+  .comment-list {
+    margin-left: 0;
+  }
 }
 </style>
 <style>

@@ -6,7 +6,7 @@
     <template v-if="!post.isLocal">
       <h4>
         <a :title="post.title" :href="post.url" target="_blank">
-          <web-font icon="external-link" />
+          <web-font icon="external-link" style="margin-right: 5px;" />
           <span>{{ post.title }}</span>
         </a>
       </h4>

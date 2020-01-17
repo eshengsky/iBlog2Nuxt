@@ -253,7 +253,7 @@ export default Vue.extend({
 
 .content-wrap {
   background: #fff;
-  border-radius: 4px;
+  border-radius: 5px;
   padding: 30px;
   min-height: 50vh;
 }
@@ -280,12 +280,6 @@ export default Vue.extend({
   width: 260px;
   flex: none;
   margin-left: 20px;
-}
-
-@media (max-width: 835px) {
-  .side-wrap {
-    display: none;
-  }
 }
 
 .side-block-container {
@@ -368,5 +362,21 @@ export default Vue.extend({
 
 .article-views {
   color: #666;
+}
+
+@media (max-width: 835px) {
+  .side-wrap {
+    display: none;
+  }
+}
+
+@media (max-width: 540px) {
+  .post-detail-wrap {
+    margin-top: 15px;
+  }
+
+  .content-wrap {
+    padding: 15px;
+  }
 }
 </style>

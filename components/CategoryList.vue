@@ -3,7 +3,6 @@
     <div class="category-title">
       文章分类
     </div>
-    <div class="category-split" />
     <ul class="category-list">
       <li v-for="item in categories" :key="item._id">
         <nuxt-link :to="item.alias ? `/blog/${item.alias}` : '/'" exact active-class="active">
@@ -30,40 +29,26 @@ export default Vue.extend({
 </script>
 <style scoped>
 .category-wrap {
-  padding: 30px 0 0 15px;
-  width: 260px;
-  top: 70px;
+  width: 250px;
+  top: 100px;
   bottom: 0;
+  margin-left: 15px;
   position: fixed;
   z-index: 1;
+  background: #fff;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  overflow: hidden;
 }
 
 .category-title {
-  border: 1px solid #e7eaec;
+  border-bottom: 1px solid #e7eaec;
   height: 60px;
   line-height: 60px;
   font-size: 16px;
   padding-left: 15px;
+  margin-bottom: 20px;
   background: #fff;
-}
-
-.category-split {
-  height: 20px;
-  border-left: 1px solid #e7eaec;
-  border-right: 1px solid #e7eaec;
-  background: #fff;
-}
-
-.category-list {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  margin-left: 15px;
-  top: 110px;
-  background: #fff;
-  border-left: 1px solid #e7eaec;
-  border-right: 1px solid #e7eaec;
 }
 
 .category-list li a {
@@ -101,5 +86,11 @@ export default Vue.extend({
   text-overflow: ellipsis;
   white-space: nowrap;
   width: 100%;
+}
+
+@media (max-width: 840px) {
+  .category-wrap {
+    display: none;
+  }
 }
 </style>

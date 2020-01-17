@@ -285,10 +285,15 @@ export default Vue.extend({
   display: flex;
 }
 
+@media (max-width: 840px) {
+  .post-wrap {
+    padding: 15px 0 0 0;
+  }
+}
+
 .post-left {
-  border-color: #e7eaec;
-  border-style: solid solid none;
-  border-width: 1px 0;
+  border-bottom: 1px solid #e7eaec;
+  border-radius: 5px;
   overflow: hidden;
   flex: 1;
 }
@@ -315,6 +320,12 @@ export default Vue.extend({
 
 .post-top-right {
   display: flex;
+}
+
+@media (max-width: 540px) {
+  .post-top-right {
+    display: none;
+  }
 }
 
 .post-list {
@@ -433,5 +444,11 @@ export default Vue.extend({
 .post-right {
   width: 300px;
   margin-left: 20px;
+}
+
+@media (max-width: 1160px) {
+  .post-right {
+    display: none;
+  }
 }
 </style>
