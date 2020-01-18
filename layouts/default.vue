@@ -3,7 +3,7 @@
     <div class="container">
       <div class="navbar">
         <div class="navbar-header">
-          <nuxt-link class="navbar-brand" to="/">
+          <a class="navbar-brand" href="/">
             <img :src="settings.blogLogo">
             <h4>
               {{ settings.blogName }}
@@ -11,7 +11,7 @@
                 {{ settings.blogSlogan }}
               </p>
             </h4>
-          </nuxt-link>
+          </a>
         </div>
         <div class="navbar-collapse">
           <ul>
