@@ -94,6 +94,24 @@ export default Vue.extend({
         PopArticles,
         ArticleContent
     },
+    async asyncData ({ $axios, params, error }) {
+        const alias = params.article;
+        const { code, data: article } = await $axios.$get('/api/article', {
+            params: {
+                alias
+            }
+        });
+        if (code === 1 && article) {
+            return {
+                article
+            };
+        } else {
+            error({
+                statusCode: 404,
+                message: '未找到该页面'
+            });
+        }
+    },
     data () {
         return {
             settings: this.$store.state.settings as ISetting,
@@ -138,24 +156,6 @@ export default Vue.extend({
                 return false;
             }
             return this.settings.enableComments;
-        }
-    },
-    async asyncData ({ $axios, params, error }) {
-        const alias = params.article;
-        const { code, data: article } = await $axios.$get('/api/article', {
-            params: {
-                alias
-            }
-        });
-        if (code === 1 && article) {
-            return {
-                article
-            };
-        } else {
-            error({
-                statusCode: 404,
-                message: '未找到该页面'
-            });
         }
     },
     async created () {

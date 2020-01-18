@@ -223,6 +223,39 @@ export default Vue.extend({
         },
         MdCheatSheet
     },
+    async asyncData ({ $axios, query, error }: any) {
+        const uid = query.uid;
+        if (uid) {
+            const { code, data } = await $axios.$get('/api/admin/article', {
+                params: {
+                    uid
+                }
+            });
+            if (code === 1) {
+                if (data && data.isActive) {
+                    return {
+                        initialData: data
+                    };
+                }
+                error({
+                    statusCode: 404,
+                    message: '未找到该页面'
+                });
+            } else {
+                error({
+                    statusCode: 500,
+                    message: '内部服务器错误'
+                });
+            }
+        } else {
+            return {
+                initialData: {
+                    isLocal: true,
+                    commentsFlag: 0
+                }
+            };
+        }
+    },
     data () {
         return {
             settings: this.$store.state.settings,
@@ -315,39 +348,6 @@ export default Vue.extend({
                         message: '链接地址格式不正确！'
                     }
                 ]
-            };
-        }
-    },
-    async asyncData ({ $axios, query, error }: any) {
-        const uid = query.uid;
-        if (uid) {
-            const { code, data } = await $axios.$get('/api/admin/article', {
-                params: {
-                    uid
-                }
-            });
-            if (code === 1) {
-                if (data && data.isActive) {
-                    return {
-                        initialData: data
-                    };
-                }
-                error({
-                    statusCode: 404,
-                    message: '未找到该页面'
-                });
-            } else {
-                error({
-                    statusCode: 500,
-                    message: '内部服务器错误'
-                });
-            }
-        } else {
-            return {
-                initialData: {
-                    isLocal: true,
-                    commentsFlag: 0
-                }
             };
         }
     },

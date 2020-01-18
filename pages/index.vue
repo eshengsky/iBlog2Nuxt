@@ -17,13 +17,6 @@ export default Vue.extend({
         PostList
     },
 
-    data () {
-        return {
-            categories: [],
-            category: null
-        };
-    },
-
     async asyncData ({ $axios, params, error }: any) {
         const { code, data }: IResp = await $axios.$get('/api/categories');
         if (code === 1) {
@@ -46,6 +39,13 @@ export default Vue.extend({
                 message: '内部服务器错误'
             });
         }
+    },
+
+    data () {
+        return {
+            categories: [],
+            category: null
+        };
     }
 });
 </script>

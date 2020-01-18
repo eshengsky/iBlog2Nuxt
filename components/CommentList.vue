@@ -298,12 +298,12 @@ export default Vue.extend({
         },
 
         referenceReply (content) {
-            let refText = content.replace(/^.*(\n+|$)/gm, text => '> ' + text);
+            let refText = content.replace(/^.*(\n+|$)/gm, text => ('> ' + text));
             refText += '\n\n';
             this.editorText = refText;
             const editorComp = this.$refs.editor as any;
-            editorComp.$el.scrollIntoViewIfNeeded();
             editorComp.invoke('focus');
+            (document as any).scrollingElement.scrollTop = 0;
         },
 
         loadNext () {
@@ -317,7 +317,7 @@ export default Vue.extend({
             if (!username) {
                 return '';
             }
-            return new Avatars(sprites()).create(username);
+            return new Avatars(sprites).create(username);
         }
     }
 });

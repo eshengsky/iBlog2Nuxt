@@ -1,4 +1,4 @@
-import { Configuration } from '@nuxt/types';
+import { Configuration } from '@nuxt/types/index';
 
 const config: Configuration = {
     mode: 'universal',
@@ -94,7 +94,7 @@ const config: Configuration = {
             less: {
                 modifyVars: {
                     // 'primary-color': '#22b8cf',
-                    'outline-width': 0
+                    'outline-width': '0'
                 },
                 javascriptEnabled: true
             }

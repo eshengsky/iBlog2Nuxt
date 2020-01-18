@@ -1,10 +1,14 @@
 <template>
   <div class="layout-footer">
-    Copyright ©{{ year }} Powered by
+    {{ year }} © Powered by
     <a
       href="https://github.com/eshengsky/iBlog2"
       target="_blank"
     >iBlog2</a>
+    <template v-if="settings.recordInfo">
+      |
+      <a href="http://www.beian.miit.gov.cn">{{ settings.recordInfo }}</a>
+    </template>
     <template v-if="showLogin">
       |
       <nuxt-link to="/admin">
@@ -25,7 +29,8 @@ export default Vue.extend({
     },
     data () {
         return {
-            year: new Date().getFullYear()
+            year: new Date().getFullYear(),
+            settings: this.$store.state.settings
         };
     }
 });

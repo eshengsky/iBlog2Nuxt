@@ -328,6 +328,14 @@ import { ICategory } from '@/server/models/category';
 export default Vue.extend({
     name: 'PageArticleManage',
     layout: 'admin',
+    async asyncData ({ $axios }) {
+        const { code, data }: IResp = await $axios.$get('/api/admin/categories');
+        if (code === 1) {
+            return {
+                categories: data
+            };
+        }
+    },
     data () {
         return {
             categories: [] as Array<ICategory>,
@@ -496,15 +504,6 @@ export default Vue.extend({
         },
         delDisabled (): boolean {
             return this.selectedRowKeys.length === 0;
-        }
-    },
-
-    async asyncData ({ $axios }) {
-        const { code, data }: IResp = await $axios.$get('/api/admin/categories');
-        if (code === 1) {
-            return {
-                categories: data
-            };
         }
     },
 

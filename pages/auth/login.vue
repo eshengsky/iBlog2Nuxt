@@ -16,11 +16,6 @@ export default Vue.extend({
         FirstLogin,
         LoginAccount
     },
-    data () {
-        return {
-            isFirst: false
-        };
-    },
     async asyncData ({ $axios }) {
         let isFirst: boolean;
         const { code, data } = await $axios.$get('/api/auth/exists');
@@ -32,6 +27,11 @@ export default Vue.extend({
         }
         return {
             isFirst
+        };
+    },
+    data () {
+        return {
+            isFirst: false
         };
     },
     methods: {

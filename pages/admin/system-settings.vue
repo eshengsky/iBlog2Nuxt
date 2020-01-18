@@ -58,6 +58,15 @@
         </a-form-item>
         <a-form-item :colon="false">
           <span slot="label">
+            备案信息
+            <a-tooltip title="根据最新规定，网站下方必须设置备案编号和查询链接" placement="topLeft" arrow-point-at-center>
+              <a-icon type="question-circle-o" />
+            </a-tooltip>
+          </span>
+          <a-input v-decorator="['recordInfo']" placeholder="请输入备案信息" allow-clear />
+        </a-form-item>
+        <a-form-item :colon="false">
+          <span slot="label">
             显示博客简介
             <a-tooltip title="博客简介展示于首页右侧" placement="topLeft" arrow-point-at-center>
               <a-icon type="question-circle-o" />
@@ -191,6 +200,7 @@ export default Vue.extend({
                 blogName: settings.blogName,
                 blogSlogan: settings.blogSlogan,
                 showBlogIntro: settings.showBlogIntro,
+                recordInfo: settings.recordInfo,
                 blogIntro: settings.blogIntro,
                 postPageSize: settings.postPageSize,
                 enablePreview: settings.enablePreview,

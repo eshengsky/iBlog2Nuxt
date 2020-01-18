@@ -285,12 +285,6 @@ export default Vue.extend({
   display: flex;
 }
 
-@media (max-width: 840px) {
-  .post-wrap {
-    padding: 15px 0 0 0;
-  }
-}
-
 .post-left {
   border-bottom: 1px solid #e7eaec;
   border-radius: 5px;
@@ -320,12 +314,6 @@ export default Vue.extend({
 
 .post-top-right {
   display: flex;
-}
-
-@media (max-width: 540px) {
-  .post-top-right {
-    display: none;
-  }
 }
 
 .post-list {
@@ -448,6 +436,18 @@ export default Vue.extend({
 
 @media (max-width: 1160px) {
   .post-right {
+    display: none;
+  }
+}
+
+@media (max-width: 840px) {
+  .post-wrap {
+    padding: 15px 0 0 0;
+  }
+}
+
+@media (max-width: 540px) {
+  .post-top-right {
     display: none;
   }
 }
