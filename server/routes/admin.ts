@@ -1,8 +1,8 @@
 import { Router } from 'express';
 import jwt from 'express-jwt';
 import moment from 'moment';
-import proxy from '../proxy/admin';
-import { IResp } from '../types';
+import * as proxy from '../proxy/admin';
+import { IResp } from '../../types';
 import config from '../../blog.config';
 
 const router = Router();

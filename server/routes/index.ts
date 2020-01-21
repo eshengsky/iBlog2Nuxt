@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import jwt from 'express-jwt';
-import proxy from '../proxy/index';
-import { IResp } from '../types';
+import * as proxy from '../proxy/index';
+import { IResp } from '../../types';
 import config from '../../blog.config';
 
 const router = Router();
@@ -23,9 +23,10 @@ router.get('/categories', async (_req, res) => {
             data: categories
         };
     } catch (err) {
-        console.error(err);
+        console.error(111, err);
         resp = {
-            code: -1
+            code: -1,
+            message: err.message
         };
     }
     res.json(resp);

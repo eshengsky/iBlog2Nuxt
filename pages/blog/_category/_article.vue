@@ -79,8 +79,7 @@ import 'highlight.js/styles/tomorrow.css';
 import CommentList from '@/components/CommentList.vue';
 import PopArticles from '@/components/widgets/popArticles.vue';
 import ArticleContent from '@/components/ArticleContent.vue';
-import { IPost } from '@/server/models/post';
-import { ISetting } from '@/server/models/setting';
+import { IPost, ISetting } from '@/types/schema';
 interface IHeading3 {
     href: string;
     title: string;
@@ -364,13 +363,13 @@ export default Vue.extend({
   color: #666;
 }
 
-@media (max-width: 835px) {
+@media (max-width: 890px) {
   .side-wrap {
     display: none;
   }
 }
 
-@media (max-width: 540px) {
+@media (max-width: 576px) {
   .post-detail-wrap {
     margin-top: 15px;
   }

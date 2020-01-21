@@ -22,8 +22,8 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { IPost } from '@/server/models/post';
-import { IResp } from '@/server/types';
+import { IPost } from '@/types/schema';
+import { IResp } from '@/types';
 export default Vue.extend({
     data () {
         return {

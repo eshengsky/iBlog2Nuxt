@@ -132,7 +132,7 @@
 import Vue from 'vue';
 import moment from 'moment';
 import { FieldDecoratorOptions } from 'ant-design-vue/types/form/form';
-import { IResp } from '@/server/types';
+import { IResp } from '@/types';
 export default Vue.extend({
     name: 'PageCommentManage',
     layout: 'admin',

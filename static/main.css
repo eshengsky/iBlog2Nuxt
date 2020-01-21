@@ -80,7 +80,7 @@ pre code {
   font-size: 14px;
   line-height: 19px;
   display: block;
-  overflow-x: auto;
+  white-space: pre-wrap;
   padding-bottom: 12px;
 }
 
@@ -285,4 +285,11 @@ button.tui-scrollsync {
 ::selection {
   background: #ffbd2e;
   color: inherit;
+}
+
+@media (max-width: 576px) {
+  .container {
+    padding-left: 0;
+    padding-right: 0;
+  }
 }

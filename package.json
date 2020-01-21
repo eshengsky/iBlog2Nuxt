@@ -27,7 +27,6 @@
     "@types/cookie-parser": "^1.4.2",
     "@types/mongoose": "^5.5.41",
     "@types/nuxtjs__auth": "^4.8.3",
-    "@types/passport": "^1.0.2",
     "ant-design-vue": "^1.4.10",
     "blueimp-md5": "^2.12.0",
     "body-parser": "^1.19.0",
@@ -46,9 +45,6 @@
     "moment": "^2.24.0",
     "mongoose": "^5.8.7",
     "nuxt": "^2.11.0",
-    "passport": "^0.4.1",
-    "passport-github2": "^0.1.11",
-    "serverlog-node": "^2.2.1",
     "uslug": "^1.0.4",
     "v-charts": "^1.19.0"
   },
@@ -66,7 +62,6 @@
     "eslint-plugin-standard": "^4.0.1",
     "eslint-plugin-vue": "^6.1.2",
     "less": "^3.10.3",
-    "less-loader": "^5.0.0",
-    "nodemon": "^2.0.2"
+    "less-loader": "^5.0.0"
   }
 }

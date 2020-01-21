@@ -1,35 +1,5 @@
-import { Schema, model, models, Document, Model } from 'mongoose';
-
-export interface ICache extends Document {
-    _id: string;
-
-    /**
-   * 客户端IP地址
-   */
-    clientIP: string;
-
-    /**
-   * 扩展字段1
-   */
-    ext1: any,
-
-    /**
-   * 扩展字段2
-   */
-    ext2: any,
-
-    /**
-   * 扩展字段3
-   */
-    ext3: any,
-
-    /**
-   * 创建时间
-   */
-    createTime: Date;
-}
-
-export interface ICacheModel extends Model<ICache> {}
+import { Schema, model, models, Model } from 'mongoose';
+import { ICache } from '@/types/schema';
 
 export class Cache {
     private _model: Model<ICache>;

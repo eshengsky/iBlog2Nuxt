@@ -47,7 +47,7 @@
 <script lang="ts">
 import Vue from 'vue';
 import md5 from 'blueimp-md5';
-import { IResp } from '@/server/types';
+import { IResp } from '@/types';
 export default Vue.extend({
     name: 'PageInitAccount',
     layout: 'auth',
@@ -140,7 +140,6 @@ export default Vue.extend({
                             location.href = '/auth/login';
                         }, 2000);
                     } else {
-                        console.error(message);
                         this.$message.error(message);
                         this.btnLoading = false;
                     }

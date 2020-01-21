@@ -35,7 +35,7 @@
 <script lang="ts">
 import Vue from 'vue';
 import md5 from 'blueimp-md5';
-import { IResp } from '@/server/types';
+import { IResp } from '@/types';
 export default Vue.extend({
     data () {
         return {

@@ -1,84 +1,8 @@
-import { Schema, model, models, Document, Model } from 'mongoose';
+import { Schema, model, models, Model } from 'mongoose';
 import MarkdownIt from 'markdown-it';
 import MarkdownItGithubHeadings from 'markdown-it-github-headings';
 import hljs from 'highlight.js';
-import { ICategory } from './category';
-
-export interface IPost extends Document {
-    _id: string;
-
-    /**
-   * 标题
-   */
-    title: string;
-
-    /**
-   * 文章别名
-   */
-    alias: string;
-
-    /**
-   * 内容
-   */
-    content: string;
-
-    /**
-   * 分类
-   */
-    category: ICategory;
-
-    /**
-   * 标签
-   */
-    labels: Array<string>;
-
-    /**
-   * 外链Url
-   */
-    url: string;
-
-    /**
-   * 浏览次数
-   */
-    viewCount: number;
-
-    /**
-   * 是否本地文档，否则是外链
-   */
-    isLocal: boolean;
-
-    /**
-   * 是否草稿
-   */
-    isDraft: boolean;
-
-    /**
-   * 是否有效
-   */
-    isActive: boolean;
-
-    /**
-     * 是否允许评论的标识
-     */
-    commentsFlag: number;
-
-    /**
-   * 创建时间
-   */
-    createTime: Date;
-
-    /**
-   * 修改时间
-   */
-    modifyTime: Date;
-
-    /**
-     *发布时间
-     */
-    publishTime: Date;
-}
-
-export interface IPostModel extends Model<IPost> {}
+import { IPost } from '@/types/schema';
 
 export class Post {
     private _model: Model<IPost>;
@@ -150,9 +74,12 @@ export class Post {
                             } else if (showLang === 'TS') {
                                 showLang = 'TYPESCRIPT';
                             }
-                            try {
-                                code = hljs.highlight(lang, str, true).value;
-                            } catch (err) {}
+                            const langObj = hljs.getLanguage(lang);
+                            if (langObj) {
+                                try {
+                                    code = hljs.highlight(lang, str, true).value;
+                                } catch (err) {}
+                            }
                         }
                         if (!code) {
                             code = md.utils.escapeHtml(str);

@@ -1,13 +1,5 @@
-import { Schema, model, models, Document, Model } from 'mongoose';
-
-export interface IAuth extends Document {
-    _id: string;
-    password: string;
-    createTime: Date;
-    modifyTime: Date;
-}
-
-export interface IAuthModel extends Model<IAuth> {}
+import { Schema, model, models, Model } from 'mongoose';
+import { IAuth } from '@/types/schema';
 
 export class Auth {
     private _model: Model<IAuth>;

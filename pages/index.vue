@@ -10,7 +10,7 @@ import Vue from 'vue';
 import CategoryList from '~/components/CategoryList.vue';
 import PostList from '~/components/PostList.vue';
 import { allCategoryItem } from '@/server/models/category';
-import { IResp } from '@/server/types';
+import { IResp } from '@/types';
 export default Vue.extend({
     components: {
         CategoryList,

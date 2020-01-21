@@ -149,7 +149,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { IResp } from '@/server/types';
+import { IResp } from '@/types';
 import { defaultSetting } from '@/server/models/setting';
 export default Vue.extend({
     name: 'PageSystemSettings',

@@ -1,6 +1,7 @@
 export default ({ $axios }) => {
     $axios.onRequest(config => {
-        console.log('Making request to ' + config.url);
+        config.startTime = Date.now();
+        console.info('发起请求 ' + config.url);
     });
 
     $axios.onError(err => {
@@ -8,6 +9,8 @@ export default ({ $axios }) => {
     });
 
     $axios.onResponse(resp => {
-        console.log(`Request: ${resp.config.url} has finished. Resonse Status: ${resp.status}`);
+        const mill = 1000;
+        const costTime = (Date.now() - resp.config.startTime) / mill;
+        console.info(`请求 ${resp.config.url} 已完成！响应耗时：${costTime}s，状态码：${resp.status}`);
     });
 };

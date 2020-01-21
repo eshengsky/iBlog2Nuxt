@@ -19,7 +19,7 @@ const config: Configuration = {
         link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }]
     },
     server: {
-        port: 8765,
+        port: 9000,
         host: 'localhost'
     },
     serverMiddleware: ['@/server/api'],
@@ -39,7 +39,7 @@ const config: Configuration = {
    ** Plugins to load before mounting the App
    */
     plugins: [
-        '@/plugins/axios',
+        { src: '@/plugins/axios', mode: 'server' },
         '@/plugins/ant-design',
         '@/plugins/font-awesome',
         '@/plugins/web-font/index',
@@ -53,8 +53,8 @@ const config: Configuration = {
    */
     modules: [
         '@nuxtjs/axios',
-        '@nuxtjs/auth'
-    // '@nuxtjs/pwa',
+        '@nuxtjs/auth',
+        '@nuxtjs/pwa'
     ],
     auth: {
         strategies: {

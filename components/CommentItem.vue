@@ -48,7 +48,7 @@
 <script lang="ts">
 import Vue, { PropOptions } from 'vue';
 import moment from 'moment';
-import { IComment } from '@/server/models/comment';
+import { IComment } from '@/types/schema';
 export default Vue.extend({
     props: {
         comment: {
@@ -186,7 +186,7 @@ export default Vue.extend({
   color: #444;
 }
 
-@media (max-width: 540px) {
+@media (max-width: 576px) {
   .comment-item {
     margin-left: 16px;
   }

@@ -5,16 +5,16 @@
       href="https://github.com/eshengsky/iBlog2"
       target="_blank"
     >iBlog2</a>
-    <template v-if="settings.recordInfo">
+    <span v-if="settings.recordInfo" class="record-info">
       |
       <a href="http://www.beian.miit.gov.cn">{{ settings.recordInfo }}</a>
-    </template>
-    <template v-if="showLogin">
+    </span>
+    <span v-if="showLogin" class="admin-link">
       |
       <nuxt-link to="/admin">
         后台管理
       </nuxt-link>
-    </template>
+    </span>
   </div>
 </template>
 
@@ -42,5 +42,12 @@ export default Vue.extend({
   color: #888;
   user-select: none;
   padding: 24px 0;
+}
+
+@media (max-width: 576px) {
+  .record-info,
+  .admin-link {
+    display: none;
+  }
 }
 </style>

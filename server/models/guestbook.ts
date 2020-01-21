@@ -1,7 +1,6 @@
 import { model, models, Model } from 'mongoose';
-import { schema, IComment } from './comment';
-
-export interface IGuestbookModel extends Model<IComment> {}
+import { schema } from './comment';
+import { IComment } from '@/types/schema';
 
 export class Guestbook {
     private _model: Model<IComment>;

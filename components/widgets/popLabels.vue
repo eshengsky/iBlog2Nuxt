@@ -18,7 +18,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { IResp } from '@/server/types';
+import { IResp } from '@/types';
 export default Vue.extend({
     data () {
         return {

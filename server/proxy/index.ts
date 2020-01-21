@@ -3,7 +3,7 @@ import BadWords from '../bad_words/index';
 const { Post, Cache, Category, Comment, Guestbook, Setting } = DB.Models;
 const badWords = BadWords.instance;
 
-async function getCategories () {
+export async function getCategories () {
     const categories = await Category.find(
         {},
         {},
@@ -12,87 +12,81 @@ async function getCategories () {
     return categories;
 }
 
-async function getPosts (params) {
+export async function getPosts (params) {
     let page = 1;
-    let postList: any[] = [];
-    let pageCount = 0;
-    let count = 0;
     const pageSize = parseInt(params.pageSize);
-    try {
-        page = parseInt(params.pageIndex) || 1;
-        page = page > 0 ? page : 1;
-        const conditions: any = {
-            isDraft: false,
-            isActive: true
-        };
-        if (params.category) {
-            conditions.category = params.category;
-        }
-        const keyword = params.keyword;
-        if (keyword) {
-            switch (params.filterType) {
-                case 'title':
-                    conditions.title = { $regex: keyword, $options: 'gi' };
-                    break;
-                case 'tag':
-                    conditions.labels = { $regex: keyword, $options: 'gi' };
-                    break;
-                case 'date':
-                    if (
-                        Array.isArray(keyword) &&
-                        keyword.length === 2 &&
-                        keyword[0] &&
-                        keyword[1]
-                    ) {
-                        const start = new Date(keyword[0]);
-                        const end = new Date(keyword[1]);
-                        conditions.publishTime = { $gte: start, $lt: end };
-                    }
-                    break;
-                default:
-                    conditions.$or = [
-                        {
-                            title: {
-                                $regex: keyword,
-                                $options: 'gi'
-                            }
-                        },
-                        {
-                            labels: {
-                                $regex: keyword,
-                                $options: 'gi'
-                            }
-                        },
-                        {
-                            content: {
-                                $regex: keyword,
-                                $options: 'gi'
-                            }
-                        }
-                    ];
-            }
-        }
-        const data = await Promise.all([
-            Post.find(
-                conditions,
-                {},
-                {
-                    skip: (page - 1) * pageSize,
-                    limit: pageSize,
-                    sort: '-publishTime'
-                }
-            )
-                .populate('category', '-img')
-                .populate('comments', '_id')
-                .exec(),
-            Post.countDocuments(conditions).exec()
-        ]);
-        postList = data[0];
-        count = data[1];
-        pageCount = Math.ceil(count / pageSize);
-    } catch (err) {
-        console.error(err);
+    page = parseInt(params.pageIndex) || 1;
+    page = page > 0 ? page : 1;
+    const conditions: any = {
+        isDraft: false,
+        isActive: true
+    };
+    if (params.category) {
+        conditions.category = params.category;
     }
+    const keyword = params.keyword;
+    if (keyword) {
+        switch (params.filterType) {
+            case 'title':
+                conditions.title = { $regex: keyword, $options: 'gi' };
+                break;
+            case 'tag':
+                conditions.labels = { $regex: keyword, $options: 'gi' };
+                break;
+            case 'date':
+                if (
+                    Array.isArray(keyword) &&
+                    keyword.length === 2 &&
+                    keyword[0] &&
+                    keyword[1]
+                ) {
+                    const start = new Date(keyword[0]);
+                    const end = new Date(keyword[1]);
+                    conditions.publishTime = { $gte: start, $lt: end };
+                }
+                break;
+            default:
+                conditions.$or = [
+                    {
+                        title: {
+                            $regex: keyword,
+                            $options: 'gi'
+                        }
+                    },
+                    {
+                        labels: {
+                            $regex: keyword,
+                            $options: 'gi'
+                        }
+                    },
+                    {
+                        content: {
+                            $regex: keyword,
+                            $options: 'gi'
+                        }
+                    }
+                ];
+        }
+    }
+    const data = await Promise.all([
+        Post.find(
+            conditions,
+            {},
+            {
+                skip: (page - 1) * pageSize,
+                limit: pageSize,
+                sort: '-publishTime'
+            }
+        )
+            .populate('category', '-img')
+            .populate('comments', '_id')
+            .exec(),
+        Post.countDocuments(conditions).exec()
+    ]);
+    const postList = data[0];
+    const count = data[1];
+    const pageCount = Math.ceil(count / pageSize);
+
     return {
         postList,
         count,
@@ -100,7 +94,7 @@ async function getPosts (params) {
     };
 }
 
-async function getPopArticles () {
+export async function getPopArticles () {
     const articles = await Post.find({}, '-content', {
         sort: '-viewCount',
         limit: 7
@@ -111,8 +105,7 @@ async function getPopArticles () {
         articles
     };
 }
-
-async function getPopLabels () {
+export async function getPopLabels () {
     const labels = await Post.aggregate([
         {
             $unwind: '$labels'
@@ -135,30 +128,20 @@ async function getPopLabels () {
     };
 }
 
-async function getArticle (params) {
-    let article;
-    try {
-        const alias = params.alias;
-        article = await Post.findOne({ alias })
-            .populate('category')
-            .exec();
-    } catch (err) {
-        console.error(err);
-    }
+export async function getArticle (params) {
+    const alias = params.alias;
+    const article = await Post.findOne({ alias })
+        .populate('category')
+        .exec();
     return article;
 }
 
-async function getPostsCountByCate (category) {
-    let count = 0;
-    try {
-        count = await Post.countDocuments({ category }).exec();
-    } catch (err) {
-        console.error(err);
-    }
+export async function getPostsCountByCate (category) {
+    const count = await Post.countDocuments({ category }).exec();
     return count;
 }
 
-async function increaseViews ({ postID, clientIP }) {
+export async function increaseViews ({ postID, clientIP }) {
     // 判断该IP用户是否已看过该文章
     const exists = await Cache.exists({
         clientIP,
@@ -168,7 +151,7 @@ async function increaseViews ({ postID, clientIP }) {
 
     // 如果没看过
     if (!exists) {
-    // 文章浏览数+1
+        // 文章浏览数+1
         Post.findByIdAndUpdate(postID, {
             $inc: { viewCount: 1 }
         }).exec();
@@ -182,32 +165,25 @@ async function increaseViews ({ postID, clientIP }) {
     }
 }
 
-async function getComments (params) {
+export async function getComments (params) {
     let page = 1;
-    let comments: any[] = [];
-    let pageCount = 0;
-    let count = 0;
     const pageSize = parseInt(params.pageSize);
-    try {
-        page = parseInt(params.pageIndex) || 1;
-        page = page > 0 ? page : 1;
-        const options: any = {};
-        options.skip = (page - 1) * pageSize;
-        options.limit = pageSize;
-        options.sort = '-createTime';
-        const query = {
-            post: params.articleId
-        };
-        const data = await Promise.all([
-            Comment.find(query, {}, options).exec(),
-            Comment.countDocuments(query).exec()
-        ]);
-        comments = data[0];
-        count = data[1];
-        pageCount = Math.ceil(count / pageSize);
-    } catch (err) {
-        console.error(err);
-    }
+    page = parseInt(params.pageIndex) || 1;
+    page = page > 0 ? page : 1;
+    const options: any = {};
+    options.skip = (page - 1) * pageSize;
+    options.limit = pageSize;
+    options.sort = '-createTime';
+    const query = {
+        post: params.articleId
+    };
+    const data = await Promise.all([
+        Comment.find(query, {}, options).exec(),
+        Comment.countDocuments(query).exec()
+    ]);
+    const comments = data[0];
+    const count = data[1];
+    const pageCount = Math.ceil(count / pageSize);
     return {
         comments,
         count,
@@ -215,7 +191,7 @@ async function getComments (params) {
     };
 }
 
-async function saveComment (params) {
+export async function saveComment (params) {
     const entity = new Comment({
         post: params.articleId,
         username: badWords.filter(params.username),
@@ -229,29 +205,22 @@ async function saveComment (params) {
     };
 }
 
-async function getGuestbook (params) {
+export async function getGuestbook (params) {
     let page = 1;
-    let comments: any[] = [];
-    let pageCount = 0;
-    let count = 0;
     const pageSize = parseInt(params.pageSize);
-    try {
-        page = parseInt(params.pageIndex) || 1;
-        page = page > 0 ? page : 1;
-        const options: any = {};
-        options.skip = (page - 1) * pageSize;
-        options.limit = pageSize;
-        options.sort = '-createTime';
-        const data = await Promise.all([
-            Guestbook.find({}, {}, options).exec(),
-            Guestbook.countDocuments({}).exec()
-        ]);
-        comments = data[0];
-        count = data[1];
-        pageCount = Math.ceil(count / pageSize);
-    } catch (err) {
-        console.error(err);
-    }
+    page = parseInt(params.pageIndex) || 1;
+    page = page > 0 ? page : 1;
+    const options: any = {};
+    options.skip = (page - 1) * pageSize;
+    options.limit = pageSize;
+    options.sort = '-createTime';
+    const data = await Promise.all([
+        Guestbook.find({}, {}, options).exec(),
+        Guestbook.countDocuments({}).exec()
+    ]);
+    const comments = data[0];
+    const count = data[1];
+    const pageCount = Math.ceil(count / pageSize);
     return {
         comments,
         count,
@@ -259,7 +228,7 @@ async function getGuestbook (params) {
     };
 }
 
-async function saveGuestbook (params) {
+export async function saveGuestbook (params) {
     const entity = new Guestbook({
         username: badWords.filter(params.username),
         website: params.website,
@@ -272,24 +241,9 @@ async function saveGuestbook (params) {
     };
 }
 
-async function getSettings () {
+export async function getSettings () {
     const settings = await Setting.findOne().exec();
     return {
         settings
     };
 }
-
-export default {
-    getCategories,
-    getPosts,
-    getPopArticles,
-    getPopLabels,
-    getArticle,
-    getPostsCountByCate,
-    increaseViews,
-    getComments,
-    saveComment,
-    getGuestbook,
-    saveGuestbook,
-    getSettings
-};

@@ -107,9 +107,8 @@
 <script lang="ts">
 import Vue, { PropOptions } from 'vue';
 import moment from 'moment';
-import { ICategory } from '@/server/models/category';
-import { IPost } from '@/server/models/post';
-import { IResp } from '@/server/types';
+import { IPost, ICategory } from '@/types/schema';
+import { IResp } from '@/types';
 import PostItem from '@/components/PostItem.vue';
 import BlogIntro from '@/components/widgets/blogIntro.vue';
 import ArticleCalendar from '@/components/widgets/articleCalendar.vue';
@@ -446,9 +445,13 @@ export default Vue.extend({
   }
 }
 
-@media (max-width: 540px) {
+@media (max-width: 576px) {
   .post-top-right {
     display: none;
+  }
+
+  .post-left {
+    border-radius: 0;
   }
 }
 </style>

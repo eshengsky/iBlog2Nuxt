@@ -323,8 +323,8 @@
 import Vue from 'vue';
 import moment from 'moment';
 import { FieldDecoratorOptions } from 'ant-design-vue/types/form/form';
-import { IResp } from '@/server/types';
-import { ICategory } from '@/server/models/category';
+import { IResp } from '@/types';
+import { ICategory } from '@/types/schema';
 export default Vue.extend({
     name: 'PageArticleManage',
     layout: 'admin',

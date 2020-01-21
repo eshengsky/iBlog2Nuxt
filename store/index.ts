@@ -1,5 +1,5 @@
 import { ActionTree, MutationTree } from 'vuex';
-import { ISetting } from '@/server/models/setting';
+import { ISetting } from '@/types/schema';
 
 export const state = () => ({
     settings: {} as ISetting

@@ -1,8 +1,8 @@
 import { Router } from 'express';
 import jwt from 'express-jwt';
 import jsonwebtoken from 'jsonwebtoken';
-import proxy from '../proxy/auth';
-import { IResp } from '../types';
+import * as proxy from '../proxy/auth';
+import { IResp } from '../../types';
 import config from '../../blog.config';
 
 const router = Router();
@@ -48,7 +48,26 @@ router.post(
     '/account',
     jwt({ secret: config.jwtSecret }),
     async (req, res) => {
-        const resp = await proxy.changePassword(req.body);
+        let resp: IResp;
+        try {
+            const code = await proxy.changePassword(req.body);
+            if (code === -2) {
+                resp = {
+                    code: -1,
+                    message: '原密码不正确！'
+                };
+            } else {
+                resp = {
+                    code: 1
+                };
+            }
+        } catch (err) {
+            console.error(err);
+            resp = {
+                code: -1,
+                message: '操作失败！'
+            };
+        }
         res.json(resp);
     }
 );
@@ -86,9 +105,7 @@ router.post('/login', async (req, res) => {
 
 // 退出登录
 router.post('/logout', jwt({ secret: config.jwtSecret }), (_req, res) => {
-    res.json({
-        code: 1
-    });
+    res.end();
 });
 
 export default router;

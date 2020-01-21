@@ -209,8 +209,8 @@
 <script lang="ts">
 import Vue from 'vue';
 import MdCheatSheet from '@/components/MdCheatSheet.vue';
-import { IResp } from '@/server/types';
-import { IPost } from '@/server/models/post';
+import { IResp } from '@/types';
+import { IPost } from '@/types/schema';
 import { otherCategoryItem } from '@/server/models/category';
 import 'highlight.js/styles/tomorrow.css';
 export default Vue.extend({

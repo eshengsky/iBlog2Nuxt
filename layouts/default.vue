@@ -55,7 +55,7 @@
 import Vue from 'vue';
 import zhCN from 'ant-design-vue/lib/locale-provider/zh_CN';
 import LayoutFooter from '@/components/LayoutFooter.vue';
-import { ISetting } from '@/server/models/setting';
+import { ISetting } from '@/types/schema';
 export default Vue.extend({
     components: {
         LayoutFooter
@@ -106,7 +106,7 @@ export default Vue.extend({
   height: 70px;
   background: #fff;
   border-bottom: 1px solid rgba(234, 234, 234, 0.8);
-  z-index: 3;
+  z-index: 999;
   box-shadow: 0 0 3px rgba(234, 234, 234, 0.8);
 }
 

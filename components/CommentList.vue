@@ -110,8 +110,8 @@ import sprites from '@dicebear/avatars-jdenticon-sprites';
 import 'lazysizes';
 import CommentItem from '@/components/CommentItem.vue';
 import MdCheatSheet from '@/components/MdCheatSheet.vue';
-import { IComment } from '@/server/models/comment';
-import { IResp } from '@/server/types';
+import { IComment } from '@/types/schema';
+import { IResp } from '@/types';
 export default Vue.extend({
     components: {
         CommentItem,
@@ -262,39 +262,39 @@ export default Vue.extend({
         },
 
         onEditorLoad () {
-            (<HTMLElement>(
-        document.querySelector('.gituser-wrap .comment-btn-wrap')
-      )).style.display = 'flex';
+            ((
+                document.querySelector('.gituser-wrap .comment-btn-wrap') as HTMLElement
+            )).style.display = 'flex';
         },
 
         onEditorFocus () {
-            (<HTMLElement>(
-        document.querySelector('.gituser-wrap .te-md-container .CodeMirror')
-      )).classList.add('editor-focus');
+            ((
+                document.querySelector('.gituser-wrap .te-md-container .CodeMirror') as HTMLElement
+            )).classList.add('editor-focus');
         },
 
         onEditorBlur () {
-            (<HTMLElement>(
-        document.querySelector('.gituser-wrap .te-md-container .CodeMirror')
-      )).classList.remove('editor-focus');
+            ((
+                document.querySelector('.gituser-wrap .te-md-container .CodeMirror') as HTMLElement
+            )).classList.remove('editor-focus');
         },
 
         onEditorReplyLoad () {
-            (<HTMLElement>(
-        document.querySelector('.comment-list .comment-btn-wrap')
-      )).style.display = 'flex';
+            ((
+                document.querySelector('.comment-list .comment-btn-wrap') as HTMLElement
+            )).style.display = 'flex';
         },
 
         onEditorReplyFocus () {
-            (<HTMLElement>(
-        document.querySelector('.comment-list .te-md-container .CodeMirror')
-      )).classList.add('editor-focus');
+            ((
+                document.querySelector('.comment-list .te-md-container .CodeMirror') as HTMLElement
+            )).classList.add('editor-focus');
         },
 
         onEditorReplyBlur () {
-            (<HTMLElement>(
-        document.querySelector('.comment-list .te-md-container .CodeMirror')
-      )).classList.remove('editor-focus');
+            ((
+                document.querySelector('.comment-list .te-md-container .CodeMirror') as HTMLElement
+            )).classList.remove('editor-focus');
         },
 
         referenceReply (content) {
@@ -303,7 +303,14 @@ export default Vue.extend({
             this.editorText = refText;
             const editorComp = this.$refs.editor as any;
             editorComp.invoke('focus');
-            (document as any).scrollingElement.scrollTop = 0;
+
+            if (this.isGuestbook) {
+                setTimeout(() => {
+                    window.scrollTo(0, 0);
+                }, 0);
+            } else {
+                editorComp.$el.scrollIntoViewIfNeeded();
+            }
         },
 
         loadNext () {
@@ -381,11 +388,11 @@ export default Vue.extend({
 .comments-panel {
   background: #fff;
   border-radius: 5px;
-  padding: 30px;
+  padding: 20px;
 }
 
 .comments-wrap {
-  margin-top: 30px;
+  margin-top: 20px;
 }
 
 .comment-list {
@@ -433,13 +440,22 @@ export default Vue.extend({
   margin-bottom: 10px;
 }
 
-@media (max-width: 540px) {
+@media (max-width: 576px) {
   .avatar-wrap {
     display: none;
   }
 
   .comment-list {
     margin-left: 0;
+  }
+
+  .comments-top {
+    margin-left: 20px;
+    margin-top: -10px;
+  }
+
+  .comments-panel {
+    border-radius: 0;
   }
 }
 </style>

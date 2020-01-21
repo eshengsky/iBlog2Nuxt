@@ -24,6 +24,6 @@ export default Vue.extend({
 .list-wrap {
   max-width: 1012px;
   margin: 0 auto 20px;
-  padding: 0 10px 40px;
+  padding-bottom: 40px;
 }
 </style>

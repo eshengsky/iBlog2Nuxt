@@ -15,7 +15,7 @@
 </template>
 <script lang="ts">
 import Vue, { PropOptions } from 'vue';
-import { ICategory } from '@/server/models/category';
+import { ICategory } from '@/types/schema';
 export default Vue.extend({
     props: {
         categories: {

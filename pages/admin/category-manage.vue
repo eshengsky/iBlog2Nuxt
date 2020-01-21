@@ -132,7 +132,7 @@
 </template>
 <script lang="ts">
 import Vue from 'vue';
-import { IResp } from '@/server/types';
+import { IResp } from '@/types';
 import { allCategoryItem, otherCategoryItem } from '@/server/models/category';
 export default Vue.extend({
     name: 'PageCategoryManage',

@@ -1,21 +1,22 @@
-import { connect, connection, Connection } from 'mongoose';
+import { connect, connection, Connection, Model } from 'mongoose';
 import config from '../blog.config';
-import { Post, IPostModel } from './models/post';
-import { Cache, ICacheModel } from './models/cache';
-import { Category, ICategoryModel } from './models/category';
-import { Comment, ICommentModel } from './models/comment';
-import { Guestbook, IGuestbookModel } from './models/guestbook';
-import { Setting, ISettingModel } from './models/setting';
-import { Auth, IAuthModel } from './models/auth';
+import { Post } from './models/post';
+import { Cache } from './models/cache';
+import { Category } from './models/category';
+import { Comment } from './models/comment';
+import { Guestbook } from './models/guestbook';
+import { Setting } from './models/setting';
+import { Auth } from './models/auth';
+import { IPost, ICategory, IComment, ICache, ISetting, IAuth } from '@/types/schema';
 
 interface IModels {
-    Post: IPostModel;
-    Cache: ICacheModel;
-    Category: ICategoryModel,
-    Comment: ICommentModel,
-    Guestbook: IGuestbookModel,
-    Setting: ISettingModel,
-    Auth: IAuthModel
+    Post: Model<IPost>;
+    Cache: Model<ICache>;
+    Category: Model<ICategory>,
+    Comment: Model<IComment>,
+    Guestbook: Model<IComment>,
+    Setting: Model<ISetting>,
+    Auth: Model<IAuth>
 }
 
 export default class DB {

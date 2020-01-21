@@ -204,4 +204,11 @@ export default Vue.extend({
 .website-link:hover {
   color: #1890ff;
 }
+
+@media (max-width: 576px) {
+  /* 隐藏预览 */
+  .preview-link {
+    display: none;
+  }
+}
 </style>

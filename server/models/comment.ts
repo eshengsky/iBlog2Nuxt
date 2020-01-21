@@ -1,15 +1,5 @@
-import { Schema, model, models, Document, Model } from 'mongoose';
-import { IPost } from './post';
-
-export interface IComment extends Document {
-    post: IPost;
-    username: string;
-    website?: string;
-    content: string;
-    createTime: Date;
-}
-
-export interface ICommentModel extends Model<IComment> {}
+import { Schema, model, models, Model } from 'mongoose';
+import { IComment } from '@/types/schema';
 
 export const schema = new Schema(
     {

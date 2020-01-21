@@ -2,10 +2,10 @@ import moment from 'moment';
 import mongoose from 'mongoose';
 import DB from '../db';
 import { otherCategoryItem } from '../models/category';
-import { IPost } from '../models/post';
+import { IPost } from '../../types/schema';
 const { Category, Post, Comment, Guestbook, Setting } = DB.Models;
 
-async function getCategories () {
+export async function getCategories () {
     const categories = await Category.find(
         {},
         {},
@@ -14,7 +14,7 @@ async function getCategories () {
     return categories;
 }
 
-const getPosts = async (params: any) => {
+export async function getPosts (params: any) {
     const matchObj: any = {};
     const {
         category,
@@ -163,17 +163,17 @@ const getPosts = async (params: any) => {
         postList: data[0],
         count: data[1].length === 0 ? 0 : data[1][0].totalCount
     };
-};
+}
 
-const getArticle = async uid => {
+export async function getArticle (uid) {
     if (!mongoose.Types.ObjectId.isValid(uid)) {
         return null;
     }
     const article = await Post.findById(uid).exec();
     return article;
-};
+}
 
-const newArticle = async params => {
+export async function newArticle (params) {
     const now = new Date();
     const doc: IPost = {
         createTime: now,
@@ -190,7 +190,7 @@ const newArticle = async params => {
     };
 };
 
-const editArticle = async (query, params) => {
+export async function editArticle (query, params) {
     const now = new Date();
     params.modifyTime = now;
 
@@ -211,7 +211,7 @@ const editArticle = async (query, params) => {
     };
 };
 
-const deleteArticle = async (uids: Array<string> | string) => {
+export async function deleteArticle (uids: Array<string> | string) {
     if (!Array.isArray(uids)) {
         uids = [uids];
     }
@@ -225,7 +225,7 @@ const deleteArticle = async (uids: Array<string> | string) => {
 };
 
 // 永久删除文章，对应的评论也要删除
-const delete2Article = async uid => {
+export async function delete2Article (uid) {
     const result = await Promise.all([
         Post.findByIdAndDelete(uid).exec(),
         Comment.deleteMany({ post: uid }).exec()
@@ -235,7 +235,7 @@ const delete2Article = async uid => {
     };
 };
 
-const checkArticleAlias = async ({ alias, excludeUid }) => {
+export async function checkArticleAlias ({ alias, excludeUid }) {
     const filter: any = {};
     filter.alias = alias;
     if (excludeUid) {
@@ -247,7 +247,7 @@ const checkArticleAlias = async ({ alias, excludeUid }) => {
     };
 };
 
-const checkCategoryAlias = async ({ alias, excludeUid }) => {
+export async function checkCategoryAlias ({ alias, excludeUid }) {
     const filter: any = {};
     filter.alias = alias;
     if (excludeUid) {
@@ -259,7 +259,7 @@ const checkCategoryAlias = async ({ alias, excludeUid }) => {
     };
 };
 
-const newCategory = async params => {
+export async function newCategory (params) {
     const now = new Date();
     const entity = new Category({
         createTime: now,
@@ -272,7 +272,7 @@ const newCategory = async params => {
     };
 };
 
-const editCategory = async (uid, params) => {
+export async function editCategory (uid, params) {
     params.modifyTime = new Date();
     const category = await Category.findByIdAndUpdate(uid, params, {
         new: true
@@ -282,7 +282,7 @@ const editCategory = async (uid, params) => {
     };
 };
 
-const deleteCategory = async (uids: Array<string> | string) => {
+export async function deleteCategory (uids: Array<string> | string) {
     if (!Array.isArray(uids)) {
         uids = [uids];
     }
@@ -298,7 +298,7 @@ const deleteCategory = async (uids: Array<string> | string) => {
     };
 };
 
-const getComments = async params => {
+export async function getComments (params) {
     const matchObj: any = {};
     const { username, content, createTime, alias } = params;
     if (username) {
@@ -384,7 +384,7 @@ const getComments = async params => {
     };
 };
 
-const deleteComment = async (uids: Array<string> | string) => {
+export async function deleteComment (uids: Array<string> | string) {
     if (!Array.isArray(uids)) {
         uids = [uids];
     }
@@ -394,7 +394,7 @@ const deleteComment = async (uids: Array<string> | string) => {
     };
 };
 
-const getGuestbook = async params => {
+export async function getGuestbook (params) {
     const page = parseInt(params.pageIndex || '1');
     const pageSize = parseInt(params.pageSize || '10');
     const options: any = {};
@@ -428,7 +428,7 @@ const getGuestbook = async params => {
     };
 };
 
-const deleteGuestbook = async (uids: Array<string> | string) => {
+export async function deleteGuestbook (uids: Array<string> | string) {
     if (!Array.isArray(uids)) {
         uids = [uids];
     }
@@ -438,7 +438,7 @@ const deleteGuestbook = async (uids: Array<string> | string) => {
     };
 };
 
-const saveSettings = async params => {
+export async function saveSettings (params) {
     const settings = await Setting.findOneAndUpdate({}, params, {
         new: true
     }).exec();
@@ -447,14 +447,14 @@ const saveSettings = async params => {
     };
 };
 
-const subtractDate = days => {
+function subtractDate (days) {
     return moment()
         .subtract(days, 'days')
         .startOf('day')
         .toDate();
 };
 
-const getGuestBookStats = async () => {
+export async function getGuestBookStats () {
     const stats = await Promise.all([
     // 今天
         Guestbook.countDocuments({
@@ -505,7 +505,7 @@ const getGuestBookStats = async () => {
     };
 };
 
-const getCommentsStats = async () => {
+export async function getCommentsStats () {
     const stats = await Promise.all([
     // 今天
         Comment.countDocuments({
@@ -556,7 +556,7 @@ const getCommentsStats = async () => {
     };
 };
 
-const getPostsStats = async () => {
+export async function getPostsStats () {
     const stats = await Promise.all([
         // 草稿
         Post.countDocuments({
@@ -602,7 +602,7 @@ const getPostsStats = async () => {
     };
 };
 
-const getCategoriesStats = async () => {
+export async function getCategoriesStats () {
     const stats = await Category.aggregate([
         {
             $lookup: {
@@ -627,7 +627,7 @@ const getCategoriesStats = async () => {
     return stats;
 };
 
-const getComentsAndGuestbookStats = async () => {
+export async function getComentsAndGuestbookStats () {
     const days = 7;
     const stats: [any[] | undefined, any[] | undefined] = await Promise.all([
         Comment.aggregate([
@@ -685,29 +685,4 @@ const getComentsAndGuestbookStats = async () => {
         comments: stats[0],
         guestbook: stats[1]
     };
-};
-
-export default {
-    getCategories,
-    getArticle,
-    getPosts,
-    newArticle,
-    editArticle,
-    deleteArticle,
-    delete2Article,
-    checkArticleAlias,
-    checkCategoryAlias,
-    newCategory,
-    editCategory,
-    deleteCategory,
-    getComments,
-    deleteComment,
-    getGuestbook,
-    deleteGuestbook,
-    saveSettings,
-    getGuestBookStats,
-    getCommentsStats,
-    getPostsStats,
-    getComentsAndGuestbookStats,
-    getCategoriesStats
 };
