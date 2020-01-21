@@ -1,12 +1,12 @@
 {
-  "name": "nuxt_demo",
-  "version": "1.0.0",
-  "description": "My wonderful Nuxt.js project",
-  "author": "sunzhenghua",
+  "name": "iblog2",
+  "version": "2.0.0",
+  "description": "基于 Node.js 的开源个人博客系统。",
+  "author": "Sky.Sun",
   "private": true,
   "scripts": {
     "lint": "eslint --ext .ts,.js,.vue .",
-    "precommit": "npm run lint",
+    "precommit": "yarn run lint",
     "dev": "nuxt-ts",
     "build": "nuxt-ts build",
     "start": "nuxt-ts start"
