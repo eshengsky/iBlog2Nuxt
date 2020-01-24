@@ -46,7 +46,7 @@ export default Vue.extend({
   height: 60px;
   line-height: 60px;
   font-size: 16px;
-  padding-left: 15px;
+  padding-left: 20px;
   margin-bottom: 20px;
   background: #fff;
 }

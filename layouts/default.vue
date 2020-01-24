@@ -206,7 +206,7 @@ export default Vue.extend({
   height: 3px;
   border-radius: 5px;
   bottom: 0;
-  right: 14px;
+  right: 15px;
   width: 30px;
   animation: fadeInLeft 1s;
 }

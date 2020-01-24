@@ -241,13 +241,13 @@ export default Vue.extend({
         const desc = article.content.length > 170 ? (article.content.substring(0, 170) + '...') : article.content;
         let keyword = article.title;
         if (article.labels && article.labels.length) {
-          keyword += ',' + article.labels.join(',');
+            keyword += ',' + article.labels.join(',');
         }
         return {
             title: article.title + ' - iBlog2',
             meta: [
-              { hid: 'description', name: 'description', content: desc },
-              { name: 'keywords', content: keyword }
+                { hid: 'description', name: 'description', content: desc },
+                { name: 'keywords', content: keyword }
             ]
         };
     }

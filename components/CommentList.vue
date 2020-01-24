@@ -68,7 +68,7 @@
                 <span>支持Markdown语法</span>
               </a>
             </a-tooltip>
-            <a-button type="primary" :disabled="!editorText" @click="postComment">
+            <a-button type="primary" :disabled="!editorText.trim()" @click="postComment">
               <span>发表{{ commentName }}</span>
             </a-button>
           </div>

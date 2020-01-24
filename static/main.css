@@ -153,6 +153,10 @@ pre code {
   color: #888;
 }
 
+.ant-input-group-addon {
+  line-height: 1.5;
+}
+
 button.tui-scrollsync {
   display: none !important;
 }
