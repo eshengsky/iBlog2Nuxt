@@ -68,7 +68,7 @@
                 <span>支持Markdown语法</span>
               </a>
             </a-tooltip>
-            <a-button type="primary" :disabled="!editorText.trim()" @click="postComment">
+            <a-button type="primary" :disabled="!editorText" @click="postComment">
               <span>发表{{ commentName }}</span>
             </a-button>
           </div>
@@ -297,9 +297,9 @@ export default Vue.extend({
             )).classList.remove('editor-focus');
         },
 
-        referenceReply (content) {
+        referenceReply ({ username, content }) {
             let refText = content.replace(/^.*(\n+|$)/gm, text => ('> ' + text));
-            refText += '\n\n';
+            refText = `@${username}\n` + refText + '\n\n';
             this.editorText = refText;
             const editorComp = this.$refs.editor as any;
             editorComp.invoke('focus');
@@ -468,5 +468,9 @@ export default Vue.extend({
 
 .comments-wrap .avatar:hover {
   transform: scale(1.3);
+}
+
+.comments-wrap .tui-editor-contents img {
+  max-height: 150px;
 }
 </style>

@@ -318,6 +318,25 @@ router.put('/settings', async (req, res) => {
     res.json(resp);
 });
 
+// 修改关于
+router.put('/profile', async (req, res) => {
+    let resp: IResp;
+    try {
+        const profile = await proxy.saveProfile(req.body);
+        resp = {
+            code: 1,
+            data: profile
+        };
+    } catch (err) {
+        console.error(err);
+        resp = {
+            code: -1,
+            message: err.message
+        };
+    }
+    res.json(resp);
+});
+
 router.get('/guestbookStats', async (_req, res) => {
     let resp: IResp;
     try {

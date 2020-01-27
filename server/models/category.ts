@@ -29,7 +29,7 @@ export class Category {
     private _model: Model<ICategory>;
 
     constructor () {
-        const schema = new Schema(
+        const schema = new Schema<ICategory>(
             {
                 // 分类名称
                 cateName: { type: String },

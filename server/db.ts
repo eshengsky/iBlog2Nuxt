@@ -6,8 +6,9 @@ import { Category } from './models/category';
 import { Comment } from './models/comment';
 import { Guestbook } from './models/guestbook';
 import { Setting } from './models/setting';
+import { Profile } from './models/profile';
 import { Auth } from './models/auth';
-import { IPost, ICategory, IComment, ICache, ISetting, IAuth } from '@/types/schema';
+import { IPost, ICategory, IComment, ICache, ISetting, IProfile, IAuth } from '@/types/schema';
 
 interface IModels {
     Post: Model<IPost>;
@@ -16,6 +17,7 @@ interface IModels {
     Comment: Model<IComment>,
     Guestbook: Model<IComment>,
     Setting: Model<ISetting>,
+    Profile: Model<IProfile>,
     Auth: Model<IAuth>
 }
 
@@ -52,6 +54,7 @@ export default class DB {
             Comment: new Comment().model,
             Guestbook: new Guestbook().model,
             Setting: new Setting().model,
+            Profile: new Profile().model,
             Auth: new Auth().model
         };
     }

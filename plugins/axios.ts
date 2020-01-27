@@ -1,4 +1,7 @@
+import https from 'https';
 export default ({ $axios }) => {
+    $axios.defaults.httpsAgent = new https.Agent({ rejectUnauthorized: false });
+
     $axios.onRequest(config => {
         config.startTime = Date.now();
         console.info('发起请求 ' + config.url);

@@ -237,4 +237,21 @@ router.get('/settings', async (_req, res) => {
     res.json(resp);
 });
 
+router.get('/profile', async (_req, res) => {
+    let resp: IResp;
+    try {
+        const profile = await proxy.getProfile();
+        resp = {
+            code: 1,
+            data: profile
+        };
+    } catch (err) {
+        console.error(err);
+        resp = {
+            code: -1
+        };
+    }
+    res.json(resp);
+});
+
 export default router;

@@ -60,6 +60,15 @@
               <span>留言管理</span>
             </nuxt-link>
           </a-menu-item>
+          <a-menu-item key="profile-settings" title="关于管理">
+            <nuxt-link to="/admin/profile-settings">
+              <font-awesome-icon
+                :icon="['fas', 'user']"
+                fixed-width
+              />
+              <span>关于管理</span>
+            </nuxt-link>
+          </a-menu-item>
           <a-menu-item key="system-settings" title="系统设置">
             <nuxt-link to="/admin/system-settings">
               <font-awesome-icon
@@ -279,7 +288,7 @@ export default Vue.extend({
 .page-header {
   background: #fff;
   font-size: 20px;
-  font-weight: 100;
+  font-weight: 300;
   padding: 16px 25px;
   border-bottom: 1px solid #e7eaec;
   user-select: none;

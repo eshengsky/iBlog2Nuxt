@@ -5,13 +5,22 @@
     </div>
     <div class="widget-body">
       <a-spin :spinning="spinning" />
-      <span
-        v-for="(item, index) in list"
-        :key="index"
-        class="pop-label"
-        @click="selectLabel(item._id)"
-      >{{ item._id }}
-      </span>
+      <template v-if="!spinning">
+        <div v-if="list.length">
+          <span
+            v-for="(item, index) in list"
+            :key="index"
+            class="pop-label"
+            @click="selectLabel(item._id)"
+          >{{ item._id }}
+          </span>
+        </div>
+        <div v-else class="no-data">
+          <a-empty>
+            <span slot="description">暂无内容</span>
+          </a-empty>
+        </div>
+      </template>
     </div>
   </div>
 </template>

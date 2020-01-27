@@ -5,7 +5,7 @@ export class Cache {
     private _model: Model<ICache>;
 
     constructor () {
-        const schema = new Schema({
+        const schema = new Schema<ICache>({
             clientIP: { type: String },
             ext1: { type: Schema.Types.Mixed },
             ext2: { type: Schema.Types.Mixed },

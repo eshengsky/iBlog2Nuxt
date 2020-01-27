@@ -8,7 +8,7 @@ export class Post {
     private _model: Model<IPost>;
 
     constructor () {
-        const schema = new Schema(
+        const schema = new Schema<IPost>(
             {
                 // 标题
                 title: { type: String },
@@ -62,7 +62,7 @@ export class Post {
         schema.virtual('html').get(function (this: any) {
             if (this.content) {
                 const md = new MarkdownIt({
-                    html: true,
+                    breaks: true,
                     linkify: true,
                     highlight (str, lang) {
                         let showLang = '';

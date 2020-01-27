@@ -9,9 +9,22 @@
 import Vue from 'vue';
 import CommentList from '@/components/CommentList.vue';
 import 'highlight.js/styles/tomorrow.css';
+import { ISetting } from '@/types/schema';
 export default Vue.extend({
+    name: 'PageGuestBook',
     components: {
         CommentList
+    },
+    head (this: any) {
+        const settings = this.$store.state.settings as ISetting;
+        const suffix = ` - ${settings.blogName}`;
+        return {
+            title: '留言' + suffix,
+            meta: [
+                { hid: 'description', name: 'description', content: settings.blogIntro || settings.blogName },
+                { name: 'keywords', content: settings.blogName }
+            ]
+        };
     }
 });
 </script>

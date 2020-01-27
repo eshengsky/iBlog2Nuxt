@@ -1,5 +1,19 @@
+import fs from 'fs';
+import path from 'path';
 import { Configuration } from '@nuxt/types/index';
+import blogConfig from './blog.config';
 
+const server: any = {
+    port: 9000,
+    host: 'localhost',
+    timing: true
+};
+if (blogConfig.enableHTTPS) {
+    server.https = {
+        key: fs.readFileSync(path.resolve(__dirname, 'ssl', 'server.key')),
+        cert: fs.readFileSync(path.resolve(__dirname, 'ssl', 'server.crt'))
+    };
+}
 const config: Configuration = {
     mode: 'universal',
     /*
@@ -18,10 +32,7 @@ const config: Configuration = {
         ],
         link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }]
     },
-    server: {
-        port: 9000,
-        host: 'localhost'
-    },
+    server,
     serverMiddleware: ['@/server/api'],
     /*
    ** Customize the progress-bar color
@@ -81,7 +92,9 @@ const config: Configuration = {
    ** Axios module configuration
    ** See https://axios.nuxtjs.org/options
    */
-    axios: {},
+    axios: {
+        baseURL: `${blogConfig.enableHTTPS ? 'https' : 'http'}://localhost:9000`
+    },
     /*
    ** Build configuration
    */
@@ -93,7 +106,7 @@ const config: Configuration = {
         loaders: {
             less: {
                 modifyVars: {
-                    // 'primary-color': '#22b8cf',
+                    // 'font-size-base': '16px',
                     'outline-width': '0'
                 },
                 javascriptEnabled: true

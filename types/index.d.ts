@@ -1,5 +1,10 @@
 export interface IBlogConfig {
     /**
+     * 是否启用HTTPS
+     */
+    enableHTTPS: boolean;
+
+    /**
    * MongoDB链接
    */
     mongoUrl: string;

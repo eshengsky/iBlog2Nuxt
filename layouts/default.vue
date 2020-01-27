@@ -13,26 +13,30 @@
             </h4>
           </a>
         </div>
-        <div class="navbar-collapse">
+        <button class="navbar-toggler" type="button" @click="toggleMenu">
+          <web-font icon="bars" />
+        </button>
+        <div class="navbar-collapse" :class="{ showMenu }">
           <ul>
             <li
               :class="{
                 'blog-active':
                   $route.path === '/' || $route.path.startsWith('/blog')
               }"
+              @click="hideMenu"
             >
               <nuxt-link to="/">
                 <font-awesome-icon :icon="['fas', 'pen-nib']" />博客
               </nuxt-link>
               <div class="nav-line" />
             </li>
-            <li :class="{ 'guestbook-active': $route.path === '/guestbook' }">
+            <li :class="{ 'guestbook-active': $route.path === '/guestbook' }" @click="hideMenu">
               <nuxt-link to="/guestbook">
                 <font-awesome-icon :icon="['fas', 'comment-dots']" />留言
               </nuxt-link>
               <div class="nav-line" />
             </li>
-            <li :class="{ 'profile-active': $route.path === '/profile' }">
+            <li :class="{ 'profile-active': $route.path === '/profile' }" @click="hideMenu">
               <nuxt-link to="/profile">
                 <font-awesome-icon :icon="['fas', 'user']" />关于
               </nuxt-link>
@@ -65,7 +69,8 @@ export default Vue.extend({
             year: new Date().getFullYear(),
             settings: this.$store.state.settings as ISetting,
             zhCN,
-            showToTop: false
+            showToTop: false,
+            showMenu: false
         };
     },
     mounted () {
@@ -89,6 +94,12 @@ export default Vue.extend({
         });
     },
     methods: {
+        toggleMenu () {
+            this.showMenu = !this.showMenu;
+        },
+        hideMenu () {
+            this.showMenu = false;
+        },
         toTop () {
             window.scrollTo(0, 0);
         }
@@ -103,6 +114,7 @@ export default Vue.extend({
   width: 100%;
   display: flex;
   justify-content: space-between;
+  flex-wrap: wrap;
   height: 70px;
   background: #fff;
   border-bottom: 1px solid rgba(234, 234, 234, 0.8);
@@ -111,6 +123,7 @@ export default Vue.extend({
 }
 
 .navbar .navbar-header {
+  height: 70px;
   padding: 0 15px;
 }
 
@@ -133,6 +146,7 @@ export default Vue.extend({
 
 .navbar .navbar-brand h4 {
   margin: 0;
+  font-weight: 400;
 }
 
 .navbar .navbar-brand h4 p {
@@ -141,8 +155,28 @@ export default Vue.extend({
   color: #666;
 }
 
+.navbar-toggler {
+  display: none;
+  padding: 4px 12px;
+  color: rgba(0, 0, 0, 0.5);
+  border: 1px solid #ccc;;
+  cursor: pointer;
+  width: 56px;
+  height: 40px;
+  border-radius: 5px;
+  margin: 15px 15px 0;
+  font-size: 28px;
+  line-height: 1;
+  background: #fff;
+}
+
+.navbar-toggler:focus {
+  outline: none;
+}
+
 .navbar-collapse ul {
   display: flex;
+  background: #fff;
 }
 
 .navbar-collapse li {
@@ -167,6 +201,7 @@ export default Vue.extend({
 }
 
 .navbar-collapse svg {
+  width: 16px;
   margin-right: 4px;
 }
 
@@ -206,7 +241,7 @@ export default Vue.extend({
   height: 3px;
   border-radius: 5px;
   bottom: 0;
-  right: 15px;
+  left: 33px;
   width: 30px;
   animation: fadeInLeft 1s;
 }
@@ -255,6 +290,37 @@ export default Vue.extend({
   background: #1890ff;
   color: #fff;
 }
+
+@media (max-width: 576px) {
+  .navbar-toggler {
+    display: block;
+  }
+
+  .navbar-collapse {
+    display: none;
+    flex-basis: 100%;
+    border-bottom: 1px solid rgba(234, 234, 234, 0.8);
+    z-index: 999;
+    box-shadow: 0 0px 3px 0px rgba(234, 234, 234, 0.8);
+  }
+
+  .navbar-collapse.showMenu {
+    display: block;
+  }
+
+  .navbar-collapse ul {
+    flex-direction: column;
+    padding: 10px 5px;
+  }
+
+  .navbar-collapse a {
+    line-height: 50px;
+  }
+
+  .navbar-collapse li .nav-line {
+    display: none !important;
+  }
+}
 </style>
 <style>
 .widget-container {
@@ -273,7 +339,7 @@ export default Vue.extend({
 
 .widget-body {
   padding: 20px;
-  min-height: 100px;
+  min-height: 170px;
   position: relative;
 }
 

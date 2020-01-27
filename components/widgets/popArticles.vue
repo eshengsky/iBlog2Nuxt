@@ -5,17 +5,24 @@
     </div>
     <div class="widget-body">
       <a-spin :spinning="spinning" />
-      <ul>
-        <li v-for="(item, index) in list" :key="index">
-          <nuxt-link
-            class="pop-article-title"
-            :to="articleUrl(item)"
-            :title="item.title"
-          >
-            {{ item.title }}
-          </nuxt-link>
-        </li>
-      </ul>
+      <template v-if="!spinning">
+        <ul v-if="list.length">
+          <li v-for="(item, index) in list" :key="index">
+            <nuxt-link
+              class="pop-article-title"
+              :to="articleUrl(item)"
+              :title="item.title"
+            >
+              {{ item.title }}
+            </nuxt-link>
+          </li>
+        </ul>
+        <div v-else class="no-data">
+          <a-empty>
+            <span slot="description">暂无内容</span>
+          </a-empty>
+        </div>
+      </template>
     </div>
   </div>
 </template>

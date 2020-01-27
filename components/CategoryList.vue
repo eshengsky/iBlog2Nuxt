@@ -1,8 +1,5 @@
 <template>
   <div class="category-wrap">
-    <div class="category-title">
-      文章分类
-    </div>
     <ul class="category-list">
       <li v-for="item in categories" :key="item._id">
         <nuxt-link :to="item.alias ? `/blog/${item.alias}` : '/'" exact active-class="active">
@@ -30,62 +27,61 @@ export default Vue.extend({
 <style scoped>
 .category-wrap {
   width: 250px;
-  top: 100px;
+  top: 95px;
   bottom: 0;
   margin-left: 15px;
   position: fixed;
   z-index: 1;
-  background: #fff;
-  border-top-left-radius: 5px;
-  border-top-right-radius: 5px;
   overflow: hidden;
 }
 
-.category-title {
-  border-bottom: 1px solid #e7eaec;
-  height: 60px;
-  line-height: 60px;
-  font-size: 16px;
-  padding-left: 20px;
-  margin-bottom: 20px;
-  background: #fff;
-}
-
 .category-list li a {
-  padding: 10px 15px;
-  border-bottom: 1px solid transparent;
-  border-top: 1px solid transparent;
+  padding-left: 40px;
   font-size: 15px;
-  height: 50px;
+  height: 54px;
   position: relative;
   display: flex;
   align-items: center;
-  color: #444;
+  color: #4F6174;
+  font-weight: 500;
+  margin-bottom: 3px;
+  border-radius: 5px 0 0 5px;
+  transition: background .3s;
 }
 
+.category-list li a.active,
 .category-list li a:hover {
-  color: #f60;
+  background: #fff;
+  box-shadow: 0 6px 10px 0px rgba(234, 234, 234, 0.8);
 }
 
-.category-list li a.active {
-  background-color: #fff5ee;
-  border-color: #f8d4bc;
-  color: #f60;
+.category-list li a.active img,
+.category-list li a.active span,
+.category-list li a:hover img,
+.category-list li a:hover span {
+  transform: translateX(-2px);
+}
+
+.category-list li a.active img,
+.category-list li a:hover img {
+  filter: grayscale(0);
 }
 
 .category-list li a img {
-  width: 25px;
-  height: 25px;
-  position: absolute;
+  max-width: 25px;
+  max-height: 25px;
+  filter: grayscale(1);
+  transition: all .3s;
 }
 
 .category-list li a span {
-  padding-left: 28px;
+  padding-left: 8px;
   display: inline-block;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
   width: 100%;
+  transition: transform .3s;
 }
 
 @media (max-width: 840px) {

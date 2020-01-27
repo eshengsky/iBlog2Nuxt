@@ -5,7 +5,7 @@ export class Auth {
     private _model: Model<IAuth>;
 
     constructor () {
-        const schema = new Schema(
+        const schema = new Schema<IAuth>(
             {
                 // 密码（已md5加密）
                 password: { type: String },

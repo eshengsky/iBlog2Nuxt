@@ -88,6 +88,7 @@ interface IHeading2 extends IHeading3 {
     subs: Array<IHeading3>;
 }
 export default Vue.extend({
+    name: 'PageArticle',
     components: {
         CommentList,
         PopArticles,
@@ -236,18 +237,20 @@ export default Vue.extend({
             }
         }
     },
-    head () {
+    head (this: any) {
         const article = this.article as IPost;
-        const desc = article.content.length > 170 ? (article.content.substring(0, 170) + '...') : article.content;
-        let keyword = article.title;
+        const content = article.html.replace(/<[^>]*>/g, '').replace(/\r?\n/g, ' ');
+        const desc = content.length > 170 ? (content.substring(0, 170) + '...') : content;
+        let keywords = article.title;
         if (article.labels && article.labels.length) {
-            keyword += ',' + article.labels.join(',');
+            keywords += ',' + article.labels.join(',');
         }
+        const suffix = ` - ${this.settings.blogName}`;
         return {
-            title: article.title + ' - iBlog2',
+            title: article.title + suffix,
             meta: [
                 { hid: 'description', name: 'description', content: desc },
-                { name: 'keywords', content: keyword }
+                { name: 'keywords', content: keywords }
             ]
         };
     }

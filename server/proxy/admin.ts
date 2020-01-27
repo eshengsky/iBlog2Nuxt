@@ -2,8 +2,8 @@ import moment from 'moment';
 import mongoose from 'mongoose';
 import DB from '../db';
 import { otherCategoryItem } from '../models/category';
-import { IPost } from '../../types/schema';
-const { Category, Post, Comment, Guestbook, Setting } = DB.Models;
+import { IPost, IProfile } from '../../types/schema';
+const { Category, Post, Comment, Guestbook, Setting, Profile } = DB.Models;
 
 export async function getCategories () {
     const categories = await Category.find(
@@ -445,6 +445,31 @@ export async function saveSettings (params) {
     return {
         settings
     };
+};
+
+export async function saveProfile (params) {
+    const exists = await Profile.exists({});
+    const now = new Date();
+    if (!exists) {
+        const doc: IProfile = {
+            createTime: now,
+            modifyTime: now,
+            ...params
+        };
+        const entity = new Profile(doc);
+        const newProfile = await entity.save();
+        return {
+            profile: newProfile
+        };
+    } else {
+        params.modifyTime = now;
+        const profile = await Profile.findOneAndUpdate({}, params, {
+            new: true
+        }).exec();
+        return {
+            profile
+        };
+    }
 };
 
 function subtractDate (days) {

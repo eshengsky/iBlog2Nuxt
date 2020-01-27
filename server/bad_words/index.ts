@@ -33,21 +33,29 @@ export default class BadWords {
     }
 
     filter (content: string) {
+        const tempImgs: Array<string> = [];
         let result = content;
-        for (let i = 0; i < result.length; i++) {
-            for (let j = i + 1; j <= result.length + 1; j++) {
-                const str = result.substring(i, j);
-                if (str.trim()) {
-                    if (this.data.some(t => t.toUpperCase() === str.toUpperCase())) {
-                        const len = str.length;
-                        const asterisks: Array<'*'> = [];
-                        for (let i = 0; i < len; i++) {
-                            asterisks.push('*');
-                        }
-                        result = result.replace(str, asterisks.join(''));
-                    }
+
+        // 将图片部分放入临时数组中，以避免待会儿过滤词会匹配到图片内容
+        result = result.replace(/!\[.+\]\(.+\)/g, val => {
+            tempImgs.push(val);
+            return '#IMG#';
+        });
+
+        // 匹配过滤词并替换
+        this.data.forEach(keyword => {
+            if (result.toUpperCase().includes(keyword.toUpperCase())) {
+                const asterisks: Array<'*'> = [];
+                for (let i = 0; i < keyword.length; i++) {
+                    asterisks.push('*');
                 }
+                result = result.replace(new RegExp(keyword, 'gi'), asterisks.join(''));
             }
+        });
+
+        // 恢复图片
+        if (tempImgs.length) {
+            result = result.replace(/#IMG#/g, () => <string>tempImgs.shift());
         }
         return result;
     }

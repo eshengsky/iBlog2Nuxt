@@ -90,7 +90,9 @@
               </div>
             </template>
             <div v-else class="no-data">
-              <a-empty />
+              <a-empty>
+                <span slot="description">暂无内容</span>
+              </a-empty>
             </div>
           </template>
         </li>
@@ -280,13 +282,12 @@ export default Vue.extend({
 </script>
 <style scoped>
 .post-wrap {
-  padding: 30px 20px 0 280px;
+  padding: 25px 20px 0 265px;
   display: flex;
 }
 
 .post-left {
-  border-bottom: 1px solid #e7eaec;
-  border-radius: 5px;
+  border-radius: 0 5px 5px 0;
   overflow: hidden;
   flex: 1;
 }
@@ -297,7 +298,6 @@ export default Vue.extend({
   align-items: center;
   background: #fff;
   height: 59px;
-  border-bottom: 1px solid #e7eaec;
   padding: 20px;
 }
 
@@ -317,7 +317,7 @@ export default Vue.extend({
 
 .post-list {
   background: #fff;
-  min-height: calc(100vh - 160px);
+  min-height: 100%;
   padding: 20px 20px 0;
   margin-bottom: 0;
 }
@@ -433,15 +433,27 @@ export default Vue.extend({
   margin-left: 20px;
 }
 
+.post-right .widget-container:last-child {
+  margin-bottom: 0;
+}
+
 @media (max-width: 1160px) {
   .post-right {
     display: none;
+  }
+
+  .post-list {
+    min-height: 100vh;
   }
 }
 
 @media (max-width: 840px) {
   .post-wrap {
     padding: 15px 0 0 0;
+  }
+
+  .post-left {
+    border-radius: 5px;
   }
 }
 

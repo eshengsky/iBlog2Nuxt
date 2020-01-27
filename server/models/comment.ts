@@ -1,7 +1,7 @@
 import { Schema, model, models, Model } from 'mongoose';
 import { IComment } from '@/types/schema';
 
-export const schema = new Schema(
+export const schema = new Schema<IComment>(
     {
     // 评论者昵称
         username: { type: String, required: true },

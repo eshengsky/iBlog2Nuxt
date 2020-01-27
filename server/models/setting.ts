@@ -21,14 +21,14 @@ export class Setting {
     private _model: Model<ISetting>;
 
     constructor () {
-        const schema = new Schema({
+        const schema = new Schema<ISetting>({
             blogName: { type: String },
             blogSlogan: { type: String },
             blogLogo: { type: String },
             recordInfo: { type: String },
             showBlogIntro: { type: Boolean },
             blogIntro: { type: String },
-            pageSize: { type: Number },
+            postPageSize: { type: Number },
             enablePreview: { type: Boolean },
             showLicense: { type: Boolean },
             enableComments: { type: Boolean },

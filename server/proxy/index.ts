@@ -1,6 +1,6 @@
 import DB from '../db';
 import BadWords from '../bad_words/index';
-const { Post, Cache, Category, Comment, Guestbook, Setting } = DB.Models;
+const { Post, Cache, Category, Comment, Guestbook, Setting, Profile } = DB.Models;
 const badWords = BadWords.instance;
 
 export async function getCategories () {
@@ -78,7 +78,7 @@ export async function getPosts (params) {
                 sort: '-publishTime'
             }
         )
-            .populate('category', '-img')
+            .populate('category')
             .populate('comments', '_id')
             .exec(),
         Post.countDocuments(conditions).exec()
@@ -245,5 +245,12 @@ export async function getSettings () {
     const settings = await Setting.findOne().exec();
     return {
         settings
+    };
+}
+
+export async function getProfile () {
+    const profile = await Profile.findOne().exec();
+    return {
+        profile
     };
 }

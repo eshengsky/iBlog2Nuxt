@@ -11,6 +11,7 @@ import CategoryList from '~/components/CategoryList.vue';
 import PostList from '~/components/PostList.vue';
 import { allCategoryItem } from '@/server/models/category';
 import { IResp } from '@/types';
+import { ISetting } from '@/types/schema';
 export default Vue.extend({
     components: {
         CategoryList,
@@ -45,6 +46,17 @@ export default Vue.extend({
         return {
             categories: [],
             category: null
+        };
+    },
+    head (this: any) {
+        const settings = this.$store.state.settings as ISetting;
+        const suffix = ` - ${settings.blogName}`;
+        return {
+            title: this.category.cateName + suffix,
+            meta: [
+                { hid: 'description', name: 'description', content: settings.blogIntro || settings.blogName },
+                { name: 'keywords', content: settings.blogName }
+            ]
         };
     }
 });

@@ -11,11 +11,11 @@
         </a>
       </h4>
       <div class="item-footer2">
-        <span>
-          <font-awesome-icon :icon="['fas', 'map-signs']" />
+        <nuxt-link :to="post.category.alias ? `/blog/${post.category.alias}` : '/'" exact active-class="active" :title="`分类: ${post.category.cateName}`">
+          <img :src="post.category.img">
           {{ post.category.cateName }}
-        </span>
-        <a class="website-link" :href="redirectUrl(post.url)" :title="redirectUrl(post.url)" target="_blank">
+        </nuxt-link>
+        <a :href="redirectUrl(post.url)" :title="redirectUrl(post.url)" target="_blank">
           <font-awesome-icon
             :icon="['fas', 'globe-americas']"
           />
@@ -36,15 +36,15 @@
         </nuxt-link>
       </h4>
       <div class="item-footer1">
-        <span>
-          <font-awesome-icon :icon="['fas', 'map-signs']" />
+        <nuxt-link :to="post.category.alias ? `/blog/${post.category.alias}` : '/'" exact active-class="active" :title="`分类: ${post.category.cateName}`">
+          <img :src="post.category.img">
           {{ post.category.cateName }}
-        </span>
-        <span>
+        </nuxt-link>
+        <span :title="`浏览数: ${post.viewCount}`">
           <font-awesome-icon :icon="['far', 'eye']" />
           {{ post.viewCount }}
         </span>
-        <span>
+        <span :title="`评论数: ${post.comments.length}`">
           <font-awesome-icon :icon="['fas', 'comments']" />
           {{ post.comments.length }}
         </span>
@@ -166,12 +166,43 @@ export default Vue.extend({
 }
 
 .item-footer1 span {
-  margin-right: 8px;
+  margin-right: 20px;
+  z-index: 2;
+  cursor: default;
+  position: relative;
 }
 
 .item-footer2 {
   display: flex;
   justify-content: space-between;
+}
+
+.item-footer1 a,
+.item-footer2 a {
+  z-index: 2;
+  position: relative;
+  margin-right: 20px;
+  cursor: pointer;
+  color: #777;
+}
+
+.item-footer1 a:hover,
+.item-footer2 a:hover {
+  color: #333;
+}
+
+.item-footer1 a:hover img,
+.item-footer2 a:hover img {
+  filter: grayscale(0);
+}
+
+.item-footer1 img,
+.item-footer2 img {
+  filter: grayscale(1);
+  position: relative;
+  max-height: 16px;
+  max-width: 16px;
+  top: -1px;
 }
 
 .hr-line-dashed {
@@ -195,14 +226,6 @@ export default Vue.extend({
   padding: 10px 16px;
   text-align: right;
   background: #fff;
-}
-
-.website-link {
-  color: #777;
-}
-
-.website-link:hover {
-  color: #1890ff;
 }
 
 @media (max-width: 576px) {

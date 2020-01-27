@@ -26,7 +26,7 @@
               <span class="comment-time" :title="commentTime2">{{ commentTime }}</span>
             </div>
             <div class="comment-header-actions">
-              <a @click="$emit('referenceReply', comment.content)">
+              <a @click="$emit('referenceReply', comment)">
                 <font-awesome-icon
                   :icon="['fas', 'reply']"
                   style="position: relative; top: -1px;"

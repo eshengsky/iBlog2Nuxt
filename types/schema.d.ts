@@ -1,19 +1,55 @@
-import { Document, Model } from 'mongoose';
+import { Document } from 'mongoose';
 
 export interface IAuth extends Document {
     _id: string;
+
+    /**
+     * 密码
+     */
     password: string;
+
+    /**
+     * 创建时间
+     */
     createTime: Date;
+
+    /**
+     * 修改时间
+     */
     modifyTime: Date;
 }
 
 export interface ICategory extends Document {
     _id: string;
+
+    /**
+     * 分类名称
+     */
     cateName: string;
+
+    /**
+     * 分类Alias
+     */
     alias: string;
+
+    /**
+     * 分类图片
+     */
     img: string;
+
+    /**
+     * 排序值
+     */
     sequence: number;
+
+    /**
+     * 创建时间
+     */
     createTime: Date;
+
+    /**
+     * 修改时间
+     */
     modifyTime: Date;
 }
 
@@ -34,6 +70,11 @@ export interface IPost extends Document {
    * 内容
    */
     content: string;
+
+    /**
+     * 编译为HTML后的内容
+     */
+    html: string;
 
     /**
    * 分类
@@ -92,10 +133,29 @@ export interface IPost extends Document {
 }
 
 export interface IComment extends Document {
+    /**
+     * 评论所在的文章
+     */
     post: IPost;
+
+    /**
+     * 评论人昵称
+     */
     username: string;
+
+    /**
+     * 评论人链接
+     */
     website?: string;
+
+    /**
+     * 评论内容
+     */
     content: string;
+
+    /**
+     * 创建时间
+     */
     createTime: Date;
 }
 
@@ -195,4 +255,48 @@ export interface ISetting extends Document {
    * 百度统计Key
    */
     statisticsKey: string
+}
+
+export interface IProfile extends Document {
+    _id: string;
+
+    /**
+     * 英文名
+     */
+    enName: string;
+
+    /**
+     * 中文名
+     */
+    cnName: string;
+
+    /**
+     * 头像
+     */
+    avatar: string;
+
+    /**
+     * 自我介绍
+     */
+    introduction: string;
+
+    /**
+     * GitHub地址
+     */
+    github: string;
+
+    /**
+     * Email地址
+     */
+    email: string;
+
+    /**
+     * 创建时间
+     */
+    createTime: Date;
+
+    /**
+     * 修改时间
+     */
+    modifyTime: Date;
 }

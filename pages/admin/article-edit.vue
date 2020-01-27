@@ -622,3 +622,8 @@ export default Vue.extend({
   margin-top: 30px;
 }
 </style>
+<style>
+.article-edit .tui-editor-defaultUI {
+  line-height: 18px;
+}
+</style>
